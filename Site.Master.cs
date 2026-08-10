@@ -11,7 +11,7 @@ namespace binary
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            SiteStylesheet.Href = ResolveUrl("~/Content/Site.css") + "?v=20260810";
         }
     }
 }
