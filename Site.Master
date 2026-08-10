@@ -6,13 +6,13 @@
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - My ASP.NET Application</title>
+    <title><%: Page.Title %> - Language Learning Platform</title>
 
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
 
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link id="SiteStylesheet" rel="stylesheet" type="text/css" runat="server" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
 </head>
@@ -37,33 +37,56 @@
             </Scripts>
         </asp:ScriptManager>
 
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" runat="server" href="~/">Application name</a>
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
+        <nav class="site-navbar" aria-label="Primary navigation">
+            <div class="site-container nav-content">
+                <a class="brand-link" runat="server" href="~/">
+                    <span class="brand-mark">LL</span>
+                    <span class="brand-text">
+                        <span class="brand-name">Binary</span>
+                        <span class="brand-subtitle">Language Platform</span>
+                    </span>
+                </a>
+                <div class="nav-menu">
+                    <ul class="nav-links">
+                        <li><a runat="server" href="~/">Home</a></li>
+                        <li><a runat="server" href="~/Courses">Courses</a></li>
+                        <li><a runat="server" href="~/Users">Users</a></li>
+                        <li><a runat="server" href="~/Admin">Admin</a></li>
+                        <li><a runat="server" href="~/Contact">Contact</a></li>
                     </ul>
+                    <div class="nav-actions">
+                        <a class="text-action" runat="server" href="~/Contact">Sign in</a>
+                        <a class="primary-action" runat="server" href="~/Courses">Start Learning</a>
+                    </div>
                 </div>
             </div>
         </nav>
-        <div class="container body-content">
+        <main class="site-container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
-            <hr />
-            <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
-            </footer>
-        </div>
+        </main>
+        <footer class="site-footer">
+            <div class="site-container footer-content">
+                <div class="footer-brand">
+                    <a class="brand-link footer-logo" runat="server" href="~/">
+                        <span class="brand-mark">LL</span>
+                        <span class="brand-text">
+                            <span class="brand-name">Binary</span>
+                            <span class="brand-subtitle">Language Platform</span>
+                        </span>
+                    </a>
+                    <p>Practice vocabulary, grammar, listening, and speaking with simple lessons built for steady progress.</p>
+                </div>
+                <div class="footer-links" aria-label="Footer navigation">
+                    <a runat="server" href="~/">Home</a>
+                    <a runat="server" href="~/Courses">Courses</a>
+                    <a runat="server" href="~/Users">Users</a>
+                    <a runat="server" href="~/Admin">Admin</a>
+                    <a runat="server" href="~/Contact">Contact</a>
+                </div>
+                <p class="footer-copy">&copy; <%: DateTime.Now.Year %> Language Learning Platform. All rights reserved.</p>
+            </div>
+        </footer>
     </form>
-    <asp:PlaceHolder runat="server">
-        <%: Scripts.Render("~/Scripts/bootstrap.js") %>
-    </asp:PlaceHolder>
 </body>
 </html>
