@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="binary.SiteMaster" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="binary.SiteMaster" %>
 
 <!DOCTYPE html>
 
@@ -6,7 +6,8 @@
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - Language Learning Platform</title>
+    <meta name="description" content="Binary — Learn languages faster with interactive lessons, smart vocabulary practice, and real progress tracking." />
+    <title><%: Page.Title %> - Binary | Language Learning Platform</title>
 
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
@@ -40,7 +41,7 @@
         <nav class="site-navbar" aria-label="Primary navigation">
             <div class="site-container nav-content">
                 <a class="brand-link" runat="server" href="~/">
-                    <span class="brand-mark">LL</span>
+                    <span class="brand-mark">Bn</span>
                     <span class="brand-text">
                         <span class="brand-name">Binary</span>
                         <span class="brand-subtitle">Language Platform</span>
@@ -50,41 +51,59 @@
                     <ul class="nav-links">
                         <li><a runat="server" href="~/">Home</a></li>
                         <li><a runat="server" href="~/Courses">Courses</a></li>
-                        <li><a runat="server" href="~/Users">Users</a></li>
-                        <li><a runat="server" href="~/Admin">Admin</a></li>
-                        <li><a runat="server" href="~/Contact">Contact</a></li>
+                        <li><a runat="server" href="~/Pages/About.aspx">About</a></li>
+                        <li><a runat="server" href="~/Pages/Contact.aspx">Contact</a></li>
                     </ul>
                     <div class="nav-actions">
-                        <a class="text-action" runat="server" href="~/Contact">Sign in</a>
-                        <a class="primary-action" runat="server" href="~/Courses">Start Learning</a>
+                        <a class="text-action" runat="server" href="~/Auth/Login.aspx">Sign in</a>
+                        <a class="primary-action" runat="server" href="~/Auth/Register.aspx">Get Started</a>
                     </div>
                 </div>
             </div>
         </nav>
-        <main class="site-container body-content">
+        <main class="body-content" aria-label="Main content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
         </main>
-        <footer class="site-footer">
-            <div class="site-container footer-content">
-                <div class="footer-brand">
-                    <a class="brand-link footer-logo" runat="server" href="~/">
-                        <span class="brand-mark">LL</span>
-                        <span class="brand-text">
-                            <span class="brand-name">Binary</span>
-                            <span class="brand-subtitle">Language Platform</span>
-                        </span>
-                    </a>
-                    <p>Practice vocabulary, grammar, listening, and speaking with simple lessons built for steady progress.</p>
+        <footer class="site-footer" aria-label="Site footer">
+            <div class="site-container">
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <a class="brand-link footer-logo" runat="server" href="~/">
+                            <span class="brand-mark">Bn</span>
+                            <span class="brand-text">
+                                <span class="brand-name">Binary</span>
+                                <span class="brand-subtitle">Language Platform</span>
+                            </span>
+                        </a>
+                        <p>Practice vocabulary, grammar, listening, and speaking with structured lessons designed for steady, lasting progress.</p>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Platform</h4>
+                        <ul>
+                            <li><a runat="server" href="~/Courses">Browse Courses</a></li>
+                            <li><a runat="server" href="~/Pages/About.aspx">About Us</a></li>
+                            <li><a runat="server" href="~/Pages/Contact.aspx">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Account</h4>
+                        <ul>
+                            <li><a runat="server" href="~/Auth/Login.aspx">Sign In</a></li>
+                            <li><a runat="server" href="~/Auth/Register.aspx">Register</a></li>
+                            <li><a runat="server" href="~/Users/Profile.aspx">My Profile</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Admin</h4>
+                        <ul>
+                            <li><a runat="server" href="~/Admin">Dashboard</a></li>
+                            <li><a runat="server" href="~/Admin/Courses.aspx">Manage Courses</a></li>
+                            <li><a runat="server" href="~/Admin/Users.aspx">Manage Users</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="footer-links" aria-label="Footer navigation">
-                    <a runat="server" href="~/">Home</a>
-                    <a runat="server" href="~/Courses">Courses</a>
-                    <a runat="server" href="~/Users">Users</a>
-                    <a runat="server" href="~/Admin">Admin</a>
-                    <a runat="server" href="~/Contact">Contact</a>
-                </div>
-                <p class="footer-copy">&copy; <%: DateTime.Now.Year %> Language Learning Platform. All rights reserved.</p>
+                <p class="footer-copy">&copy; <%: DateTime.Now.Year %> Binary Language Learning Platform. All rights reserved.</p>
             </div>
         </footer>
     </form>
