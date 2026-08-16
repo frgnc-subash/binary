@@ -101,9 +101,12 @@
   <ItemGroup>
     <Content Include="Admin\Default.aspx" />
     <Content Include="Auth\Login.aspx" />
+    <Content Include="Auth\Logout.aspx" />
     <Content Include="Auth\Register.aspx" />
     <Content Include="Content\Site.css" />
     <Content Include="Courses\Default.aspx" />
+    <Content Include="CreateDatabase.sql" />
+    <Content Include="CreateDatabase_MySQL.sql" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -158,10 +161,28 @@
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Auth\Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Auth\Logout.aspx.cs">
+      <DependentUpon>Logout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Auth\Logout.aspx.designer.cs">
+      <DependentUpon>Logout.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Auth\Register.aspx.cs">
       <DependentUpon>Register.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Auth\Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BLL\AuthBLL.cs" />
+    <Compile Include="BLL\CourseBLL.cs" />
+    <Compile Include="BLL\EnrollmentBLL.cs" />
+    <Compile Include="BLL\FeedbackBLL.cs" />
+    <Compile Include="BLL\UserBLL.cs" />
     <Compile Include="Courses\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -169,6 +190,13 @@
     <Compile Include="Courses\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="DAL\CategoryDAL.cs" />
+    <Compile Include="DAL\CourseDAL.cs" />
+    <Compile Include="DAL\EnrollmentDAL.cs" />
+    <Compile Include="DAL\FeedbackDAL.cs" />
+    <Compile Include="DAL\LessonDAL.cs" />
+    <Compile Include="DAL\UserDAL.cs" />
+    <Compile Include="CreateAdmin.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -179,13 +207,32 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\DbHelper.cs" />
+    <Compile Include="Helpers\PasswordHelper.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Course.cs" />
+    <Compile Include="Models\Enrollment.cs" />
+    <Compile Include="Models\Feedback.cs" />
+    <Compile Include="Models\Lesson.cs" />
+    <Compile Include="Models\Question.cs" />
+    <Compile Include="Models\QuestionOption.cs" />
+    <Compile Include="Models\Quiz.cs" />
+    <Compile Include="Models\QuizAttempt.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\ValidationException.cs" />
     <Compile Include="Pages\About.aspx.cs">
       <DependentUpon>About.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Pages\About.aspx.designer.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Contact.aspx.designer.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">
@@ -213,6 +260,9 @@
       <DependentUpon>Profile.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Users\Profile.aspx.designer.cs">
+      <DependentUpon>Profile.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -223,6 +273,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="BLL\" />
+    <Folder Include="DAL\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
