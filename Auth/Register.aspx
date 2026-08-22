@@ -51,7 +51,7 @@
 
                 <asp:Button ID="RegisterBtn" runat="server" CssClass="btn btn-primary btn-lg" Text="Create Free Account" OnClick="RegisterBtn_Click" style="width:100%;" />
             </div>
-            <div class="auth-card-footer" style="text-align:center;font-size:13.5px;color:var(--text-secondary);">
+            <div class="auth-card-footer card-footer" style="text-align:center;font-size:13.5px;color:var(--text-secondary);">
                 Already have an account? <a runat="server" href="~/Auth/Login.aspx" style="color:var(--brand-primary);font-weight:700;">Sign in &rarr;</a>
             </div>
         </div>

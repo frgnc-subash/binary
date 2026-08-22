@@ -50,8 +50,9 @@ namespace binary.Auth
                     litErrorMessage.Text = Server.HtmlEncode(vex.Message);
                     ErrorPanel.Visible = true;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Trace.TraceError("Login failed for {0}: {1}", email, ex);
                     litErrorMessage.Text = "A system error occurred. Please try again later.";
                     ErrorPanel.Visible = true;
                 }
