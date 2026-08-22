@@ -1,10 +1,10 @@
 using System;
 using System.Web;
-using binary.DAL;
-using binary.Helpers;
+using binary.Core.DAL;
+using binary.Core.Helpers;
 using binary.Models;
 
-namespace binary.BLL
+namespace binary.Core.BLL
 {
     // centralized session-based authentication management
     public static class AuthBLL

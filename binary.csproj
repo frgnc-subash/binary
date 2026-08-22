@@ -105,8 +105,8 @@
     <Content Include="Auth\Register.aspx" />
     <Content Include="Content\Site.css" />
     <Content Include="Courses\Default.aspx" />
-    <Content Include="CreateDatabase.sql" />
-    <Content Include="CreateDatabase_MySQL.sql" />
+    <Content Include="App_Data\CreateDatabase.sql" />
+    <Content Include="App_Data\CreateDatabase_MySQL.sql" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -178,11 +178,11 @@
     <Compile Include="Auth\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
-    <Compile Include="BLL\AuthBLL.cs" />
-    <Compile Include="BLL\CourseBLL.cs" />
-    <Compile Include="BLL\EnrollmentBLL.cs" />
-    <Compile Include="BLL\FeedbackBLL.cs" />
-    <Compile Include="BLL\UserBLL.cs" />
+    <Compile Include="Core\BLL\AuthBLL.cs" />
+    <Compile Include="Core\BLL\CourseBLL.cs" />
+    <Compile Include="Core\BLL\EnrollmentBLL.cs" />
+    <Compile Include="Core\BLL\FeedbackBLL.cs" />
+    <Compile Include="Core\BLL\UserBLL.cs" />
     <Compile Include="Courses\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -190,12 +190,12 @@
     <Compile Include="Courses\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="DAL\CategoryDAL.cs" />
-    <Compile Include="DAL\CourseDAL.cs" />
-    <Compile Include="DAL\EnrollmentDAL.cs" />
-    <Compile Include="DAL\FeedbackDAL.cs" />
-    <Compile Include="DAL\LessonDAL.cs" />
-    <Compile Include="DAL\UserDAL.cs" />
+    <Compile Include="Core\DAL\CategoryDAL.cs" />
+    <Compile Include="Core\DAL\CourseDAL.cs" />
+    <Compile Include="Core\DAL\EnrollmentDAL.cs" />
+    <Compile Include="Core\DAL\FeedbackDAL.cs" />
+    <Compile Include="Core\DAL\LessonDAL.cs" />
+    <Compile Include="Core\DAL\UserDAL.cs" />
     <Compile Include="CreateAdmin.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -207,8 +207,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\DbHelper.cs" />
-    <Compile Include="Helpers\PasswordHelper.cs" />
+    <Compile Include="Core\Helpers\DbHelper.cs" />
+    <Compile Include="Core\Helpers\PasswordHelper.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Enrollment.cs" />
@@ -273,9 +273,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="BLL\" />
-    <Folder Include="DAL\" />
-    <Folder Include="Helpers\" />
+    <Folder Include="Core\BLL\" />
+    <Folder Include="Core\DAL\" />
+    <Folder Include="Core\Helpers\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

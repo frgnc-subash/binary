@@ -1,7 +1,7 @@
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
-using binary.Helpers;
+using binary.Core.Helpers;
 
 namespace binary
 {

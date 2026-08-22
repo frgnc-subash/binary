@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace binary.Helpers
+namespace binary.Core.Helpers
 {
     // shared database connection and command helpers
     public static class DbHelper

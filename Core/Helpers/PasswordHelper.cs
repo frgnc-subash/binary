@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace binary.Helpers
+namespace binary.Core.Helpers
 {
     // password hashing with salt using sha256
     public static class PasswordHelper

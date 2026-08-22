@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using binary.DAL;
+using binary.Core.DAL;
 using binary.Models;
 
-namespace binary.BLL
+namespace binary.Core.BLL
 {
     public class FeedbackBLL
     {

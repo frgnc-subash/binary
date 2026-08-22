@@ -1,6 +1,6 @@
 using System;
 using System.Web.UI;
-using binary.BLL;
+using binary.Core.BLL;
 
 namespace binary.Admin
 {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using binary.DAL;
+using binary.Core.DAL;
 using binary.Models;
 
-namespace binary.BLL
+namespace binary.Core.BLL
 {
     public class EnrollmentBLL
     {
