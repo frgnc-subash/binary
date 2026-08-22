@@ -41,26 +41,38 @@ namespace binary.Auth
                 {
                     var userBll = new UserBLL();
                     userBll.Register(firstName, lastName, email, password);
-
-                    // auto-login newly registered user
-                    AuthBLL.Login(email, password);
-
-                    litRegisterSuccess.Text = "Welcome to Binary! Your account has been created.";
-                    SuccessPanel.Visible = true;
-
-                    // redirect to homepage
-                    Response.Redirect("~/", false);
                 }
                 catch (ValidationException vex)
                 {
                     litRegisterError.Text = Server.HtmlEncode(vex.Message);
                     ErrorPanel.Visible = true;
+                    return;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Trace.TraceError("Registration failed for {0}: {1}", email, ex);
                     litRegisterError.Text = "An error occurred during registration. Please try again.";
                     ErrorPanel.Visible = true;
+                    return;
                 }
+
+                // account was created successfully at this point; auto-login is best-effort
+                try
+                {
+                    AuthBLL.Login(email, password);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.TraceError("Auto-login after registration failed for {0}: {1}", email, ex);
+                    Response.Redirect("~/Auth/Login.aspx", false);
+                    return;
+                }
+
+                litRegisterSuccess.Text = "Welcome to Binary! Your account has been created.";
+                SuccessPanel.Visible = true;
+
+                // redirect to homepage
+                Response.Redirect("~/", false);
             }
         }
     }

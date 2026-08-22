@@ -32,7 +32,7 @@
 
                 <asp:Button ID="LoginBtn" runat="server" CssClass="btn btn-primary btn-lg" Text="Sign In" OnClick="LoginBtn_Click" style="width:100%;" />
             </div>
-            <div class="auth-card-footer" style="text-align:center;font-size:13.5px;color:var(--text-secondary);">
+            <div class="auth-card-footer card-footer" style="text-align:center;font-size:13.5px;color:var(--text-secondary);">
                 Don't have an account? <a runat="server" href="~/Auth/Register.aspx" style="color:var(--brand-primary);font-weight:700;">Create one free &rarr;</a>
             </div>
         </div>
