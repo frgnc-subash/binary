@@ -1,10 +1,10 @@
 using System;
 using System.Text.RegularExpressions;
-using binary.DAL;
-using binary.Helpers;
+using binary.Core.DAL;
+using binary.Core.Helpers;
 using binary.Models;
 
-namespace binary.BLL
+namespace binary.Core.BLL
 {
     // business logic for user accounts
     public class UserBLL

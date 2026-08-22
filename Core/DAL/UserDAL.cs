@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using binary.Helpers;
+using binary.Core.Helpers;
 using binary.Models;
 
-namespace binary.DAL
+namespace binary.Core.DAL
 {
     // data access layer for users table
     public class UserDAL
