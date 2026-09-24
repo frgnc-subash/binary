@@ -30,12 +30,27 @@ namespace binary.Core.BLL
                 Message = message.Trim()
             };
 
-            return _dal.Insert(fb);
+            int feedbackId = _dal.Insert(fb);
+
+            new NotificationBLL().NotifyAdmins(
+                "New message: " + fb.Subject,
+                "From " + fb.Name + ": " + fb.Message,
+                "~/Admin/Feedback.aspx");
+
+            return feedbackId;
         }
 
         public List<Feedback> GetAllFeedback()
         {
             return _dal.SelectAll();
+        }
+
+        public void DeleteFeedback(int feedbackId)
+        {
+            if (feedbackId <= 0)
+                throw new ValidationException("Invalid feedback ID.");
+
+            _dal.Delete(feedbackId);
         }
     }
 }

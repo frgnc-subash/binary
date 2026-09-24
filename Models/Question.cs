@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace binary.Models
 {
     /// <summary>
@@ -9,5 +11,6 @@ namespace binary.Models
         public int QuizID { get; set; }
         public string QuestionText { get; set; }
         public int SortOrder { get; set; }
+        public List<QuestionOption> Options { get; set; }
     }
 }

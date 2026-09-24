@@ -56,5 +56,17 @@ namespace binary.Core.DAL
             }
             return list;
         }
+
+        public void Delete(int feedbackId)
+        {
+            const string sql = "DELETE FROM Feedback WHERE FeedbackID = @FeedbackID;";
+
+            using (SqlConnection con = DbHelper.CreateConnection())
+            using (SqlCommand cmd = DbHelper.CreateCommand(con, sql))
+            {
+                DbHelper.AddParam(cmd, "@FeedbackID", feedbackId);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }
