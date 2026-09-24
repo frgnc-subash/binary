@@ -11,5 +11,11 @@ namespace binary.Pages
 {
     public partial class About
     {
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkHeroSecondary;
+        protected global::System.Web.UI.WebControls.Literal litStatCourses;
+        protected global::System.Web.UI.WebControls.Literal litStatLessons;
+        protected global::System.Web.UI.WebControls.Literal litStatFamilies;
+        protected global::System.Web.UI.WebControls.Literal litStatLearners;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkCtaBottom;
     }
 }

@@ -35,6 +35,7 @@ namespace binary.Pages
         /// rfvEmail control.
         /// </summary>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvEmail;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revEmail;
 
         /// <summary>
         /// Subject control.
@@ -55,6 +56,8 @@ namespace binary.Pages
         /// SuccessPanel control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Panel SuccessPanel;
+        protected global::System.Web.UI.WebControls.Panel ErrorPanel;
+        protected global::System.Web.UI.WebControls.Literal litContactError;
 
         /// <summary>
         /// SubmitBtn control.

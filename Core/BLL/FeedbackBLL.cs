@@ -20,6 +20,13 @@ namespace binary.Core.BLL
                 throw new ValidationException("Please enter a valid email address.");
             if (string.IsNullOrWhiteSpace(message))
                 throw new ValidationException("Message cannot be empty.");
+            // match the Feedback column sizes so an overlong value is a clear message, not a SQL error
+            if (name.Trim().Length > 200)
+                throw new ValidationException("Name must be 200 characters or fewer.");
+            if (email.Trim().Length > 256)
+                throw new ValidationException("Email must be 256 characters or fewer.");
+            if (message.Trim().Length > 4000)
+                throw new ValidationException("Message must be 4,000 characters or fewer.");
 
             var fb = new Feedback
             {
