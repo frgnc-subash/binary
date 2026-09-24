@@ -14,9 +14,28 @@ namespace binary.Auth
                 // redirect if already logged in
                 if (AuthBLL.IsLoggedIn)
                 {
-                    Response.Redirect(AuthBLL.IsAdmin ? "~/Admin" : "~/");
+                    Response.Redirect(GetPostAuthRedirect());
                 }
             }
+        }
+
+        private string GetPostAuthRedirect()
+        {
+            string returnUrl = Request.QueryString["ReturnUrl"];
+            if (AuthBLL.IsSafeReturnUrl(returnUrl))
+                return returnUrl;
+            return AuthBLL.IsAdmin ? "~/Admin" : "~/Users/Profile.aspx";
+        }
+
+        // carries the current ReturnUrl (if any) across to the other auth page, so switching
+        // between Sign In and Register doesn't lose track of where the guest was headed
+        protected string BuildAuthCrossLink(string path)
+        {
+            string returnUrl = Request.QueryString["ReturnUrl"];
+            string resolved = ResolveUrl(path);
+            return AuthBLL.IsSafeReturnUrl(returnUrl)
+                ? resolved + "?ReturnUrl=" + Server.UrlEncode(returnUrl)
+                : resolved;
         }
 
         protected void LoginBtn_Click(object sender, EventArgs e)
@@ -30,20 +49,7 @@ namespace binary.Auth
                 {
                     AuthBLL.Login(email, password);
 
-                    // redirect to return url or default
-                    string returnUrl = Request.QueryString["ReturnUrl"];
-                    if (!string.IsNullOrEmpty(returnUrl) && !returnUrl.Contains("://") && !returnUrl.StartsWith("//"))
-                    {
-                        Response.Redirect(returnUrl);
-                    }
-                    else if (AuthBLL.IsAdmin)
-                    {
-                        Response.Redirect("~/Admin");
-                    }
-                    else
-                    {
-                        Response.Redirect("~/");
-                    }
+                    Response.Redirect(GetPostAuthRedirect());
                 }
                 catch (ValidationException vex)
                 {
@@ -53,7 +59,7 @@ namespace binary.Auth
                 catch (Exception ex)
                 {
                     System.Diagnostics.Trace.TraceError("Login failed for {0}: {1}", email, ex);
-                    litErrorMessage.Text = "A system error occurred. Please try again later.";
+                    litErrorMessage.Text = "We couldn't sign you in right now. Please try again in a moment.";
                     ErrorPanel.Visible = true;
                 }
             }

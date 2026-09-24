@@ -1,4 +1,4 @@
-<%@ Page Title="Sign Out" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Logout.aspx.cs" Inherits="binary.Auth.Logout" %>
+<%@ Page Title="Sign Out" Language="C#" MasterPageFile="~/MasterPages/Site.Master" AutoEventWireup="true" CodeBehind="Logout.aspx.cs" Inherits="binary.Auth.Logout" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="site-container" style="text-align:center;padding:var(--space-20) 0;">
