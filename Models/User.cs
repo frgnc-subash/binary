@@ -17,6 +17,8 @@ namespace binary.Models
         public int FailedLoginAttempts { get; set; }
         public DateTime? LockoutEndUtc { get; set; }
         public DateTime CreatedDate { get; set; }
+        public int TotalXP { get; set; }
+        public string ProfileImageUrl { get; set; }
 
         public string FullName
         {
