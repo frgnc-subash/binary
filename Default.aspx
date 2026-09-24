@@ -1,4 +1,4 @@
-<%@ Page Title="Home" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="binary._Default" %>
+<%@ Page Title="Home" Language="C#" MasterPageFile="~/MasterPages/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="binary._Default" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -88,27 +88,27 @@
     <section style="background:#ffffff;border-top:1px solid var(--border-light);border-bottom:1px solid var(--border-light);padding:var(--space-6) 0;">
         <div class="site-container">
             <div class="clean-lang-strip">
-                <a class="clean-lang-chip" runat="server" href="~/Courses">
+                <a class="clean-lang-chip" runat="server" href="~/Courses?lang=Spanish">
                     <span class="lang-chip-name">Spanish</span>
                     <span class="lang-chip-level">A1 &ndash; B2</span>
                 </a>
-                <a class="clean-lang-chip" runat="server" href="~/Courses">
+                <a class="clean-lang-chip" runat="server" href="~/Courses?lang=French">
                     <span class="lang-chip-name">French</span>
                     <span class="lang-chip-level">A1 &ndash; B2</span>
                 </a>
-                <a class="clean-lang-chip" runat="server" href="~/Courses">
+                <a class="clean-lang-chip" runat="server" href="~/Courses?lang=Japanese">
                     <span class="lang-chip-name">Japanese</span>
                     <span class="lang-chip-level">N5 &ndash; N3</span>
                 </a>
-                <a class="clean-lang-chip" runat="server" href="~/Courses">
+                <a class="clean-lang-chip" runat="server" href="~/Courses?lang=German">
                     <span class="lang-chip-name">German</span>
                     <span class="lang-chip-level">A1 &ndash; B1</span>
                 </a>
-                <a class="clean-lang-chip" runat="server" href="~/Courses">
+                <a class="clean-lang-chip" runat="server" href="~/Courses?lang=Korean">
                     <span class="lang-chip-name">Korean</span>
                     <span class="lang-chip-level">Beginner</span>
                 </a>
-                <a class="clean-lang-chip" runat="server" href="~/Courses">
+                <a class="clean-lang-chip" runat="server" href="~/Courses?lang=Italian">
                     <span class="lang-chip-name">Italian</span>
                     <span class="lang-chip-level">A1 &ndash; B1</span>
                 </a>

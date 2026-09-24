@@ -1,0 +1,185 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="binary.MasterPages.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Binary — Learn languages faster with interactive lessons, smart vocabulary practice, and real progress tracking." />
+    <title><%: Page.Title %> - Binary | Language Learning Platform</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <link id="SiteStylesheet" rel="stylesheet" type="text/css" runat="server" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+</head>
+<body>
+    <form runat="server" enctype="multipart/form-data">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+        <asp:PlaceHolder ID="phSiteNavbar" runat="server">
+        <nav class="site-navbar" aria-label="Primary navigation">
+            <div class="site-container nav-content">
+                <a class="brand-link" runat="server" href="~/">
+                    <span class="brand-mark">Bn</span>
+                    <span class="brand-text">
+                        <span class="brand-name">Binary</span>
+                        <span class="brand-subtitle">Language Platform</span>
+                    </span>
+                </a>
+                <button type="button" class="nav-toggle" id="navToggleBtn" onclick="toggleMobileNav()" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+                    <svg class="nav-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <div class="nav-menu" id="navMenu">
+                    <ul class="nav-links">
+                        <li><a runat="server" href="~/">Home</a></li>
+                        <li><a runat="server" href="~/Courses">Courses</a></li>
+                        <li><a runat="server" href="~/Leaderboard">Leaderboard</a></li>
+                        <li><a runat="server" href="~/Pages/About.aspx">About</a></li>
+                        <li><a runat="server" href="~/Pages/Contact.aspx">Contact</a></li>
+                    </ul>
+                    <div class="nav-actions">
+                        <asp:PlaceHolder ID="phGuestActions" runat="server">
+                            <a class="btn btn-outline" runat="server" href="~/Auth/Login.aspx" style="height:38px;padding:0 16px;font-size:13.5px;">Sign in</a>
+                            <a class="btn btn-primary" runat="server" href="~/Auth/Register.aspx" style="height:38px;padding:0 18px;font-size:13.5px;">Get Started</a>
+                        </asp:PlaceHolder>
+                        <asp:PlaceHolder ID="phUserActions" runat="server" Visible="false">
+                            <div class="user-nav-dropdown">
+                                <a class="user-pill" id="lnkUserPill" runat="server" href="~/Users/Profile.aspx">
+                                    <span class="user-avatar-sm">
+                                        <asp:Image ID="imgAvatarNav" runat="server" CssClass="avatar-img" Visible="false" AlternateText="" />
+                                        <asp:Literal ID="litAvatarInitials" runat="server">U</asp:Literal>
+                                    </span>
+                                </a>
+                                <a class="btn btn-outline text-danger" runat="server" href="~/Auth/Logout.aspx" style="height:36px;padding:0 12px;font-size:13px;" title="Sign Out">Sign Out</a>
+                            </div>
+                        </asp:PlaceHolder>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <script>
+            function toggleMobileNav() {
+                var menu = document.getElementById('navMenu');
+                var btn = document.getElementById('navToggleBtn');
+                var isOpen = menu.classList.toggle('nav-menu-open');
+                btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            }
+        </script>
+        </asp:PlaceHolder>
+        <main class="body-content" aria-label="Main content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </main>
+        <asp:PlaceHolder ID="phSiteFooter" runat="server">
+            <footer class="site-footer" aria-label="Site footer">
+                <div class="site-container">
+                    <div class="footer-content">
+                        <div class="footer-brand">
+                            <a class="brand-link footer-logo" runat="server" href="~/">
+                                <span class="brand-mark">Bn</span>
+                                <span class="brand-text">
+                                    <span class="brand-name">Binary</span>
+                                    <span class="brand-subtitle">Language Platform</span>
+                                </span>
+                            </a>
+                            <p>Practice vocabulary, grammar, listening, and speaking with structured lessons designed for steady, lasting progress.</p>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Platform</h4>
+                            <ul>
+                                <li><a runat="server" href="~/Courses">Browse Courses</a></li>
+                                <li><a runat="server" href="~/Pages/About.aspx">About Us</a></li>
+                                <li><a runat="server" href="~/Pages/Contact.aspx">Contact</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Account</h4>
+                            <ul>
+                                <asp:PlaceHolder ID="phFooterGuestLinks" runat="server">
+                                    <li><a runat="server" href="~/Auth/Login.aspx">Sign In</a></li>
+                                    <li><a runat="server" href="~/Auth/Register.aspx">Register</a></li>
+                                </asp:PlaceHolder>
+                                <li><a runat="server" href="~/Users/Profile.aspx">My Profile</a></li>
+                            </ul>
+                        </div>
+                        <asp:PlaceHolder ID="phAdminFooterNav" runat="server" Visible="false">
+                            <div class="footer-col">
+                                <h4>Admin</h4>
+                                <ul>
+                                    <li><a runat="server" href="~/Admin">Dashboard</a></li>
+                                    <li><a runat="server" href="~/Admin/Courses.aspx">Manage Courses</a></li>
+                                    <li><a runat="server" href="~/Admin/Users.aspx">Manage Users</a></li>
+                                </ul>
+                            </div>
+                        </asp:PlaceHolder>
+                    </div>
+                    <p class="footer-copy">&copy; <%: DateTime.Now.Year %> Binary Language Learning Platform. All rights reserved.</p>
+                </div>
+            </footer>
+        </asp:PlaceHolder>
+    </form>
+
+    <script>
+        // One postback at a time: a double-click on Submit Answers / Enroll / Complete Lesson would
+        // otherwise post twice (duplicate quiz attempts and XP, "already enrolled" errors).
+        (function () {
+            var form = document.forms[0];
+            if (!form) return;
+            var busy = false;
+
+            function markBusy(el) {
+                busy = true;
+                document.documentElement.classList.add('is-submitting');
+                if (el && el.classList) el.classList.add('is-busy');
+            }
+
+            // <asp:Button> submits: runs after WebForms' inline onsubmit, so failed validation
+            // (defaultPrevented) doesn't lock the form
+            form.addEventListener('submit', function (e) {
+                if (e.defaultPrevented) return;
+                if (busy) { e.preventDefault(); return; }
+                markBusy(document.activeElement);
+            });
+
+            // <asp:LinkButton> postbacks go through __doPostBack -> form.submit(), which skips the submit event
+            var nativeSubmit = form.submit;
+            form.submit = function () {
+                if (busy) return;
+                markBusy(document.activeElement);
+                nativeSubmit.call(form);
+            };
+
+            // coming back via the browser's back button restores this page from cache still locked
+            window.addEventListener('pageshow', function (e) {
+                if (!e.persisted) return;
+                busy = false;
+                document.documentElement.classList.remove('is-submitting');
+                var locked = document.querySelectorAll('.is-busy');
+                for (var i = 0; i < locked.length; i++) locked[i].classList.remove('is-busy');
+            });
+        })();
+    </script>
+</body>
+</html>
