@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Web.UI;
 using binary.Core.BLL;
+using binary.Core.Helpers;
 
 namespace binary.Admin
 {
@@ -8,18 +10,26 @@ namespace binary.Admin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // enforce admin authorization
-            if (!AuthBLL.IsLoggedIn)
+            // admin authorization is enforced centrally by AdminMaster (runs earlier, in Init)
+            if (!IsPostBack)
             {
-                Response.Redirect("~/Auth/Login.aspx?ReturnUrl=" + Server.UrlEncode(Request.RawUrl), true);
-                return;
-            }
+                var allUsers = new UserBLL().GetAllUsers();
+                litTotalUsers.Text = allUsers.Count.ToString();
+                litActiveCourses.Text = new CourseBLL().GetPublishedCourses().Count.ToString();
+                litLessonsCompleted.Text = new EnrollmentBLL().CountAllCompletedLessons().ToString();
 
-            if (!AuthBLL.IsAdmin)
-            {
-                // redirect non-admin users to homepage
-                Response.Redirect("~/", true);
-                return;
+                DateTime weekStart = DateTime.UtcNow.Date.AddDays(-6);
+                litNewThisWeek.Text = allUsers.Count(u => u.CreatedDate.Date >= weekStart).ToString();
+
+                var signupChart = DisplayHelper.BuildDailyChart(day => allUsers.Count(u => u.CreatedDate.Date == day));
+                rptSignupChart.DataSource = signupChart;
+                rptSignupChart.DataBind();
+
+                // GetAllUsers is already ordered by CreatedDate DESC
+                rptRecentUsers.DataSource = allUsers.Take(5);
+                rptRecentUsers.DataBind();
+                pnlRecentUsers.Visible = allUsers.Count > 0;
+                pnlNoRecentUsers.Visible = allUsers.Count == 0;
             }
         }
     }
