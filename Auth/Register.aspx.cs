@@ -13,9 +13,28 @@ namespace binary.Auth
             {
                 if (AuthBLL.IsLoggedIn)
                 {
-                    Response.Redirect("~/", true);
+                    Response.Redirect(GetPostAuthRedirect(), true);
                 }
             }
+        }
+
+        private string GetPostAuthRedirect()
+        {
+            string returnUrl = Request.QueryString["ReturnUrl"];
+            if (AuthBLL.IsSafeReturnUrl(returnUrl))
+                return returnUrl;
+            return AuthBLL.IsAdmin ? "~/Admin" : "~/Users/Profile.aspx";
+        }
+
+        // carries the current ReturnUrl (if any) across to the other auth page, so switching
+        // between Sign In and Register doesn't lose track of where the guest was headed
+        protected string BuildAuthCrossLink(string path)
+        {
+            string returnUrl = Request.QueryString["ReturnUrl"];
+            string resolved = ResolveUrl(path);
+            return AuthBLL.IsSafeReturnUrl(returnUrl)
+                ? resolved + "?ReturnUrl=" + Server.UrlEncode(returnUrl)
+                : resolved;
         }
 
         protected void RegisterBtn_Click(object sender, EventArgs e)
@@ -51,7 +70,7 @@ namespace binary.Auth
                 catch (Exception ex)
                 {
                     System.Diagnostics.Trace.TraceError("Registration failed for {0}: {1}", email, ex);
-                    litRegisterError.Text = "An error occurred during registration. Please try again.";
+                    litRegisterError.Text = "We couldn't create your account right now. Please try again in a moment.";
                     ErrorPanel.Visible = true;
                     return;
                 }
@@ -64,15 +83,15 @@ namespace binary.Auth
                 catch (Exception ex)
                 {
                     System.Diagnostics.Trace.TraceError("Auto-login after registration failed for {0}: {1}", email, ex);
-                    Response.Redirect("~/Auth/Login.aspx", false);
+                    Response.Redirect(BuildAuthCrossLink("~/Auth/Login.aspx"), false);
                     return;
                 }
 
                 litRegisterSuccess.Text = "Welcome to Binary! Your account has been created.";
                 SuccessPanel.Visible = true;
 
-                // redirect to homepage
-                Response.Redirect("~/", false);
+                // redirect to return url (e.g. the course they were trying to enroll in) or the dashboard
+                Response.Redirect(GetPostAuthRedirect(), false);
             }
         }
     }
