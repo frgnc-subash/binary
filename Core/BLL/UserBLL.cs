@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using binary.Core.DAL;
 using binary.Core.Helpers;
@@ -11,9 +13,8 @@ namespace binary.Core.BLL
     {
         private readonly UserDAL _dal = new UserDAL();
 
-        public int Register(string firstName, string lastName, string email, string password)
+        private static string ValidateAndCleanEmail(string firstName, string lastName, string email)
         {
-            // validate user inputs
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new ValidationException("First name is required.");
             if (string.IsNullOrWhiteSpace(lastName))
@@ -26,8 +27,25 @@ namespace binary.Core.BLL
             if (!Regex.IsMatch(cleanEmail, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
                 throw new ValidationException("Please enter a valid email address.");
 
+            return cleanEmail;
+        }
+
+        private static void ValidatePassword(string password)
+        {
             if (string.IsNullOrEmpty(password) || password.Length < 8)
                 throw new ValidationException("Password must be at least 8 characters long.");
+        }
+
+        private static void ValidateRole(int roleId)
+        {
+            if (roleId != 1 && roleId != 2)
+                throw new ValidationException("Please choose a valid role.");
+        }
+
+        public int Register(string firstName, string lastName, string email, string password)
+        {
+            string cleanEmail = ValidateAndCleanEmail(firstName, lastName, email);
+            ValidatePassword(password);
 
             if (_dal.EmailExists(cleanEmail))
                 throw new ValidationException("An account with this email address already exists.");
@@ -47,7 +65,86 @@ namespace binary.Core.BLL
                 IsActive = true
             };
 
+            int newUserId = _dal.Insert(user);
+
+            var notifications = new NotificationBLL();
+            notifications.Notify(newUserId,
+                "Welcome to Binary, " + user.FirstName + "!",
+                "Pick a course to start earning XP. Your progress and streaks show up on your dashboard.",
+                NotificationTypes.Success,
+                "~/Courses");
+            notifications.NotifyAdmins(
+                "New learner joined",
+                user.FullName + " (" + user.Email + ") just created an account.",
+                "~/Admin/Users.aspx?id=" + newUserId);
+
+            return newUserId;
+        }
+
+        public int AdminCreateUser(string firstName, string lastName, string email, string password, int roleId, bool isActive)
+        {
+            string cleanEmail = ValidateAndCleanEmail(firstName, lastName, email);
+            ValidatePassword(password);
+            ValidateRole(roleId);
+
+            if (_dal.EmailExists(cleanEmail))
+                throw new ValidationException("An account with this email address already exists.");
+
+            string salt = PasswordHelper.GenerateSalt();
+            string hash = PasswordHelper.Hash(password, salt);
+
+            var user = new User
+            {
+                FirstName = firstName.Trim(),
+                LastName = lastName.Trim(),
+                Email = cleanEmail,
+                PasswordHash = hash,
+                PasswordSalt = salt,
+                RoleID = roleId,
+                IsActive = isActive
+            };
+
             return _dal.Insert(user);
+        }
+
+        public void AdminUpdateUser(int userId, string firstName, string lastName, string email, int roleId, bool isActive)
+        {
+            if (userId <= 0)
+                throw new ValidationException("Invalid user ID.");
+
+            string cleanEmail = ValidateAndCleanEmail(firstName, lastName, email);
+            ValidateRole(roleId);
+
+            if (_dal.EmailExistsExcluding(cleanEmail, userId))
+                throw new ValidationException("An account with this email address already exists.");
+
+            var user = new User
+            {
+                UserID = userId,
+                FirstName = firstName.Trim(),
+                LastName = lastName.Trim(),
+                Email = cleanEmail,
+                RoleID = roleId,
+                IsActive = isActive
+            };
+
+            _dal.UpdateAdminDetails(user);
+        }
+
+        public void DeleteUser(int userId)
+        {
+            if (userId <= 0)
+                throw new ValidationException("Invalid user ID.");
+
+            try
+            {
+                _dal.Delete(userId);
+            }
+            catch (SqlException sqlEx) when (sqlEx.Number == 547)
+            {
+                // 547 = foreign key constraint violation
+                throw new ValidationException("Cannot delete a user with existing courses, enrollments, or activity. Deactivate the account instead.");
+            }
         }
 
         public User GetProfile(int userId)
@@ -81,6 +178,16 @@ namespace binary.Core.BLL
             _dal.UpdateProfile(user);
         }
 
+        public void UpdateProfilePicture(int userId, string imageUrl)
+        {
+            if (userId <= 0)
+                throw new ValidationException("Invalid user ID.");
+            if (string.IsNullOrWhiteSpace(imageUrl))
+                throw new ValidationException("No image was uploaded.");
+
+            _dal.UpdateProfileImage(userId, imageUrl);
+        }
+
         public void ChangePassword(int userId, string currentPassword, string newPassword)
         {
             if (userId <= 0)
@@ -100,6 +207,33 @@ namespace binary.Core.BLL
             string newHash = PasswordHelper.Hash(newPassword, newSalt);
 
             _dal.UpdatePassword(userId, newHash, newSalt);
+
+            new NotificationBLL().Notify(userId,
+                "Password changed",
+                "Your password was just updated. If this wasn't you, change it again right away and contact support.",
+                NotificationTypes.Warning,
+                "~/Users/Profile.aspx?tab=security");
+        }
+
+        public List<User> GetAllUsers()
+        {
+            return _dal.SelectAll();
+        }
+
+        public List<User> GetLeaderboard(int top)
+        {
+            if (top <= 0)
+                top = 50;
+
+            return _dal.SelectLeaderboard(top);
+        }
+
+        public int GetRank(int userId)
+        {
+            if (userId <= 0)
+                throw new ValidationException("Invalid user ID.");
+
+            return _dal.GetRank(userId);
         }
     }
 }

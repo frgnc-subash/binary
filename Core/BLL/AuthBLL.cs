@@ -13,6 +13,7 @@ namespace binary.Core.BLL
         private const string SessionUserNameKey = "AUTH_USER_NAME";
         private const string SessionUserEmailKey = "AUTH_USER_EMAIL";
         private const string SessionUserRoleKey = "AUTH_USER_ROLE";
+        private const string SessionUserAvatarKey = "AUTH_USER_AVATAR";
 
         private const int MaxFailedAttempts = 5;
         private static readonly TimeSpan LockoutDuration = TimeSpan.FromMinutes(15);
@@ -66,6 +67,20 @@ namespace binary.Core.BLL
                 if (session != null && session[SessionUserEmailKey] != null)
                 {
                     return session[SessionUserEmailKey].ToString();
+                }
+                return string.Empty;
+            }
+        }
+
+        // logged-in user's profile picture URL, or empty if none set
+        public static string CurrentUserAvatarUrl
+        {
+            get
+            {
+                var session = HttpContext.Current?.Session;
+                if (session != null && session[SessionUserAvatarKey] != null)
+                {
+                    return session[SessionUserAvatarKey].ToString();
                 }
                 return string.Empty;
             }
@@ -150,7 +165,15 @@ namespace binary.Core.BLL
                 session[SessionUserNameKey] = user.FullName;
                 session[SessionUserEmailKey] = user.Email;
                 session[SessionUserRoleKey] = user.RoleName;
+                session[SessionUserAvatarKey] = user.ProfileImageUrl ?? string.Empty;
             }
+        }
+
+        // true if a ReturnUrl querystring value is safe to redirect to (relative, same-site only —
+        // guards against open-redirect attacks via a crafted ReturnUrl)
+        public static bool IsSafeReturnUrl(string url)
+        {
+            return !string.IsNullOrEmpty(url) && !url.Contains("://") && !url.StartsWith("//");
         }
 
         // clears current session
