@@ -5,7 +5,7 @@
     <section class="auth-page">
         <div class="auth-card card">
             <div class="auth-card-header">
-                <div class="brand-mark" style="margin:0 auto var(--space-3);">Bn</div>
+                <img class="auth-logo" runat="server" src="~/Content/images/logo.png" alt="Binary" />
                 <h1 style="font-size:1.6rem;margin-bottom:4px;">Create your account</h1>
                 <p style="color:var(--text-muted);font-size:14px;">Start learning any language with free structured lessons.</p>
             </div>
@@ -52,7 +52,7 @@
                 <asp:Button ID="RegisterBtn" runat="server" CssClass="btn btn-primary btn-lg" Text="Create Free Account" OnClick="RegisterBtn_Click" style="width:100%;" />
             </div>
             <div class="auth-card-footer card-footer" style="text-align:center;font-size:13.5px;color:var(--text-secondary);">
-                Already have an account? <a href="<%= BuildAuthCrossLink("~/Auth/Login.aspx") %>" style="color:var(--brand-primary);font-weight:700;">Sign in &rarr;</a>
+                Already have an account? <a href="<%= BuildAuthCrossLink("~/Auth/Login.aspx") %>" style="color:var(--brand-primary);font-weight:700;">Sign in<svg class="ui-icon ui-icon-after" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
             </div>
         </div>
     </section>
