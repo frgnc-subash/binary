@@ -11,5 +11,13 @@ namespace binary.Admin
 {
     public partial class AdminHome
     {
+        protected System.Web.UI.WebControls.Literal litTotalUsers;
+        protected System.Web.UI.WebControls.Literal litActiveCourses;
+        protected System.Web.UI.WebControls.Literal litLessonsCompleted;
+        protected System.Web.UI.WebControls.Literal litNewThisWeek;
+        protected System.Web.UI.WebControls.Repeater rptSignupChart;
+        protected System.Web.UI.WebControls.Panel pnlRecentUsers;
+        protected System.Web.UI.WebControls.Panel pnlNoRecentUsers;
+        protected System.Web.UI.WebControls.Repeater rptRecentUsers;
     }
 }
