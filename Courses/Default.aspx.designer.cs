@@ -11,5 +11,7 @@ namespace binary.Courses
 {
     public partial class CoursesHome
     {
+        protected System.Web.UI.WebControls.Repeater rptCourses;
+        protected System.Web.UI.WebControls.Panel pnlNoCourses;
     }
 }

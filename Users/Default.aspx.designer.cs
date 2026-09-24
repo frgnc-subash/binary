@@ -11,5 +11,7 @@ namespace binary.Users
 {
     public partial class UsersHome
     {
+        protected System.Web.UI.WebControls.Repeater rptTopLearners;
+        protected System.Web.UI.WebControls.Panel pnlNoLearners;
     }
 }
