@@ -71,13 +71,14 @@
                             <div class="card-header"><h3 style="font-size:1.05rem;">Lessons</h3></div>
                             <div style="overflow-x:auto;">
                                 <table class="admin-table">
-                                    <thead><tr><th>Order</th><th>Title</th><th>Action</th></tr></thead>
+                                    <thead><tr><th>Order</th><th>Title</th><th>Video</th><th>Action</th></tr></thead>
                                     <tbody>
                                         <asp:Repeater ID="rptLessons" runat="server" OnItemCommand="rptLessons_ItemCommand">
                                             <ItemTemplate>
                                                 <tr>
                                                     <td><%# Eval("SortOrder") %></td>
                                                     <td><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></td>
+                                                    <td><%# GetVideoBadge(Eval("VideoUrl")) %></td>
                                                     <td>
                                                         <asp:LinkButton runat="server" CssClass="btn btn-ghost" style="height:30px;font-size:12px;padding:0 10px;" CommandName="EditLesson" CommandArgument='<%# Eval("LessonID") %>'>Edit</asp:LinkButton>
                                                         <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteLesson" CommandArgument='<%# Eval("LessonID") %>' OnClientClick="return confirm('Delete this lesson?');">Delete</asp:LinkButton>
@@ -90,25 +91,50 @@
                             </div>
                             <div class="card-body" style="border-top:1px solid var(--border-light);">
                                 <asp:HiddenField ID="hfLessonId" runat="server" />
-                                <div class="form-group">
-                                    <label class="form-label" for="txtLessonTitle">Lesson Title</label>
-                                    <asp:TextBox ID="txtLessonTitle" runat="server" CssClass="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="txtLessonContent">Content</label>
-                                    <asp:TextBox ID="txtLessonContent" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" />
-                                </div>
                                 <div class="grid-2">
                                     <div class="form-group">
-                                        <label class="form-label" for="txtLessonVideoUrl">Video URL (optional)</label>
-                                        <asp:TextBox ID="txtLessonVideoUrl" runat="server" CssClass="form-control" />
+                                        <label class="form-label" for="txtLessonTitle">Lesson Title</label>
+                                        <asp:TextBox ID="txtLessonTitle" runat="server" CssClass="form-control" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="txtLessonSortOrder">Sort Order</label>
                                         <asp:TextBox ID="txtLessonSortOrder" runat="server" CssClass="form-control" Text="0" />
                                     </div>
                                 </div>
-                                <asp:Button ID="btnSaveLesson" runat="server" CssClass="btn btn-primary" Text="Save Lesson" OnClick="btnSaveLesson_Click" />
+                                <div class="form-group">
+                                    <label class="form-label" for="txtLessonContent">Content</label>
+                                    <asp:TextBox ID="txtLessonContent" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" />
+                                </div>
+
+                                <%-- lesson video: paste a link OR upload a file --%>
+                                <div class="form-group">
+                                    <label class="form-label">Lesson Video (optional)</label>
+
+                                    <asp:Panel ID="pnlCurrentVideo" runat="server" Visible="false" CssClass="current-video">
+                                        <span class="current-video-label">🎬 Current: <asp:Literal ID="litCurrentVideo" runat="server" /></span>
+                                        <label class="current-video-remove"><asp:CheckBox ID="chkRemoveVideo" runat="server" /> Remove video</label>
+                                    </asp:Panel>
+
+                                    <div class="video-source-toggle" role="radiogroup" aria-label="Video source">
+                                        <label><input type="radio" name="videoSource" value="link" checked onclick="setVideoSource('link')" /> Paste a link</label>
+                                        <label><input type="radio" name="videoSource" value="upload" onclick="setVideoSource('upload')" /> Upload a file</label>
+                                    </div>
+
+                                    <div id="videoLinkPane">
+                                        <asp:TextBox ID="txtLessonVideoUrl" runat="server" CssClass="form-control" placeholder="https://www.youtube.com/watch?v=…  (YouTube, Vimeo, or a direct .mp4 link)" />
+                                    </div>
+                                    <div id="videoUploadPane" hidden>
+                                        <asp:FileUpload ID="fuLessonVideo" runat="server" CssClass="form-control" accept="video/mp4,video/webm,video/ogg,.mp4,.webm,.ogv" />
+                                        <p class="form-hint">MP4 (recommended — plays everywhere), WEBM, or OGV. Up to <%= binary.Core.Helpers.VideoHelper.MaxUploadMegabytes %> MB; for longer videos, upload to YouTube and paste the link.</p>
+                                    </div>
+
+                                    <div class="upload-progress" id="lessonUploadProgress" hidden>
+                                        <div class="upload-progress-track"><div class="upload-progress-bar" id="lessonUploadBar"></div></div>
+                                        <span class="upload-progress-text" id="lessonUploadText">Uploading… 0%</span>
+                                    </div>
+                                </div>
+
+                                <asp:Button ID="btnSaveLesson" runat="server" CssClass="btn btn-primary" Text="Save Lesson" OnClick="btnSaveLesson_Click" OnClientClick="return saveLessonWithProgress(this);" />
                                 <a class="btn btn-outline" href="<%= ResolveUrl("~/Admin/Courses.aspx?id=" + hfCourseId.Value) %>">+ New Lesson</a>
                             </div>
                         </div>
@@ -202,5 +228,84 @@
                     </div>
                 </div>
             </div>
+
+    <script>
+        function setVideoSource(source) {
+            var upload = source === 'upload';
+            document.getElementById('videoLinkPane').hidden = upload;
+            document.getElementById('videoUploadPane').hidden = !upload;
+            // a file picked earlier would override the link on save, so drop it when switching back
+            if (!upload) {
+                var file = document.getElementById('<%= fuLessonVideo.ClientID %>');
+                if (file) file.value = '';
+            }
+        }
+
+        // With a video file selected, post the form in the background so the admin sees real upload
+        // progress instead of a frozen page. Without a file it's a normal postback (returns true).
+        function saveLessonWithProgress(btn) {
+            var input = document.getElementById('<%= fuLessonVideo.ClientID %>');
+            if (!input || !input.files || input.files.length === 0) return true;
+            if (!window.FormData || !window.XMLHttpRequest) return true;
+            if (saveLessonWithProgress.busy) return false;
+
+            var maxBytes = <%= binary.Core.Helpers.VideoHelper.MaxUploadBytes %>;
+            if (input.files[0].size > maxBytes) {
+                alert('That video is larger than <%= binary.Core.Helpers.VideoHelper.MaxUploadMegabytes %> MB. Upload it to YouTube and paste the link instead.');
+                return false;
+            }
+
+            var form = document.forms[0];
+            var data = new FormData(form);
+            data.append(btn.name, btn.value);   // tells WebForms which button was clicked
+
+            var progress = document.getElementById('lessonUploadProgress');
+            var bar = document.getElementById('lessonUploadBar');
+            var text = document.getElementById('lessonUploadText');
+
+            function reset() {
+                saveLessonWithProgress.busy = false;
+                progress.hidden = true;
+                btn.classList.remove('is-busy');
+            }
+
+            saveLessonWithProgress.busy = true;
+            btn.classList.add('is-busy');
+            progress.hidden = false;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action);
+            xhr.upload.onprogress = function (e) {
+                if (!e.lengthComputable) return;
+                var pct = Math.round(e.loaded * 100 / e.total);
+                bar.style.width = pct + '%';
+                text.textContent = pct < 100 ? 'Uploading… ' + pct + '%' : 'Processing…';
+            };
+            xhr.onload = function () {
+                // success redirects to the course with ?msg=lesson-saved; follow it like a normal save
+                if (xhr.status === 200 && xhr.responseURL && xhr.responseURL.indexOf('msg=lesson-saved') !== -1) {
+                    window.location.href = xhr.responseURL;
+                    return;
+                }
+                if (xhr.status === 200) {
+                    // validation error: the server re-rendered this page with the message, show it as-is
+                    document.open();
+                    document.write(xhr.responseText);
+                    document.close();
+                    return;
+                }
+                reset();
+                alert(xhr.status === 404 || xhr.status === 413
+                    ? 'The server rejected the upload because the file is too large.'
+                    : 'Upload failed (error ' + xhr.status + '). Please try again.');
+            };
+            xhr.onerror = function () {
+                reset();
+                alert('Upload failed. Check your connection and try again.');
+            };
+            xhr.send(data);
+            return false;
+        }
+    </script>
 
 </asp:Content>

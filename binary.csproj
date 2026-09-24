@@ -283,6 +283,7 @@
     <Compile Include="Core\Helpers\DbHelper.cs" />
     <Compile Include="Core\Helpers\DisplayHelper.cs" />
     <Compile Include="Core\Helpers\PasswordHelper.cs" />
+    <Compile Include="Core\Helpers\VideoHelper.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Enrollment.cs" />

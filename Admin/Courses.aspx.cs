@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.UI.WebControls;
 using binary.Core.BLL;
+using binary.Core.Helpers;
 using binary.Models;
 
 namespace binary.Admin
@@ -260,7 +263,10 @@ namespace binary.Admin
             {
                 if (e.CommandName == "DeleteCourse")
                 {
+                    // the database cascades to lessons, but their uploaded video files live on disk
+                    var videos = new LessonBLL().GetLessonsByCourse(courseId).Select(l => l.VideoUrl).ToList();
                     bll.DeleteCourse(courseId);
+                    foreach (string video in videos) VideoHelper.TryDeleteUploadedFile(video);
                     Response.Redirect(WithMsg("~/Admin/Courses.aspx", "course-deleted"));
                 }
                 else if (e.CommandName == "TogglePublish")
@@ -286,24 +292,32 @@ namespace binary.Admin
 
         protected void btnSaveLesson_Click(object sender, EventArgs e)
         {
+            int courseId = 0;
+            string newUpload = null;   // video saved during this request; removed again if the save fails
+
             try
             {
-                int courseId = int.Parse(hfCourseId.Value);
+                courseId = int.Parse(hfCourseId.Value);
                 int sortOrder;
                 int.TryParse(txtLessonSortOrder.Text, out sortOrder);
+
+                var bll = new LessonBLL();
+                int lessonId;
+                bool editing = int.TryParse(hfLessonId.Value, out lessonId) && lessonId > 0;
+                string currentVideo = editing ? bll.GetLessonById(lessonId).VideoUrl : null;
+
+                string video = ResolveLessonVideo(currentVideo, out newUpload);
 
                 var l = new Lesson
                 {
                     CourseID = courseId,
                     Title = txtLessonTitle.Text.Trim(),
                     Content = txtLessonContent.Text.Trim(),
-                    VideoUrl = string.IsNullOrWhiteSpace(txtLessonVideoUrl.Text) ? null : txtLessonVideoUrl.Text.Trim(),
+                    VideoUrl = video,
                     SortOrder = sortOrder
                 };
 
-                var bll = new LessonBLL();
-                int lessonId;
-                if (!string.IsNullOrEmpty(hfLessonId.Value) && int.TryParse(hfLessonId.Value, out lessonId) && lessonId > 0)
+                if (editing)
                 {
                     l.LessonID = lessonId;
                     bll.UpdateLesson(l);
@@ -312,19 +326,75 @@ namespace binary.Admin
                 {
                     bll.AddLesson(l);
                 }
-                Response.Redirect(WithMsg("~/Admin/Courses.aspx?id=" + courseId, "lesson-saved"));
+
+                // replaced or removed: the old uploaded file is no longer referenced
+                if (!string.Equals(currentVideo, video, StringComparison.Ordinal))
+                    VideoHelper.TryDeleteUploadedFile(currentVideo);
+                newUpload = null;
             }
             catch (ValidationException vex)
             {
+                VideoHelper.TryDeleteUploadedFile(newUpload);
                 litLessonError.Text = Server.HtmlEncode(vex.Message);
                 pnlLessonError.Visible = true;
+                return;
             }
             catch (Exception ex)
             {
+                VideoHelper.TryDeleteUploadedFile(newUpload);
                 System.Diagnostics.Trace.TraceError("Save lesson failed: {0}", ex);
                 litLessonError.Text = "Something went wrong saving the lesson. Please try again.";
                 pnlLessonError.Visible = true;
+                return;
             }
+
+            // outside the try: Response.Redirect aborts the thread, which catch (Exception) would intercept
+            Response.Redirect(WithMsg("~/Admin/Courses.aspx?id=" + courseId, "lesson-saved"));
+        }
+
+        // Precedence: a newly uploaded file, then "Remove video", then a pasted link, then keep the
+        // existing uploaded file. An emptied link box on a link-based lesson means "no video".
+        private string ResolveLessonVideo(string currentVideo, out string newUpload)
+        {
+            newUpload = null;
+
+            if (fuLessonVideo.HasFile)
+            {
+                string error;
+                if (!VideoHelper.IsValidUpload(fuLessonVideo.PostedFile, out error))
+                    throw new ValidationException(error);
+
+                string folder = Server.MapPath(VideoHelper.VideoFolderVirtualPath);
+                Directory.CreateDirectory(folder);
+                string fileName = VideoHelper.BuildFileName(fuLessonVideo.FileName);
+                fuLessonVideo.SaveAs(Path.Combine(folder, fileName));
+
+                newUpload = VideoHelper.VideoFolderVirtualPath + fileName;
+                return newUpload;
+            }
+
+            if (chkRemoveVideo.Checked)
+                return null;
+
+            string link = (txtLessonVideoUrl.Text ?? "").Trim();
+            if (link.Length > 0)
+            {
+                string normalized;
+                string error;
+                if (!VideoHelper.TryNormalizeLink(link, out normalized, out error))
+                    throw new ValidationException(error);
+                return normalized;
+            }
+
+            return VideoHelper.IsUploadedVideo(currentVideo) ? currentVideo : null;
+        }
+
+        protected string GetVideoBadge(object videoUrl)
+        {
+            string url = videoUrl as string;
+            if (string.IsNullOrEmpty(url))
+                return "<span style=\"color:var(--text-subtle);\">—</span>";
+            return "<span class=\"badge badge-primary\">🎬 " + Server.HtmlEncode(VideoHelper.GetSourceLabel(url)) + "</span>";
         }
 
         protected void rptLessons_ItemCommand(object source, RepeaterCommandEventArgs e)
@@ -340,12 +410,25 @@ namespace binary.Admin
                     hfLessonId.Value = l.LessonID.ToString();
                     txtLessonTitle.Text = l.Title;
                     txtLessonContent.Text = l.Content;
-                    txtLessonVideoUrl.Text = l.VideoUrl;
                     txtLessonSortOrder.Text = l.SortOrder.ToString();
+
+                    // uploaded files aren't editable as text; they're shown as "current" with a remove option
+                    bool uploaded = VideoHelper.IsUploadedVideo(l.VideoUrl);
+                    txtLessonVideoUrl.Text = uploaded ? "" : l.VideoUrl;
+                    chkRemoveVideo.Checked = false;
+                    pnlCurrentVideo.Visible = !string.IsNullOrEmpty(l.VideoUrl);
+                    if (pnlCurrentVideo.Visible)
+                    {
+                        string href = uploaded ? ResolveUrl(l.VideoUrl) : l.VideoUrl;
+                        litCurrentVideo.Text = Server.HtmlEncode(VideoHelper.GetSourceLabel(l.VideoUrl)) +
+                            " · <a href=\"" + HttpUtility.HtmlAttributeEncode(href) + "\" target=\"_blank\" rel=\"noopener\">preview</a>";
+                    }
                 }
                 else if (e.CommandName == "DeleteLesson")
                 {
+                    string video = bll.GetLessonById(lessonId).VideoUrl;
                     bll.DeleteLesson(lessonId);
+                    VideoHelper.TryDeleteUploadedFile(video);
                     Response.Redirect(WithMsg("~/Admin/Courses.aspx?id=" + hfCourseId.Value, "lesson-deleted"));
                 }
             }

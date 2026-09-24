@@ -1099,6 +1099,171 @@ textarea:focus {
 }
 
 /* =====================================================
+   Lesson videos (learner player + admin upload)
+   ===================================================== */
+.lesson-video {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    margin: var(--space-4) 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #0f172a;
+    box-shadow: var(--shadow-card);
+}
+
+.lesson-video video,
+.lesson-video iframe,
+.video-facade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.lesson-video video {
+    background: #0f172a;
+}
+
+.video-facade {
+    padding: 0;
+    cursor: pointer;
+    background: #0f172a;
+}
+
+.video-facade img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+.video-facade:hover img,
+.video-facade:focus-visible img {
+    opacity: 1;
+}
+
+.video-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 68px;
+    height: 68px;
+    margin: -34px 0 0 -34px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.35);
+    transition: transform 0.2s ease;
+}
+
+/* play triangle */
+.video-play::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -7px;
+    border-style: solid;
+    border-width: 12px 0 12px 20px;
+    border-color: transparent transparent transparent #ffffff;
+}
+
+.video-facade:hover .video-play,
+.video-facade:focus-visible .video-play {
+    transform: scale(1.08);
+}
+
+.video-source-toggle {
+    display: flex;
+    gap: var(--space-4);
+    margin-bottom: var(--space-2);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.video-source-toggle label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.current-video {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    margin-bottom: var(--space-3);
+    border-radius: var(--radius-sm);
+    background: var(--brand-primary-soft);
+    font-size: 13px;
+}
+
+.current-video-label {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.current-video-label a {
+    color: var(--brand-primary);
+}
+
+.current-video-remove {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--brand-rose);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.form-hint {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.upload-progress {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+}
+
+.upload-progress[hidden] {
+    display: none;
+}
+
+.upload-progress-track {
+    flex: 1;
+    height: 8px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-subtle);
+    overflow: hidden;
+}
+
+.upload-progress-bar {
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--brand-primary);
+    transition: width 0.2s ease;
+}
+
+.upload-progress-text {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--brand-primary);
+    min-width: 110px;
+    text-align: right;
+}
+
+/* =====================================================
    Learner titles (Profile tab + Exp Earned tab)
    ===================================================== */
 .profile-title-row {
