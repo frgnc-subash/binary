@@ -1,15 +1,10 @@
--- =====================================================
--- Binary Language Learning Platform — Database Setup
--- Run once in SSMS (or VS Server Explorer) to create
--- the entire database, tables, and sample data.
--- =====================================================
 
 -- Create the database if it doesn't exist
-IF DB_ID('Auth') IS NULL
-    CREATE DATABASE Auth;
+IF DB_ID('BinaryKoData') IS NULL
+    CREATE DATABASE BinaryKoData;
 GO
 
-USE Auth;
+USE BinaryKoData;
 GO
 
 -- ── Roles ──
@@ -34,8 +29,15 @@ CREATE TABLE Users (
     FailedLoginAttempts INT            NOT NULL DEFAULT 0,
     LockoutEndUtc       DATETIME       NULL,
     CreatedDate         DATETIME       NOT NULL DEFAULT GETUTCDATE(),
+    TotalXP             INT            NOT NULL DEFAULT 0,  -- Moved here to avoid ALTER TABLE issues
+    ProfileImageUrl     NVARCHAR(500)  NULL,
     CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
 );
+GO
+
+-- Safety net for databases created before ProfileImageUrl existed
+IF COL_LENGTH('Users', 'ProfileImageUrl') IS NULL
+    ALTER TABLE Users ADD ProfileImageUrl NVARCHAR(500) NULL;
 GO
 
 -- ── Categories ──
@@ -164,6 +166,34 @@ CREATE TABLE Feedback (
 );
 GO
 
+-- ── Notifications ──
+-- Type drives the icon/colour in the notification drawer: info | success | xp | warning | admin | award
+-- Users can read and archive notifications but never delete them (no DELETE path exists in the app);
+-- rows only go away if the owning user account itself is deleted.
+IF OBJECT_ID('Notifications', 'U') IS NULL
+CREATE TABLE Notifications (
+    NotificationID INT IDENTITY(1,1) PRIMARY KEY,
+    UserID         INT           NOT NULL,
+    Title          NVARCHAR(150) NOT NULL,
+    Message        NVARCHAR(500) NOT NULL,
+    Type           NVARCHAR(20)  NOT NULL DEFAULT 'info',
+    LinkUrl        NVARCHAR(300) NULL,
+    IsRead         BIT           NOT NULL DEFAULT 0,
+    IsArchived     BIT           NOT NULL DEFAULT 0,
+    CreatedDate    DATETIME      NOT NULL DEFAULT GETUTCDATE(),
+    CONSTRAINT FK_Notifications_Users FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE
+);
+GO
+
+-- Safety net for databases created before IsArchived existed
+IF COL_LENGTH('Notifications', 'IsArchived') IS NULL
+    ALTER TABLE Notifications ADD IsArchived BIT NOT NULL CONSTRAINT DF_Notifications_IsArchived DEFAULT 0;
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_Notifications_User_Created')
+    CREATE INDEX IX_Notifications_User_Created ON Notifications (UserID, CreatedDate DESC) INCLUDE (IsRead);
+GO
+
 -- =====================================================
 -- Seed Data
 -- =====================================================
@@ -173,6 +203,26 @@ IF NOT EXISTS (SELECT 1 FROM Roles WHERE RoleName = 'Admin')
     INSERT INTO Roles (RoleName) VALUES ('Admin');
 IF NOT EXISTS (SELECT 1 FROM Roles WHERE RoleName = 'Member')
     INSERT INTO Roles (RoleName) VALUES ('Member');
+GO
+
+-- Default Admin User (Credentials: admin@binary.com / AdminPassword123!)
+IF NOT EXISTS (SELECT 1 FROM Users WHERE Email = 'admin@binary.com')
+BEGIN
+    INSERT INTO Users (FirstName, LastName, Email, PasswordHash, PasswordSalt, RoleID, IsActive, FailedLoginAttempts, LockoutEndUtc, CreatedDate, TotalXP)
+    VALUES (
+        'Admin',
+        'User',
+        'admin@binary.com',
+        '31762b459973ebed71b27fc48617c29ec02e30cff20927711b54f571eb4d32be',
+        'd3b07384d113edec49eaa6238ad5ff00',
+        1, -- Admin Role (RoleID = 1)
+        1, -- IsActive = true
+        0,
+        NULL,
+        GETUTCDATE(),
+        0
+    );
+END
 GO
 
 -- Categories
@@ -203,21 +253,62 @@ BEGIN
 END
 GO
 
--- Sample lessons for "Spanish for Beginners" (CourseID = 1)
+-- Sample lessons for all courses
 IF NOT EXISTS (SELECT 1 FROM Lessons)
 BEGIN
+    -- Spanish
     INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
-        (1, 'Greetings & Introductions',    'Learn how to say hello, goodbye, and introduce yourself in Spanish. Covers: Hola, Buenos días, ¿Cómo te llamas?, Me llamo...', 1),
-        (1, 'Numbers 1-100',                'Master counting in Spanish from uno to cien. Practice with listening exercises and flashcards.', 2),
-        (1, 'Common Verbs: Ser & Estar',    'Understand the two forms of "to be" in Spanish. When to use ser vs. estar with clear examples.', 3),
-        (1, 'At the Restaurant',            'Order food and drinks confidently. Vocabulary for menus, asking for the bill, and dietary requests.', 4),
-        (1, 'Directions & Transportation',  'Navigate cities in Spanish. Ask for and give directions, buy tickets, and use public transport.', 5),
-        (2, 'Les Salutations',              'French greetings for formal and informal situations. Bonjour, Bonsoir, Comment allez-vous?', 1),
-        (2, 'Le Passé Composé',             'Master the most important past tense in French. Formation with avoir and être, plus irregular participles.', 2),
-        (2, 'Au Marché',                    'Shopping at a French market. Quantities, prices, and polite requests.', 3),
-        (4, 'Hiragana: あ to ん',            'Learn all 46 hiragana characters with stroke order, pronunciation, and memory tricks.', 1),
-        (4, 'Katakana: ア to ン',            'Master all 46 katakana characters used for foreign words, sounds, and emphasis.', 2),
-        (4, 'Self-Introduction: 自己紹介',   'Introduce yourself in Japanese. Name, nationality, occupation, and hobbies.', 3);
+        (1, 'Greetings & Introductions',    'Learn how to say hello, goodbye, and introduce yourself in Spanish. Covers: ¡Hola!, Buenos días, ¿Cómo te llamas?, Me llamo...', 1),
+        (1, 'Numbers 1-100',                'Master counting in Spanish from uno to cien. Practice: Uno, Dos, Tres, Cuatro, Cinco, Diez, Veinte...', 2),
+        (1, 'Common Verbs: Ser & Estar',    'Understand the two forms of "to be" in Spanish. SER for permanent traits, ESTAR for temporary states/locations.', 3),
+        (1, 'At the Restaurant',            'Order food and drinks confidently: La cuenta, por favor, ¿Qué recomienda?, Quisiera una paella.', 4),
+        (1, 'Directions & Transportation',  'Navigate cities in Spanish: ¿Dónde está la estación?, Todo recto, A la izquierda, A la derecha.', 5);
+
+    -- French
+    INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
+        (2, 'Les Salutations & Politesse',  'Learn polite French greetings: Bonjour, Bonsoir, Comment allez-vous?, Ça va?, S''il vous plaît, Merci beaucoup.', 1),
+        (2, 'Le Passé Composé',             'Master the past tense with avoir and être: J''ai mangé, Je suis allé à Paris.', 2),
+        (2, 'Au Café & Boulangerie',        'Ordering food in Paris: Un café noir, s''il vous plaît, Un croissant au beurre, C''est combien?', 3),
+        (2, 'Se Déplacer dans la Ville',    'Navigating the city: Où est le métro?, Tout droit, À gauche, À droite.', 4);
+
+    -- German
+    INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
+        (3, 'Begrüßung & Kennenlernen',     'German greetings: Hallo!, Guten Tag!, Wie heißen Sie?, Ich heiße Lukas, Freut mich!', 1),
+        (3, 'Articles: Der, Die, Das',      'Noun genders in German: Der Mann (masculine), Die Frau (feminine), Das Auto (neuter).', 2),
+        (3, 'Im Restaurant & Bestellen',    'Ordering food: Die Speisekarte bitte, Ich hätte gerne ein Wasser, Zusammen oder getrennt?', 3);
+
+    -- Japanese
+    INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
+        (4, 'Hiragana: あ to ん',            'Learn the foundational phonetic alphabet with stroke order and pronunciation.', 1),
+        (4, 'Katakana: ア to ン',            'Master katakana characters used for foreign loanwords: コーヒー (Coffee), アメリカ (America).', 2),
+        (4, 'Self-Introduction: 自己紹介',   'Introduce yourself: 初めまして (Nice to meet you), 私は...です (I am...), よろしくお願いします。', 3);
+
+    -- Chinese
+    INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
+        (5, 'The Four Tones & Pinyin',      'Master the 4 tones in Mandarin: 1st (high flat), 2nd (rising), 3rd (dipping), 4th (falling).', 1),
+        (5, 'Essential Greetings: 你好',     'Conversational Chinese: 你好 (Nǐ hǎo), 谢谢 (Xièxie), 不客气 (Bú kèqì), 再见 (Zàijiàn).', 2),
+        (5, 'Numbers & Shopping',           'Count 1-10 (一, 二, 三...) and ask prices: 这个多少钱？ (Zhège duōshǎo qián?).', 3);
+
+    -- Korean
+    INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
+        (6, 'Hangul Masterclass',           'Consonants (ㄱ, ㄴ, ㄷ) and vowels (ㅏ, ㅓ, ㅗ) combined into syllabic blocks: 한 (h-a-n) 글 (g-eu-l).', 1),
+        (6, 'K-Drama Expressions',          'Everyday phrases: 안녕하세요 (Hello), 감사합니다 (Thank you), 대박! (Daebak!), 화이팅! (Fighting!).', 2),
+        (6, 'Ordering Korean Food',         'K-Food phrases: 삼겹살 2인분 주세요 (2 servings of pork belly, please), 물 좀 주세요 (Water please).', 3);
+
+    -- Italian
+    INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
+        (7, 'Saluti & Cortesia',            'Italian basics: Ciao!, Buongiorno, Per favore, Grazie mille.', 1),
+        (7, 'Al Ristorante & Caffè',        'Order like a local: Un espresso per favore, Una pizza margherita, Il conto per favore.', 2);
+
+    -- Portuguese
+    INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
+        (8, 'Tudo Bem? Greetings',          'Brazilian greetings: Oi! Tudo bem?, Tudo bom!, Por favor, Obrigado/Obrigada.', 1),
+        (8, 'Na Praia & Na Cidade',         'City & beach phrases: Onde fica a praia?, Uma água de coco por favor.', 2);
+
+    -- Arabic
+    INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
+        (9, 'The Arabic Alphabet',          'Right-to-left script: Alif (أ), Baa (ب), Taa (ت), Thaa (ث).', 1),
+        (9, 'Essential Greetings',          'Greetings: السلام عليكم (As-salamu alaykum), شكراً (Shukran).', 2);
 END
 GO
 
