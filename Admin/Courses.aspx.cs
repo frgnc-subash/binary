@@ -56,6 +56,10 @@ namespace binary.Admin
                 BindCategoryList();
                 BindCategoryFilterDropdown();
 
+                // arriving from the admin header search box (?q=...)
+                if (!string.IsNullOrWhiteSpace(Request.QueryString["q"]))
+                    txtCourseSearch.Text = Request.QueryString["q"].Trim();
+
                 string msgKey = Request.QueryString["msg"];
                 string msgText;
                 if (!string.IsNullOrEmpty(msgKey) && ActionMessages.TryGetValue(msgKey, out msgText))

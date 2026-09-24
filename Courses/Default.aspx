@@ -10,7 +10,7 @@
             <p style="color:var(--text-secondary);font-size:15px;margin-bottom:var(--space-6);">Choose a course to begin learning vocabulary, grammar rules, and listening exercises.</p>
 
             <div>
-                <input id="CourseSearch" type="search" class="form-control" placeholder="Search languages (Spanish, French, Japanese, German...)" value="<%: Request.QueryString["lang"] %>" onkeyup="filterCourses()" />
+                <input id="CourseSearch" type="search" class="form-control" placeholder="Search languages (Spanish, French, Japanese, German...)" value="<%: Request.QueryString["q"] ?? Request.QueryString["lang"] %>" onkeyup="filterCourses()" />
             </div>
         </div>
     </section>
