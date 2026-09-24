@@ -111,6 +111,8 @@
     <Content Include="Auth\Logout.aspx" />
     <Content Include="Auth\Register.aspx" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\logo-mark.png" />
     <Content Include="Courses\Default.aspx" />
     <Content Include="Courses\Detail.aspx" />
     <Content Include="App_Data\CreateDatabase.sql" />
