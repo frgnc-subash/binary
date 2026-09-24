@@ -217,6 +217,21 @@ namespace binary.Users
         protected global::System.Web.UI.WebControls.FileUpload fuAvatar;
 
         /// <summary>
+        /// litProfileName control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litProfileName;
+
+        /// <summary>
+        /// litProfileEmail control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litProfileEmail;
+
+        /// <summary>
+        /// litMemberSince control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litMemberSince;
+
+        /// <summary>
         /// litProfileTitle control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Literal litProfileTitle;
@@ -320,5 +335,85 @@ namespace binary.Users
         /// btnChangePassword control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Button btnChangePassword;
+
+        /// <summary>
+        /// litContinueCourse control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litContinueCourse;
+
+        /// <summary>
+        /// litContinueLesson control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litContinueLesson;
+
+        /// <summary>
+        /// litCountCompleted control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litCountCompleted;
+
+        /// <summary>
+        /// litCountInProgress control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litCountInProgress;
+
+        /// <summary>
+        /// litCountNotStarted control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litCountNotStarted;
+
+        /// <summary>
+        /// litGreetingName control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litGreetingName;
+
+        /// <summary>
+        /// litGreetingTitle control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litGreetingTitle;
+
+        /// <summary>
+        /// litInProgressBadge control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litInProgressBadge;
+
+        /// <summary>
+        /// litLessonsThisWeek control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litLessonsThisWeek;
+
+        /// <summary>
+        /// litLessonsThisWeekBadge control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litLessonsThisWeekBadge;
+
+        /// <summary>
+        /// lnkContinue control.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkContinue;
+
+        /// <summary>
+        /// pnlContinue control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlContinue;
+
+        /// <summary>
+        /// pnlStartLearning control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlStartLearning;
+
+        /// <summary>
+        /// segCompleted control.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl segCompleted;
+
+        /// <summary>
+        /// segInProgress control.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl segInProgress;
+
+        /// <summary>
+        /// segNotStarted control.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl segNotStarted;
     }
 }

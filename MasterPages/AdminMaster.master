@@ -7,17 +7,17 @@
         <%-- Vertical Left Navigation Sidebar --%>
         <aside class="admin-sidebar">
             <div>
-                <a class="admin-sidebar-header" runat="server" href="~/Admin/Default.aspx" style="text-decoration:none;color:inherit;">
-                    <div class="admin-logo-mark">Bn</div>
+                <a class="admin-sidebar-header" runat="server" href="~/Admin/Default.aspx" title="Admin dashboard">
+                    <img class="brand-logo" runat="server" src="~/Content/images/logo-mark.png" alt="" />
                     <div>
-                        <div class="admin-brand-title">Binary Control</div>
+                        <div class="admin-brand-title">Binary</div>
                         <span class="admin-badge">Admin Panel</span>
                     </div>
                 </a>
 
                 <nav class="admin-sidebar-nav">
                     <div class="admin-nav-group">
-                        <div class="admin-nav-group-title">Main Menu</div>
+                        <div class="admin-nav-group-title">Manage</div>
                         <a class="admin-nav-item <%= GetActiveClass("~/Admin/Default.aspx") %>" href="<%= Page.ResolveUrl("~/Admin/Default.aspx") %>">
                             <span class="admin-nav-icon">
                                 <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg>
@@ -45,17 +45,13 @@
                     </div>
 
                     <div class="admin-nav-group">
-                        <div class="admin-nav-group-title">Analytics</div>
+                        <div class="admin-nav-group-title">Insights</div>
                         <a class="admin-nav-item <%= GetActiveClass("~/Admin/Reports.aspx") %>" href="<%= Page.ResolveUrl("~/Admin/Reports.aspx") %>">
                             <span class="admin-nav-icon">
                                 <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                             </span>
                             <span>Reports</span>
                         </a>
-                    </div>
-
-                    <div class="admin-nav-group">
-                        <div class="admin-nav-group-title">Settings</div>
                         <a class="admin-nav-item <%= GetActiveClass("~/Admin/Feedback.aspx") %>" href="<%= Page.ResolveUrl("~/Admin/Feedback.aspx") %>">
                             <span class="admin-nav-icon">
                                 <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"></path></svg>
@@ -63,19 +59,39 @@
                             <span>Feedback</span>
                         </a>
                     </div>
+
+                    <div class="admin-nav-group">
+                        <div class="admin-nav-group-title">Account</div>
+                        <a class="admin-nav-item" runat="server" href="~/Users/Profile.aspx?tab=profile">
+                            <span class="admin-nav-icon">
+                                <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="10" r="3"></circle><path d="M6.5 19a6 6 0 0 1 11 0"></path></svg>
+                            </span>
+                            <span>My Profile</span>
+                        </a>
+                    </div>
+
+                    <div class="admin-nav-group">
+                        <div class="admin-nav-group-title">Website</div>
+                        <a class="admin-nav-item" runat="server" href="~/" target="_blank" rel="noopener">
+                            <span class="admin-nav-icon">
+                                <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                            </span>
+                            <span>View Site</span>
+                        </a>
+                    </div>
                 </nav>
             </div>
 
             <%-- Admin User Profile Footer --%>
             <div class="admin-sidebar-footer">
-                <a class="admin-user-info" runat="server" href="~/Users/Profile.aspx?tab=profile" style="text-decoration:none;color:inherit;" title="Edit your profile">
+                <a class="admin-user-info" runat="server" href="~/Users/Profile.aspx?tab=profile" title="Edit your profile">
                     <div class="admin-user-avatar"><%= GetAvatarHtml() %></div>
                     <div class="admin-user-meta">
                         <div class="admin-user-name"><%: AdminName %></div>
                         <div class="admin-user-role"><%: AdminEmail %></div>
                     </div>
                 </a>
-                <a class="admin-logout-btn" runat="server" href="~/Auth/Logout.aspx" title="Sign Out">
+                <a class="admin-logout-btn" runat="server" href="~/Auth/Logout.aspx" title="Sign out" aria-label="Sign out">
                     <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                 </a>
             </div>
@@ -86,12 +102,10 @@
             <header class="admin-global-bar">
                 <div class="admin-global-search">
                     <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="search" placeholder="Search…" autocomplete="off" />
+                    <input type="search" placeholder="Search courses…" autocomplete="off" aria-label="Search courses" data-search-url="<%= Page.ResolveUrl("~/Admin/Courses.aspx") %>?q=" />
+                    <kbd class="search-kbd" title="Press / to search">/</kbd>
                 </div>
                 <div class="admin-global-actions">
-                    <a class="admin-icon-btn" runat="server" href="~/" target="_blank" title="View Site">
-                        <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                    </a>
                     <bn:NotificationBell ID="NotificationBell" runat="server" />
                     <a class="admin-global-avatar" runat="server" href="~/Users/Profile.aspx?tab=profile" title="Edit your profile" style="text-decoration:none;color:inherit;"><%= GetAvatarHtml() %></a>
                 </div>
@@ -99,8 +113,8 @@
 
             <header class="admin-topbar">
                 <div>
-                    <h1 style="font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;"><asp:ContentPlaceHolder ID="AdminHeaderTitle" runat="server" /></h1>
-                    <p style="color:var(--text-muted);font-size:13px;"><asp:ContentPlaceHolder ID="AdminHeaderSubtitle" runat="server" /></p>
+                    <h1 class="dash-page-title"><asp:ContentPlaceHolder ID="AdminHeaderTitle" runat="server" /></h1>
+                    <p class="dash-page-subtitle"><asp:ContentPlaceHolder ID="AdminHeaderSubtitle" runat="server" /></p>
                 </div>
                 <div style="display:flex;gap:var(--space-3);align-items:center;">
                     <asp:ContentPlaceHolder ID="AdminHeaderActions" runat="server" />

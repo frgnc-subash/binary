@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using binary.Core.BLL;
@@ -25,7 +26,33 @@ namespace binary.Users
 
         protected string GetNavBtnClass(string tabId)
         {
-            return tabId == ActiveTab ? "learner-nav-btn active" : "learner-nav-btn";
+            return tabId == ActiveTab ? "admin-nav-item active" : "admin-nav-item";
+        }
+
+        // page heading per tab: { title, subtitle }; also sent to the page script so it can update them
+        private static readonly Dictionary<string, string[]> TabTitles = new Dictionary<string, string[]>
+        {
+            { "tab-dash", new[] { "Dashboard", "Your learning progress at a glance" } },
+            { "tab-practice", new[] { "Vocabulary Practice", "Quizzes from the courses you're enrolled in" } },
+            { "tab-exp", new[] { "Exp Earned", "Your XP, current title, and the titles still to unlock" } },
+            { "tab-profile", new[] { "Profile", "Your details, picture, and password" } },
+        };
+
+        protected string GetTabTitle(string tabId)
+        {
+            string[] titles;
+            return TabTitles.TryGetValue(tabId, out titles) ? titles[0] : "Dashboard";
+        }
+
+        protected string GetTabSubtitle(string tabId)
+        {
+            string[] titles;
+            return TabTitles.TryGetValue(tabId, out titles) ? titles[1] : "";
+        }
+
+        protected string GetTabTitlesJson()
+        {
+            return new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(TabTitles);
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -53,7 +80,7 @@ namespace binary.Users
             { "dash", "tab-dash" },
             { "practice", "tab-practice" },
             { "profile", "tab-profile" },
-            { "security", "tab-security" },
+            { "security", "tab-profile" },   // password now lives on the Profile tab
             { "exp", "tab-exp" },
             { "badges", "tab-exp" },   // old name, kept so earlier links still work
         };
@@ -86,15 +113,39 @@ namespace binary.Users
 
                 int completedCount = 0;
                 var enrollmentBll = new EnrollmentBLL();
+                var completedByEnrollment = new Dictionary<int, List<int>>();
                 foreach (var en in enrollments)
                 {
-                    completedCount += enrollmentBll.GetCompletedLessonIds(en.EnrollmentID).Count;
+                    List<int> done = enrollmentBll.GetCompletedLessonIds(en.EnrollmentID);
+                    completedByEnrollment[en.EnrollmentID] = done;
+                    completedCount += done.Count;
                 }
                 litCompletedLessonsCount.Text = completedCount.ToString();
                 BindTitle(user.TotalXP);
                 litStreak.Text = enrollmentBll.GetCurrentStreak(userId).ToString();
 
+                litGreetingName.Text = Server.HtmlEncode(user.FirstName);
+                litGreetingTitle.Text = Server.HtmlEncode(LearnerTitles.For(user.TotalXP).Display);
+
+                // course progress breakdown (replaces the old fixed 45/35/20 bar)
+                int coursesDone = enrollments.Count(en => en.ProgressPercent >= 100);
+                int coursesNotStarted = enrollments.Count(en => en.ProgressPercent <= 0);
+                int coursesInProgress = enrollments.Count - coursesDone - coursesNotStarted;
+                litCountCompleted.Text = coursesDone.ToString();
+                litCountInProgress.Text = coursesInProgress.ToString();
+                litCountNotStarted.Text = coursesNotStarted.ToString();
+                litInProgressBadge.Text = coursesInProgress + " in progress";
+                double total = Math.Max(1, enrollments.Count);
+                segCompleted.Style["width"] = Pct(coursesDone / total);
+                segInProgress.Style["width"] = Pct(coursesInProgress / total);
+                segNotStarted.Style["width"] = Pct(enrollments.Count == 0 ? 1 : coursesNotStarted / total);
+
+                BindContinueLearning(enrollments, completedByEnrollment);
+
                 var activityCounts = enrollmentBll.GetWeeklyActivity(userId);
+                int lessonsThisWeek = activityCounts.Values.Sum();
+                litLessonsThisWeek.Text = lessonsThisWeek.ToString();
+                litLessonsThisWeekBadge.Text = lessonsThisWeek + " this week";
                 var activityChart = DisplayHelper.BuildDailyChart(day =>
                 {
                     int count;
@@ -109,6 +160,41 @@ namespace binary.Users
                 System.Diagnostics.Trace.TraceError("Failed to load enrollments for user {0}: {1}", userId, ex);
                 ShowError("Unable to load your courses right now. Please try again later.");
             }
+        }
+
+        private static string Pct(double fraction)
+        {
+            return (Math.Max(0, Math.Min(1, fraction)) * 100).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + "%";
+        }
+
+        // "Continue where you left off": the most recent course that isn't finished, and its next lesson
+        private void BindContinueLearning(List<Enrollment> enrollments, Dictionary<int, List<int>> completedByEnrollment)
+        {
+            pnlStartLearning.Visible = enrollments.Count == 0;
+            pnlContinue.Visible = false;
+
+            Enrollment current = enrollments.FirstOrDefault(en => en.ProgressPercent > 0 && en.ProgressPercent < 100)
+                              ?? enrollments.FirstOrDefault(en => en.ProgressPercent < 100);
+            if (current == null) return;
+
+            List<int> done = completedByEnrollment[current.EnrollmentID];
+            Lesson next = new LessonBLL().GetLessonsByCourse(current.CourseID).FirstOrDefault(l => !done.Contains(l.LessonID));
+
+            litContinueCourse.Text = Server.HtmlEncode(current.CourseTitle);
+            litContinueLesson.Text = next != null
+                ? "Next: Lesson " + next.SortOrder + " · " + Server.HtmlEncode(next.Title)
+                : current.ProgressPercent + "% complete";
+            // the course page opens the next unfinished lesson automatically
+            lnkContinue.HRef = "~/Courses/Detail.aspx?id=" + current.CourseID;
+            pnlContinue.Visible = true;
+        }
+
+        protected string GetEnrollmentStatusBadge(object progressPercent)
+        {
+            int pct = Convert.ToInt32(progressPercent);
+            if (pct >= 100) return "<span class=\"badge badge-success\">Completed</span>";
+            if (pct <= 0) return "<span class=\"badge badge-muted\">Not started</span>";
+            return "<span class=\"badge badge-primary\">In progress</span>";
         }
 
         private class TitleCardVM
@@ -188,6 +274,9 @@ namespace binary.Users
                     txtEmail.Text = user.Email;
 
                     litFullName.Text = Server.HtmlEncode(user.FullName);
+                    litProfileName.Text = Server.HtmlEncode(user.FullName);
+                    litProfileEmail.Text = Server.HtmlEncode(user.Email);
+                    litMemberSince.Text = user.CreatedDate.ToString("MMMM yyyy");
 
                     // calculate initials for avatar
                     string initials = "U";

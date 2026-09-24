@@ -31,7 +31,9 @@ namespace binary.MasterPages
             AdminName = AuthBLL.CurrentUserName;
             AdminEmail = AuthBLL.CurrentUserEmail;
             AdminAvatarUrl = AuthBLL.CurrentUserAvatarUrl;
-            CurrentPath = Request.AppRelativeCurrentExecutionFilePath;
+            // the page's .aspx file, not the URL: FriendlyUrls serves every page at both /Admin/Users
+            // and /Admin/Users.aspx, and a URL match highlighted the sidebar on only one of them
+            CurrentPath = Page.AppRelativeVirtualPath ?? "";
 
             if (!string.IsNullOrWhiteSpace(AdminName))
             {
