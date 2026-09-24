@@ -40,6 +40,23 @@ namespace binary.Core.DAL
             return list;
         }
 
+        public Dictionary<int, int> CountByCourse()
+        {
+            const string sql = "SELECT CourseID, COUNT(*) AS LessonCount FROM Lessons GROUP BY CourseID;";
+
+            var counts = new Dictionary<int, int>();
+            using (SqlConnection con = DbHelper.CreateConnection())
+            using (SqlCommand cmd = DbHelper.CreateCommand(con, sql))
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    counts[Convert.ToInt32(reader["CourseID"])] = Convert.ToInt32(reader["LessonCount"]);
+                }
+            }
+            return counts;
+        }
+
         public Lesson SelectById(int lessonId)
         {
             const string sql = @"
@@ -68,6 +85,56 @@ namespace binary.Core.DAL
                 }
             }
             return null;
+        }
+
+        public int Insert(Lesson l)
+        {
+            const string sql = @"
+                INSERT INTO Lessons (CourseID, Title, Content, VideoUrl, SortOrder)
+                VALUES (@CourseID, @Title, @Content, @VideoUrl, @SortOrder);
+                SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+            using (SqlConnection con = DbHelper.CreateConnection())
+            using (SqlCommand cmd = DbHelper.CreateCommand(con, sql))
+            {
+                DbHelper.AddParam(cmd, "@CourseID", l.CourseID);
+                DbHelper.AddParam(cmd, "@Title", l.Title);
+                DbHelper.AddParam(cmd, "@Content", l.Content);
+                DbHelper.AddParam(cmd, "@VideoUrl", l.VideoUrl);
+                DbHelper.AddParam(cmd, "@SortOrder", l.SortOrder);
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
+        public void Update(Lesson l)
+        {
+            const string sql = @"
+                UPDATE Lessons
+                SET Title = @Title, Content = @Content, VideoUrl = @VideoUrl, SortOrder = @SortOrder
+                WHERE LessonID = @LessonID;";
+
+            using (SqlConnection con = DbHelper.CreateConnection())
+            using (SqlCommand cmd = DbHelper.CreateCommand(con, sql))
+            {
+                DbHelper.AddParam(cmd, "@Title", l.Title);
+                DbHelper.AddParam(cmd, "@Content", l.Content);
+                DbHelper.AddParam(cmd, "@VideoUrl", l.VideoUrl);
+                DbHelper.AddParam(cmd, "@SortOrder", l.SortOrder);
+                DbHelper.AddParam(cmd, "@LessonID", l.LessonID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void Delete(int lessonId)
+        {
+            const string sql = "DELETE FROM Lessons WHERE LessonID = @LessonID;";
+
+            using (SqlConnection con = DbHelper.CreateConnection())
+            using (SqlCommand cmd = DbHelper.CreateCommand(con, sql))
+            {
+                DbHelper.AddParam(cmd, "@LessonID", lessonId);
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

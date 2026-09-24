@@ -52,7 +52,15 @@ namespace binary.Core.BLL
             if (courseId <= 0)
                 throw new ValidationException("Invalid course ID.");
 
-            _dal.Delete(courseId);
+            try
+            {
+                _dal.Delete(courseId);
+            }
+            catch (System.Data.SqlClient.SqlException sqlEx) when (sqlEx.Number == 547)
+            {
+                // 547 = foreign key constraint violation
+                throw new ValidationException("Cannot delete a course that still has lessons or enrolled learners.");
+            }
         }
 
         private void Validate(Course c)

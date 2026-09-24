@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace binary.Models
 {
     /// <summary>
@@ -9,5 +11,6 @@ namespace binary.Models
         public int CourseID { get; set; }
         public string Title { get; set; }
         public string CourseTitle { get; set; }
+        public List<Question> Questions { get; set; }
     }
 }

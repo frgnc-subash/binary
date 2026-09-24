@@ -51,5 +51,44 @@ namespace binary.Core.DAL
             }
             return null;
         }
+
+        public int Insert(Category c)
+        {
+            const string sql = @"
+                INSERT INTO Categories (Name) VALUES (@Name);
+                SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+            using (SqlConnection con = DbHelper.CreateConnection())
+            using (SqlCommand cmd = DbHelper.CreateCommand(con, sql))
+            {
+                DbHelper.AddParam(cmd, "@Name", c.Name);
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
+        public void Update(Category c)
+        {
+            const string sql = "UPDATE Categories SET Name = @Name WHERE CategoryID = @CategoryID;";
+
+            using (SqlConnection con = DbHelper.CreateConnection())
+            using (SqlCommand cmd = DbHelper.CreateCommand(con, sql))
+            {
+                DbHelper.AddParam(cmd, "@Name", c.Name);
+                DbHelper.AddParam(cmd, "@CategoryID", c.CategoryID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void Delete(int categoryId)
+        {
+            const string sql = "DELETE FROM Categories WHERE CategoryID = @CategoryID;";
+
+            using (SqlConnection con = DbHelper.CreateConnection())
+            using (SqlCommand cmd = DbHelper.CreateCommand(con, sql))
+            {
+                DbHelper.AddParam(cmd, "@CategoryID", categoryId);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }
