@@ -20,7 +20,20 @@ namespace binary.MasterPages
             phGuestActions.Visible = !loggedIn;
             phUserActions.Visible = loggedIn;
             phFooterGuestLinks.Visible = !loggedIn;
+            phFooterMemberLinks.Visible = loggedIn;
             phAdminFooterNav.Visible = isAdmin;
+
+            // footer call to action: sign up for visitors, straight back into learning for members
+            if (isAdmin)
+            {
+                lnkFooterCta.HRef = "~/Admin/Default.aspx";
+                lnkFooterCta.InnerText = "Open admin panel";
+            }
+            else if (loggedIn)
+            {
+                lnkFooterCta.HRef = "~/Users/Profile.aspx";
+                lnkFooterCta.InnerText = "Continue learning";
+            }
 
             bool isPublicPage = IsPublicPage();
             phSiteFooter.Visible = isPublicPage;

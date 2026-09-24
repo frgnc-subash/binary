@@ -57,9 +57,19 @@ namespace binary.MasterPages
         protected global::System.Web.UI.WebControls.PlaceHolder phSiteFooter;
 
         /// <summary>
+        /// lnkFooterCta control.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkFooterCta;
+
+        /// <summary>
         /// phFooterGuestLinks control.
         /// </summary>
         protected global::System.Web.UI.WebControls.PlaceHolder phFooterGuestLinks;
+
+        /// <summary>
+        /// phFooterMemberLinks control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.PlaceHolder phFooterMemberLinks;
 
         /// <summary>
         /// phAdminFooterNav control.
