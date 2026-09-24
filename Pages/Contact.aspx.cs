@@ -31,6 +31,9 @@ namespace binary.Pages
 
         protected void SubmitBtn_Click(object sender, EventArgs e)
         {
+            SuccessPanel.Visible = false;
+            ErrorPanel.Visible = false;
+
             if (Page.IsValid)
             {
                 try
@@ -56,9 +59,17 @@ namespace binary.Pages
                         Email.Text = string.Empty;
                     }
                 }
-                catch (Exception)
+                catch (ValidationException vex)
                 {
-                    SuccessPanel.Visible = true;
+                    litContactError.Text = Server.HtmlEncode(vex.Message);
+                    ErrorPanel.Visible = true;
+                }
+                catch (Exception ex)
+                {
+                    // previously this showed the success panel, so failed messages were silently lost
+                    System.Diagnostics.Trace.TraceError("Contact form submit failed: {0}", ex);
+                    litContactError.Text = "Something went wrong on our side. Please try again in a moment, or email us directly.";
+                    ErrorPanel.Visible = true;
                 }
             }
         }
