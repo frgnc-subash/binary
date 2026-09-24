@@ -12,9 +12,29 @@ namespace binary.Users
     public partial class Profile
     {
         /// <summary>
+        /// imgAvatarSidebar control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Image imgAvatarSidebar;
+
+        /// <summary>
         /// litAvatar control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Literal litAvatar;
+
+        /// <summary>
+        /// NotificationBell control.
+        /// </summary>
+        protected global::binary.Controls.NotificationBell NotificationBell;
+
+        /// <summary>
+        /// imgAvatarHeader control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Image imgAvatarHeader;
+
+        /// <summary>
+        /// litHeaderAvatar control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litHeaderAvatar;
 
         /// <summary>
         /// litFullName control.
@@ -22,19 +42,144 @@ namespace binary.Users
         protected global::System.Web.UI.WebControls.Literal litFullName;
 
         /// <summary>
-        /// litEmail control.
-        /// </summary>
-        protected global::System.Web.UI.WebControls.Literal litEmail;
-
-        /// <summary>
-        /// litRoleBadge control.
-        /// </summary>
-        protected global::System.Web.UI.WebControls.Literal litRoleBadge;
-
-        /// <summary>
         /// litActiveCoursesCount control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Literal litActiveCoursesCount;
+
+        /// <summary>
+        /// litTotalXp control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litTotalXp;
+
+        /// <summary>
+        /// litRank control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litRank;
+
+        /// <summary>
+        /// litCompletedLessonsCount control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litCompletedLessonsCount;
+
+        /// <summary>
+        /// litLearnerLevel control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litLearnerLevel;
+
+        /// <summary>
+        /// hfActiveTab control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HiddenField hfActiveTab;
+
+        /// <summary>
+        /// litStreak control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litStreak;
+
+        /// <summary>
+        /// rptActivityChart control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Repeater rptActivityChart;
+
+        /// <summary>
+        /// pnlQuizList control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlQuizList;
+
+        /// <summary>
+        /// rptQuizzes control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Repeater rptQuizzes;
+
+        /// <summary>
+        /// pnlNoQuizzes control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlNoQuizzes;
+
+        /// <summary>
+        /// rptAttempts control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Repeater rptAttempts;
+
+        /// <summary>
+        /// pnlNoAttempts control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlNoAttempts;
+
+        /// <summary>
+        /// pnlQuizPlay control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlQuizPlay;
+
+        /// <summary>
+        /// litPlayQuizTitle control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litPlayQuizTitle;
+
+        /// <summary>
+        /// hfPlayQuizId control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HiddenField hfPlayQuizId;
+
+        /// <summary>
+        /// rptQuestions control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Repeater rptQuestions;
+
+        /// <summary>
+        /// btnSubmitQuiz control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Button btnSubmitQuiz;
+
+        /// <summary>
+        /// lnkCancelQuiz control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.LinkButton lnkCancelQuiz;
+
+        /// <summary>
+        /// pnlQuizResult control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlQuizResult;
+
+        /// <summary>
+        /// litResultEmoji control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litResultEmoji;
+
+        /// <summary>
+        /// litResultScore control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litResultScore;
+
+        /// <summary>
+        /// litResultMessage control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litResultMessage;
+
+        /// <summary>
+        /// litResultXp control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litResultXp;
+
+        /// <summary>
+        /// lnkRetryQuiz control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.LinkButton lnkRetryQuiz;
+
+        /// <summary>
+        /// lnkBackToList control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.LinkButton lnkBackToList;
+
+        /// <summary>
+        /// rptEnrollments control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Repeater rptEnrollments;
+
+        /// <summary>
+        /// pnlNoEnrollments control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlNoEnrollments;
 
         /// <summary>
         /// ProfileAlertPanel control.
@@ -55,6 +200,61 @@ namespace binary.Users
         /// litProfileError control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Literal litProfileError;
+
+        /// <summary>
+        /// imgAvatarPreview control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Image imgAvatarPreview;
+
+        /// <summary>
+        /// litAvatarPreview control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litAvatarPreview;
+
+        /// <summary>
+        /// fuAvatar control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.FileUpload fuAvatar;
+
+        /// <summary>
+        /// litProfileTitle control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litProfileTitle;
+
+        /// <summary>
+        /// litProfileTitleHint control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litProfileTitleHint;
+
+        /// <summary>
+        /// litExpTitleEmoji control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litExpTitleEmoji;
+
+        /// <summary>
+        /// litExpTitleName control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litExpTitleName;
+
+        /// <summary>
+        /// litExpTotal control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litExpTotal;
+
+        /// <summary>
+        /// litExpToNext control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litExpToNext;
+
+        /// <summary>
+        /// expProgressBar control.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl expProgressBar;
+
+        /// <summary>
+        /// rptTitles control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Repeater rptTitles;
 
         /// <summary>
         /// txtFirstName control.
