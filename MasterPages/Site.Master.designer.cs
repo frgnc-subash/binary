@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace binary
+namespace binary.MasterPages
 {
     public partial class SiteMaster
     {
@@ -17,14 +17,9 @@ namespace binary
         protected global::System.Web.UI.HtmlControls.HtmlLink SiteStylesheet;
 
         /// <summary>
-        /// phAdminNav control.
+        /// phSiteNavbar control.
         /// </summary>
-        protected global::System.Web.UI.WebControls.PlaceHolder phAdminNav;
-
-        /// <summary>
-        /// phMemberLinks control.
-        /// </summary>
-        protected global::System.Web.UI.WebControls.PlaceHolder phMemberLinks;
+        protected global::System.Web.UI.WebControls.PlaceHolder phSiteNavbar;
 
         /// <summary>
         /// phGuestActions control.
@@ -37,18 +32,38 @@ namespace binary
         protected global::System.Web.UI.WebControls.PlaceHolder phUserActions;
 
         /// <summary>
+        /// lnkUserPill control.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkUserPill;
+
+        /// <summary>
+        /// imgAvatarNav control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Image imgAvatarNav;
+
+        /// <summary>
         /// litAvatarInitials control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Literal litAvatarInitials;
 
         /// <summary>
-        /// litUserName control.
-        /// </summary>
-        protected global::System.Web.UI.WebControls.Literal litUserName;
-
-        /// <summary>
         /// MainContent control.
         /// </summary>
         protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+
+        /// <summary>
+        /// phSiteFooter control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.PlaceHolder phSiteFooter;
+
+        /// <summary>
+        /// phFooterGuestLinks control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.PlaceHolder phFooterGuestLinks;
+
+        /// <summary>
+        /// phAdminFooterNav control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.PlaceHolder phAdminFooterNav;
     }
 }
