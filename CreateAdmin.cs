@@ -23,7 +23,7 @@ namespace binary
             string hash = PasswordHelper.Hash(password, salt);
 
             string connectionString = ConfigurationManager.ConnectionStrings["LoginConnectionString"]?.ConnectionString
-                ?? @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Auth;Integrated Security=True;TrustServerCertificate=True;";
+                ?? @"Data Source=.\SQLEXPRESS01;Initial Catalog=BinaryKoData;Integrated Security=True;TrustServerCertificate=True;";
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
