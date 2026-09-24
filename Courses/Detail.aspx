@@ -49,10 +49,18 @@
                     </div>
                     <div class="progress" style="height:10px;"><div id="progressBarFill" runat="server" class="progress-bar" style="background:linear-gradient(90deg, #10b981, #059669);"></div></div>
                 </div>
+            </asp:Panel>
 
-                <div style="margin-bottom:var(--space-4);display:flex;justify-content:space-between;align-items:center;">
+            <%-- admins can check any course's lessons and videos without enrolling --%>
+            <asp:Panel ID="pnlAdminPreview" runat="server" Visible="false" CssClass="admin-preview-banner">
+                <strong>Admin preview</strong> — you can see every lesson and video without enrolling. Progress and XP aren't tracked here.
+            </asp:Panel>
+
+            <%-- syllabus: titles are public; lesson content and videos only render when unlocked --%>
+            <asp:Panel ID="pnlSyllabus" runat="server" Visible="false">
+                <div style="margin-bottom:var(--space-4);display:flex;justify-content:space-between;align-items:center;gap:var(--space-3);flex-wrap:wrap;">
                     <h3 style="font-size:1.2rem;font-weight:800;">Lesson Syllabus</h3>
-                    <span style="font-size:13px;color:var(--text-muted);">Click any lesson to expand & study</span>
+                    <span style="font-size:13px;color:var(--text-muted);"><asp:Literal ID="litSyllabusHint" runat="server" /></span>
                 </div>
 
                 <asp:Repeater ID="rptLessons" runat="server" OnItemCommand="rptLessons_ItemCommand" OnItemDataBound="rptLessons_ItemDataBound">
@@ -70,22 +78,31 @@
                                     <asp:Literal ID="litCompleted" runat="server" Visible="false">
                                         <span class="badge badge-success" style="font-size:12px;padding:3px 10px;">&#10003; Completed</span>
                                     </asp:Literal>
-                                    <span class="accordion-arrow" style="font-size:14px;color:var(--text-muted);transition:transform 0.2s ease;">&#9660;</span>
+                                    <asp:Literal ID="litLocked" runat="server" Visible="false">
+                                        <span class="badge badge-muted" style="font-size:12px;padding:3px 10px;">🔒 Locked</span>
+                                    </asp:Literal>
+                                    <span class="accordion-arrow" style="font-size:14px;color:var(--text-muted);transition:transform 0.2s ease;"><svg class="ui-icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
                                 </div>
                             </div>
 
                             <div id="lesson-body-<%# Eval("LessonID") %>" class="lesson-card-body" style="display:none;">
-                                <%# RenderVideoPlaceholder(Eval("VideoUrl"), Eval("Title")) %>
-                                <div style="background:#ffffff;padding:var(--space-4);border-radius:var(--radius-md);border:1px solid var(--border-light);margin-bottom:var(--space-4);">
-                                    <h4 style="font-size:13px;font-weight:700;text-transform:uppercase;color:var(--brand-primary);letter-spacing:0.04em;margin-bottom:6px;">Lesson Content & Key Phrases</h4>
-                                    <p style="font-size:14.5px;color:var(--text-primary);white-space:pre-line;line-height:1.7;"><%# HttpUtility.HtmlEncode((string)Eval("Content")) %></p>
-                                </div>
+                                <%-- server-side Visible=false means locked content is never sent to the browser --%>
+                                <asp:PlaceHolder ID="phLessonUnlocked" runat="server">
+                                    <%# RenderVideoPlaceholder(Eval("VideoUrl"), Eval("Title")) %>
+                                    <div style="background:#ffffff;padding:var(--space-4);border-radius:var(--radius-md);border:1px solid var(--border-light);margin:var(--space-4) 0;">
+                                        <h4 style="font-size:13px;font-weight:700;text-transform:uppercase;color:var(--brand-primary);letter-spacing:0.04em;margin-bottom:6px;">Lesson Content & Key Phrases</h4>
+                                        <p style="font-size:14.5px;color:var(--text-primary);white-space:pre-line;line-height:1.7;"><%# HttpUtility.HtmlEncode((string)Eval("Content")) %></p>
+                                    </div>
 
-                                <div class="lesson-card-actions">
-                                    <asp:LinkButton ID="btnMarkComplete" runat="server" CssClass="btn btn-primary" style="height:38px;padding:0 18px;font-size:13.5px;box-shadow:0 2px 8px var(--brand-primary-glow);" CommandName="MarkComplete" CommandArgument='<%# Eval("LessonID") %>'>
-                                        <span>Complete Lesson & Earn +<%# binary.Core.BLL.EnrollmentBLL.LessonXpReward %> XP ⚡</span>
-                                    </asp:LinkButton>
-                                </div>
+                                    <div class="lesson-card-actions">
+                                        <asp:LinkButton ID="btnMarkComplete" runat="server" CssClass="btn btn-primary" style="height:38px;padding:0 18px;font-size:13.5px;box-shadow:0 2px 8px var(--brand-primary-glow);" CommandName="MarkComplete" CommandArgument='<%# Eval("LessonID") %>'>
+                                            <span>Complete Lesson & Earn +<%# binary.Core.BLL.EnrollmentBLL.LessonXpReward %> XP ⚡</span>
+                                        </asp:LinkButton>
+                                    </div>
+                                </asp:PlaceHolder>
+                                <asp:PlaceHolder ID="phLessonLocked" runat="server" Visible="false">
+                                    <div class="lesson-locked"><%# LockedMessage %></div>
+                                </asp:PlaceHolder>
                             </div>
                         </div>
                     </ItemTemplate>
@@ -215,6 +232,8 @@
         .lesson-num-badge { width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--bg-subtle);border-radius:50%;font-weight:800;font-size:13px;color:var(--text-muted); }
         .lesson-card-body { padding:0 var(--space-4) var(--space-4);border-top:1px solid var(--border-light);background:#fcfcfc; }
         .lesson-card-actions { text-align:right; }
+        .lesson-locked { margin-top:var(--space-4);padding:var(--space-4);border-radius:var(--radius-md);border:1px dashed var(--border-mid);background:#ffffff;text-align:center;font-size:13.5px;font-weight:600;color:var(--text-muted); }
+        .admin-preview-banner { margin-bottom:var(--space-4);padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);background:var(--brand-primary-soft);border:1px solid rgba(67,56,202,0.2);color:var(--brand-primary);font-size:13.5px; }
     </style>
 
 </asp:Content>
