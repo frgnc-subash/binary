@@ -32,7 +32,11 @@ namespace binary.Admin
         protected System.Web.UI.WebControls.HiddenField hfLessonId;
         protected System.Web.UI.WebControls.TextBox txtLessonTitle;
         protected System.Web.UI.WebControls.TextBox txtLessonContent;
+        protected System.Web.UI.WebControls.Panel pnlCurrentVideo;
+        protected System.Web.UI.WebControls.Literal litCurrentVideo;
+        protected System.Web.UI.WebControls.CheckBox chkRemoveVideo;
         protected System.Web.UI.WebControls.TextBox txtLessonVideoUrl;
+        protected System.Web.UI.WebControls.FileUpload fuLessonVideo;
         protected System.Web.UI.WebControls.TextBox txtLessonSortOrder;
         protected System.Web.UI.WebControls.Button btnSaveLesson;
         protected System.Web.UI.WebControls.HiddenField hfCoursesPage;

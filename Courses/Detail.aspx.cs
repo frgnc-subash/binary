@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.UI.WebControls;
 using binary.Core.BLL;
+using binary.Core.Helpers;
 using binary.Models;
 
 namespace binary.Courses
@@ -90,6 +92,26 @@ namespace binary.Courses
 
             rptLessons.DataSource = lessons;
             rptLessons.DataBind();
+        }
+
+        protected string GetLessonKindLabel(object videoUrl)
+        {
+            return VideoHelper.GetEmbed(videoUrl as string) != null ? "🎬 Video lesson" : "Interactive Lesson";
+        }
+
+        // Only a placeholder with data attributes; the page script builds the actual player when
+        // the lesson is opened. Every value is attribute-encoded.
+        protected string RenderVideoPlaceholder(object videoUrl, object title)
+        {
+            VideoEmbed embed = VideoHelper.GetEmbed(videoUrl as string);
+            if (embed == null) return string.Empty;
+
+            string html = "<div class=\"lesson-video\" data-kind=\"" + embed.Kind + "\"" +
+                          " data-src=\"" + HttpUtility.HtmlAttributeEncode(embed.Source) + "\"" +
+                          " data-title=\"" + HttpUtility.HtmlAttributeEncode(title as string ?? "") + "\"";
+            if (embed.Kind == "youtube")
+                html += " data-thumb=\"https://i.ytimg.com/vi/" + embed.YouTubeId + "/hqdefault.jpg\"";
+            return html + "></div>";
         }
 
         protected void rptLessons_ItemDataBound(object sender, RepeaterItemEventArgs e)
