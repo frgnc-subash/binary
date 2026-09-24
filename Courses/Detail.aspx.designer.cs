@@ -30,6 +30,9 @@ namespace binary.Courses
         protected System.Web.UI.WebControls.Panel pnlEnrolled;
         protected System.Web.UI.WebControls.Literal litProgressPercent;
         protected System.Web.UI.HtmlControls.HtmlGenericControl progressBarFill;
+        protected System.Web.UI.WebControls.Panel pnlAdminPreview;
+        protected System.Web.UI.WebControls.Panel pnlSyllabus;
+        protected System.Web.UI.WebControls.Literal litSyllabusHint;
         protected System.Web.UI.WebControls.Repeater rptLessons;
     }
 }

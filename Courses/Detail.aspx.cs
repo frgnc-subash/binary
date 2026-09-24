@@ -50,46 +50,73 @@ namespace binary.Courses
             BindPage();
         }
 
+        private enum AccessMode { Guest, NotEnrolled, Enrolled, AdminPreview }
+
+        private AccessMode _mode;
+
+        protected string LockedMessage
+        {
+            get
+            {
+                return _mode == AccessMode.Guest
+                    ? "🔒 Sign in and enroll to unlock this lesson and its video."
+                    : "🔒 Enroll in this course to unlock this lesson and its video.";
+            }
+        }
+
+        // The syllabus is shown to everyone so visitors can see what a course contains; lesson
+        // content and videos are only rendered for enrolled learners and admins (preview).
         private void BindPage()
         {
             var lessons = new LessonBLL().GetLessonsByCourse(_courseId);
             litLessonCount.Text = lessons.Count.ToString();
 
+            pnlGuestCta.Visible = false;
+            pnlEnrollCta.Visible = false;
+            pnlEnrolled.Visible = false;
+            pnlAdminPreview.Visible = false;
+            _completedLessonIds = new List<int>();
+            OpenLessonId = 0;
+
             if (!AuthBLL.IsLoggedIn)
             {
+                _mode = AccessMode.Guest;
                 pnlGuestCta.Visible = true;
-                pnlEnrollCta.Visible = false;
-                pnlEnrolled.Visible = false;
                 string returnUrl = "?ReturnUrl=" + Server.UrlEncode(Request.Url.PathAndQuery);
                 lnkSignInEnroll.HRef = ResolveUrl("~/Auth/Login.aspx" + returnUrl);
                 lnkRegisterEnroll.HRef = ResolveUrl("~/Auth/Register.aspx" + returnUrl);
-                return;
             }
-
-            int userId = AuthBLL.CurrentUserId;
-            var enrollmentBll = new EnrollmentBLL();
-
-            if (!enrollmentBll.IsUserEnrolled(userId, _courseId))
+            else
             {
-                pnlGuestCta.Visible = false;
-                pnlEnrollCta.Visible = true;
-                pnlEnrolled.Visible = false;
-                return;
+                int userId = AuthBLL.CurrentUserId;
+                var enrollmentBll = new EnrollmentBLL();
+                Enrollment enrollment = enrollmentBll.GetEnrollment(userId, _courseId);
+
+                if (enrollment != null)
+                {
+                    _mode = AccessMode.Enrolled;
+                    pnlEnrolled.Visible = true;
+                    _completedLessonIds = enrollmentBll.GetCompletedLessonIds(enrollment.EnrollmentID);
+
+                    Lesson nextLesson = lessons.FirstOrDefault(l => !_completedLessonIds.Contains(l.LessonID));
+                    OpenLessonId = nextLesson != null ? nextLesson.LessonID : 0;
+
+                    litProgressPercent.Text = enrollment.ProgressPercent.ToString();
+                    progressBarFill.Style["width"] = enrollment.ProgressPercent + "%";
+                }
+                else
+                {
+                    _mode = AuthBLL.IsAdmin ? AccessMode.AdminPreview : AccessMode.NotEnrolled;
+                    pnlEnrollCta.Visible = _mode == AccessMode.NotEnrolled;
+                    pnlAdminPreview.Visible = _mode == AccessMode.AdminPreview;
+                }
             }
 
-            pnlGuestCta.Visible = false;
-            pnlEnrollCta.Visible = false;
-            pnlEnrolled.Visible = true;
+            litSyllabusHint.Text = _mode == AccessMode.Enrolled || _mode == AccessMode.AdminPreview
+                ? "Click any lesson to expand & study"
+                : "Preview — enroll to unlock lessons and videos";
 
-            Enrollment enrollment = enrollmentBll.GetEnrollment(userId, _courseId);
-            _completedLessonIds = enrollmentBll.GetCompletedLessonIds(enrollment.EnrollmentID);
-
-            Lesson nextLesson = lessons.FirstOrDefault(l => !_completedLessonIds.Contains(l.LessonID));
-            OpenLessonId = nextLesson != null ? nextLesson.LessonID : 0;
-
-            litProgressPercent.Text = enrollment.ProgressPercent.ToString();
-            progressBarFill.Style["width"] = enrollment.ProgressPercent + "%";
-
+            pnlSyllabus.Visible = lessons.Count > 0;
             rptLessons.DataSource = lessons;
             rptLessons.DataBind();
         }
@@ -120,10 +147,15 @@ namespace binary.Courses
                 return;
 
             var lesson = (Lesson)e.Item.DataItem;
-            bool completed = _completedLessonIds.Contains(lesson.LessonID);
+            bool unlocked = _mode == AccessMode.Enrolled || _mode == AccessMode.AdminPreview;
+            bool completed = _mode == AccessMode.Enrolled && _completedLessonIds.Contains(lesson.LessonID);
 
+            e.Item.FindControl("phLessonUnlocked").Visible = unlocked;
+            e.Item.FindControl("phLessonLocked").Visible = !unlocked;
+            e.Item.FindControl("litLocked").Visible = !unlocked;
             e.Item.FindControl("litCompleted").Visible = completed;
-            e.Item.FindControl("btnMarkComplete").Visible = !completed;
+            // only enrolled learners track progress; the admin preview is read-only
+            e.Item.FindControl("btnMarkComplete").Visible = _mode == AccessMode.Enrolled && !completed;
         }
 
         protected void btnEnroll_Click(object sender, EventArgs e)
