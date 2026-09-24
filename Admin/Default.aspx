@@ -77,7 +77,7 @@
                         <h3 style="font-size:1.1rem;font-weight:700;">Recent Registrations</h3>
                         <p style="font-size:12.5px;color:var(--text-muted);margin-top:2px;">Latest learners joined on Binary</p>
                     </div>
-                    <a class="btn btn-outline" style="height:32px;font-size:12px;padding:0 12px;" runat="server" href="~/Admin/Users.aspx">View All Users &rarr;</a>
+                    <a class="btn btn-outline" style="height:32px;font-size:12px;padding:0 12px;" runat="server" href="~/Admin/Users.aspx">View All Users<svg class="ui-icon ui-icon-after" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
                 </div>
                 <asp:Panel ID="pnlRecentUsers" runat="server">
                     <div style="overflow-x:auto;">

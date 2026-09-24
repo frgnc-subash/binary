@@ -3,8 +3,8 @@
 <asp:Content ID="HeaderTitle" ContentPlaceHolderID="AdminHeaderTitle" runat="server">Manage Courses</asp:Content>
 <asp:Content ID="HeaderSubtitle" ContentPlaceHolderID="AdminHeaderSubtitle" runat="server">Create categories, courses, and lessons.</asp:Content>
 <asp:Content ID="HeaderActions" ContentPlaceHolderID="AdminHeaderActions" runat="server">
-    <a class="btn btn-outline" runat="server" href="~/Admin">&larr; Dashboard</a>
-    <a class="btn btn-primary" runat="server" href="~/Admin/Courses.aspx?new=1">+ New Course</a>
+    <a class="btn btn-outline" runat="server" href="~/Admin"><svg class="ui-icon ui-icon-before" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>Dashboard</a>
+    <a class="btn btn-primary" runat="server" href="~/Admin/Courses.aspx?new=1"><svg class="ui-icon ui-icon-before" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>New Course</a>
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="AdminMainContent" runat="server">
@@ -135,7 +135,7 @@
                                 </div>
 
                                 <asp:Button ID="btnSaveLesson" runat="server" CssClass="btn btn-primary" Text="Save Lesson" OnClick="btnSaveLesson_Click" OnClientClick="return saveLessonWithProgress(this);" />
-                                <a class="btn btn-outline" href="<%= ResolveUrl("~/Admin/Courses.aspx?id=" + hfCourseId.Value) %>">+ New Lesson</a>
+                                <a class="btn btn-outline" href="<%= ResolveUrl("~/Admin/Courses.aspx?id=" + hfCourseId.Value) %>"><svg class="ui-icon ui-icon-before" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>New Lesson</a>
                             </div>
                         </div>
                     </asp:Panel>
@@ -195,7 +195,7 @@
                             <div style="width:44px;height:44px;margin:0 auto var(--space-3);border-radius:50%;background:rgba(67,56,202,0.1);color:var(--brand-primary);display:grid;place-items:center;"><svg class="admin-icon" style="width:22px;height:22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5h6a4 4 0 0 1 4 4v11a3 3 0 0 0-3-3H2z"></path><path d="M22 4.5h-6a4 4 0 0 0-4 4v11a3 3 0 0 1 3-3h7z"></path></svg></div>
                             <h4 style="font-weight:700;color:var(--text-primary);">No courses found</h4>
                             <p style="font-size:13.5px;margin-bottom:var(--space-3);">Try adjusting your search or filters, or create a new course.</p>
-                            <a class="btn btn-primary" runat="server" href="~/Admin/Courses.aspx?new=1">+ New Course</a>
+                            <a class="btn btn-primary" runat="server" href="~/Admin/Courses.aspx?new=1"><svg class="ui-icon ui-icon-before" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>New Course</a>
                         </asp:Panel>
                     </div>
                 </div>

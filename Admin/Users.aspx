@@ -3,8 +3,8 @@
 <asp:Content ID="HeaderTitle" ContentPlaceHolderID="AdminHeaderTitle" runat="server">Manage Users</asp:Content>
 <asp:Content ID="HeaderSubtitle" ContentPlaceHolderID="AdminHeaderSubtitle" runat="server">Create, edit, and remove learner and admin accounts.</asp:Content>
 <asp:Content ID="HeaderActions" ContentPlaceHolderID="AdminHeaderActions" runat="server">
-    <a class="btn btn-outline" runat="server" href="~/Admin">&larr; Dashboard</a>
-    <a class="btn btn-primary" runat="server" href="~/Admin/Users.aspx?new=1">+ New User</a>
+    <a class="btn btn-outline" runat="server" href="~/Admin"><svg class="ui-icon ui-icon-before" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>Dashboard</a>
+    <a class="btn btn-primary" runat="server" href="~/Admin/Users.aspx?new=1"><svg class="ui-icon ui-icon-before" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>New User</a>
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="AdminMainContent" runat="server">

@@ -14,7 +14,8 @@
     </asp:PlaceHolder>
 
     <link id="SiteStylesheet" rel="stylesheet" type="text/css" runat="server" />
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/favicon.ico" rel="icon" />
+    <link href="~/Content/images/logo.png" rel="apple-touch-icon" />
 
 </head>
 <body>
@@ -42,7 +43,7 @@
         <nav class="site-navbar" aria-label="Primary navigation">
             <div class="site-container nav-content">
                 <a class="brand-link" runat="server" href="~/">
-                    <span class="brand-mark">Bn</span>
+                    <img class="brand-logo" runat="server" src="~/Content/images/logo-mark.png" alt="" />
                     <span class="brand-text">
                         <span class="brand-name">Binary</span>
                         <span class="brand-subtitle">Language Platform</span>
@@ -95,47 +96,66 @@
         <asp:PlaceHolder ID="phSiteFooter" runat="server">
             <footer class="site-footer" aria-label="Site footer">
                 <div class="site-container">
-                    <div class="footer-content">
+                    <div class="footer-top">
                         <div class="footer-brand">
-                            <a class="brand-link footer-logo" runat="server" href="~/">
-                                <span class="brand-mark">Bn</span>
+                            <a class="brand-link" runat="server" href="~/">
+                                <img class="brand-logo" runat="server" src="~/Content/images/logo-mark.png" alt="" />
                                 <span class="brand-text">
                                     <span class="brand-name">Binary</span>
                                     <span class="brand-subtitle">Language Platform</span>
                                 </span>
                             </a>
-                            <p>Practice vocabulary, grammar, listening, and speaking with structured lessons designed for steady, lasting progress.</p>
+                            <p class="footer-tagline">Practice vocabulary, grammar, listening, and speaking with structured lessons, video, and quizzes designed for steady, lasting progress.</p>
+                            <a class="btn btn-primary footer-cta" id="lnkFooterCta" runat="server" href="~/Auth/Register.aspx">Start learning free</a>
                         </div>
-                        <div class="footer-col">
-                            <h4>Platform</h4>
-                            <ul>
-                                <li><a runat="server" href="~/Courses">Browse Courses</a></li>
-                                <li><a runat="server" href="~/Pages/About.aspx">About Us</a></li>
-                                <li><a runat="server" href="~/Pages/Contact.aspx">Contact</a></li>
-                            </ul>
-                        </div>
-                        <div class="footer-col">
-                            <h4>Account</h4>
-                            <ul>
-                                <asp:PlaceHolder ID="phFooterGuestLinks" runat="server">
-                                    <li><a runat="server" href="~/Auth/Login.aspx">Sign In</a></li>
-                                    <li><a runat="server" href="~/Auth/Register.aspx">Register</a></li>
-                                </asp:PlaceHolder>
-                                <li><a runat="server" href="~/Users/Profile.aspx">My Profile</a></li>
-                            </ul>
-                        </div>
-                        <asp:PlaceHolder ID="phAdminFooterNav" runat="server" Visible="false">
+
+                        <nav class="footer-links" aria-label="Footer">
                             <div class="footer-col">
-                                <h4>Admin</h4>
+                                <h4>Learn</h4>
                                 <ul>
-                                    <li><a runat="server" href="~/Admin">Dashboard</a></li>
-                                    <li><a runat="server" href="~/Admin/Courses.aspx">Manage Courses</a></li>
-                                    <li><a runat="server" href="~/Admin/Users.aspx">Manage Users</a></li>
+                                    <li><a runat="server" href="~/Courses">Browse courses</a></li>
+                                    <li><a runat="server" href="~/Leaderboard">Leaderboard</a></li>
+                                    <li><a runat="server" href="~/Users">Community</a></li>
                                 </ul>
                             </div>
-                        </asp:PlaceHolder>
+                            <div class="footer-col">
+                                <h4>Company</h4>
+                                <ul>
+                                    <li><a runat="server" href="~/Pages/About.aspx">About us</a></li>
+                                    <li><a runat="server" href="~/Pages/Contact.aspx">Contact</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-col">
+                                <h4>Account</h4>
+                                <ul>
+                                    <asp:PlaceHolder ID="phFooterGuestLinks" runat="server">
+                                        <li><a runat="server" href="~/Auth/Login.aspx">Sign in</a></li>
+                                        <li><a runat="server" href="~/Auth/Register.aspx">Create account</a></li>
+                                    </asp:PlaceHolder>
+                                    <asp:PlaceHolder ID="phFooterMemberLinks" runat="server" Visible="false">
+                                        <li><a runat="server" href="~/Users/Profile.aspx">My dashboard</a></li>
+                                        <li><a runat="server" href="~/Users/Profile.aspx?tab=profile">Profile settings</a></li>
+                                        <li><a runat="server" href="~/Auth/Logout.aspx">Sign out</a></li>
+                                    </asp:PlaceHolder>
+                                </ul>
+                            </div>
+                            <asp:PlaceHolder ID="phAdminFooterNav" runat="server" Visible="false">
+                                <div class="footer-col">
+                                    <h4>Admin</h4>
+                                    <ul>
+                                        <li><a runat="server" href="~/Admin">Dashboard</a></li>
+                                        <li><a runat="server" href="~/Admin/Courses.aspx">Manage courses</a></li>
+                                        <li><a runat="server" href="~/Admin/Users.aspx">Manage users</a></li>
+                                    </ul>
+                                </div>
+                            </asp:PlaceHolder>
+                        </nav>
                     </div>
-                    <p class="footer-copy">&copy; <%: DateTime.Now.Year %> Binary Language Learning Platform. All rights reserved.</p>
+
+                    <div class="footer-bottom">
+                        <p>&copy; <%: DateTime.Now.Year %> Binary Language Learning Platform. All rights reserved.</p>
+                        <button type="button" class="footer-top-btn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">Back to top<svg class="ui-icon ui-icon-after" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg></button>
+                    </div>
                 </div>
             </footer>
         </asp:PlaceHolder>
@@ -170,6 +190,24 @@
                 markBusy(document.activeElement);
                 nativeSubmit.call(form);
             };
+
+            // dashboard search: Enter searches (instead of submitting the WebForms page), "/" focuses it
+            var searchBox = document.querySelector('.admin-global-search input[data-search-url]');
+            if (searchBox) {
+                searchBox.addEventListener('keydown', function (e) {
+                    if (e.key !== 'Enter') return;
+                    e.preventDefault();
+                    var q = searchBox.value.trim();
+                    if (q) window.location.href = searchBox.getAttribute('data-search-url') + encodeURIComponent(q);
+                });
+                document.addEventListener('keydown', function (e) {
+                    var tag = (document.activeElement && document.activeElement.tagName) || '';
+                    if (e.key === '/' && !/^(INPUT|TEXTAREA|SELECT)$/.test(tag) && !e.ctrlKey && !e.metaKey) {
+                        e.preventDefault();
+                        searchBox.focus();
+                    }
+                });
+            }
 
             // coming back via the browser's back button restores this page from cache still locked
             window.addEventListener('pageshow', function (e) {
