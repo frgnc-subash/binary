@@ -9,7 +9,7 @@ namespace binary.Core.Helpers
     public static class DbHelper
     {
         private static readonly string _connectionString =
-            ConfigurationManager.ConnectionStrings["LoginConnectionString"].ConnectionString;
+            ConfigurationManager.ConnectionStrings["BinaryConnectionString"].ConnectionString;
 
         // creates and opens sql connection
         public static SqlConnection CreateConnection()

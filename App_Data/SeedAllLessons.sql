@@ -1,8 +1,8 @@
 ﻿-- =====================================================
--- Seed Lessons for All Courses in BinaryKoData
--- Run this in SSMS against BinaryKoData
+-- Seed Lessons for All Courses in BinaryDB
+-- Run this in SSMS against BinaryDB
 -- =====================================================
-USE BinaryKoData;
+USE BinaryDB;
 GO
 
 -- 1. Spanish for Beginners
