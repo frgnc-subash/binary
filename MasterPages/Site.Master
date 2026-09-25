@@ -133,8 +133,8 @@
                                         <li><a runat="server" href="~/Auth/Register.aspx">Create account</a></li>
                                     </asp:PlaceHolder>
                                     <asp:PlaceHolder ID="phFooterMemberLinks" runat="server" Visible="false">
-                                        <li><a runat="server" href="~/Users/Profile.aspx">My dashboard</a></li>
-                                        <li><a runat="server" href="~/Users/Profile.aspx?tab=profile">Profile settings</a></li>
+                                        <li><a id="lnkFooterDashboard" runat="server" href="~/Users/Profile.aspx">My dashboard</a></li>
+                                        <li><a id="lnkFooterProfile" runat="server" href="~/Users/Profile.aspx?tab=profile">Profile settings</a></li>
                                         <li><a runat="server" href="~/Auth/Logout.aspx">Sign out</a></li>
                                     </asp:PlaceHolder>
                                 </ul>
