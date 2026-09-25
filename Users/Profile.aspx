@@ -85,7 +85,7 @@
                     </div>
                     <div class="admin-user-meta">
                         <div class="admin-user-name"><asp:Literal ID="litFullName" runat="server">Learner</asp:Literal></div>
-                        <div class="admin-user-role"><asp:Literal ID="litLearnerLevel" runat="server">🌱 Beginner</asp:Literal></div>
+                        <div class="admin-user-role"><asp:Literal ID="litLearnerLevel" runat="server">Beginner</asp:Literal></div>
                     </div>
                 </a>
                 <a class="admin-logout-btn" runat="server" href="~/Auth/Logout.aspx" title="Sign out" aria-label="Sign out">
@@ -143,6 +143,7 @@
                         </p>
                     </div>
                     <asp:Panel ID="pnlContinue" runat="server" CssClass="dash-continue" Visible="false">
+                        <asp:Literal ID="litContinueFlag" runat="server" />
                         <div class="dash-continue-info">
                             <span class="dash-continue-label">Continue where you left off</span>
                             <span class="dash-continue-course"><asp:Literal ID="litContinueCourse" runat="server" /></span>
@@ -279,7 +280,7 @@
                                         <tr>
                                             <td>
                                                 <div style="display:flex;align-items:center;gap:12px;">
-                                                    <div class="dash-course-mono"><%# binary.Core.Helpers.DisplayHelper.GetTitleMonogram((string)Eval("CourseTitle")) %></div>
+                                                    <%# binary.Core.Helpers.FlagHelper.Render((string)Eval("CourseFlagUrl"), (string)Eval("CourseTitle"), "flag-md") %>
                                                     <div>
                                                         <div style="font-weight:700;color:var(--text-primary);"><%# HttpUtility.HtmlEncode((string)Eval("CourseTitle")) %></div>
                                                         <div style="font-size:12px;color:var(--text-muted);"><%# HttpUtility.HtmlEncode((string)Eval("CourseLevel")) %> &bull; +<%# binary.Core.BLL.EnrollmentBLL.LessonXpReward %> XP per lesson</div>
@@ -288,7 +289,7 @@
                                             </td>
                                             <td style="min-width:180px;">
                                                 <div style="display:flex;align-items:center;gap:8px;">
-                                                    <div class="progress" style="height:6px;flex:1;"><div class="progress-bar" style="width:<%# Eval("ProgressPercent") %>%;background:linear-gradient(90deg, #10b981, #059669);"></div></div>
+                                                    <div class="progress" style="height:6px;flex:1;"><div class="progress-bar" style="width:<%# Eval("ProgressPercent") %>%;background:#10b981;"></div></div>
                                                     <span style="font-size:12px;font-weight:700;color:var(--text-secondary);"><%# Eval("ProgressPercent") %>%</span>
                                                 </div>
                                             </td>
@@ -322,7 +323,7 @@
                             <ItemTemplate>
                                 <div class="card card-body" style="display:flex;flex-direction:column;gap:var(--space-3);background:#ffffff;">
                                     <div style="display:flex;align-items:center;gap:var(--space-3);">
-                                        <div class="kpi-icon" style="background:rgba(99,102,241,0.12);color:#4f46e5;">🧠</div>
+                                        <div class="kpi-icon" style="background:rgba(99,102,241,0.12);color:#4f46e5;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 2 2 4-4"/><path d="m3 15 2 2 4-4"/><line x1="11" y1="8" x2="21" y2="8"/><line x1="11" y1="16" x2="21" y2="16"/></svg></div>
                                         <div>
                                             <h3 style="font-size:1.02rem;font-weight:700;"><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></h3>
                                             <p style="font-size:12px;color:var(--text-muted);"><%# HttpUtility.HtmlEncode((string)Eval("CourseTitle")) %></p>
@@ -334,7 +335,7 @@
                         </asp:Repeater>
                     </div>
                     <asp:Panel ID="pnlNoQuizzes" runat="server" Visible="false" style="text-align:center;color:var(--text-muted);padding:var(--space-8) var(--space-4);">
-                        <div style="font-size:2.5rem;margin-bottom:var(--space-2);">🧠</div>
+                        <div class="dash-empty-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 2 2 4-4"/><path d="m3 15 2 2 4-4"/><line x1="11" y1="8" x2="21" y2="8"/><line x1="11" y1="16" x2="21" y2="16"/></svg></div>
                         <h4 style="font-weight:700;color:var(--text-primary);">No practice available yet</h4>
                         <p style="font-size:13.5px;">Enroll in a course to unlock its vocabulary practice quiz.</p>
                     </asp:Panel>
@@ -391,7 +392,7 @@
 
                 <asp:Panel ID="pnlQuizResult" runat="server" Visible="false">
                     <div class="card card-body" style="max-width:480px;text-align:center;background:#ffffff;">
-                        <div style="font-size:2.5rem;margin-bottom:var(--space-2);"><asp:Literal ID="litResultEmoji" runat="server" /></div>
+                        <div class="quiz-result-badge"><asp:Literal ID="litResultIcon" runat="server" /></div>
                         <h3 style="font-size:1.3rem;font-weight:800;">Score: <asp:Literal ID="litResultScore" runat="server" /></h3>
                         <p style="font-size:13.5px;color:var(--text-muted);margin:6px 0 var(--space-2);"><asp:Literal ID="litResultMessage" runat="server" /></p>
                         <p style="font-size:12.5px;color:#d97706;font-weight:700;margin-bottom:var(--space-4);">+<asp:Literal ID="litResultXp" runat="server" /> XP earned</p>
@@ -418,6 +419,7 @@
                             <span class="profile-title-pill"><asp:Literal ID="litProfileTitle" runat="server" /></span>
                             <span><asp:Literal ID="litProfileEmail" runat="server" /></span>
                             <span>Member since <asp:Literal ID="litMemberSince" runat="server" /></span>
+                            <asp:Literal ID="litOnboardingInfo" runat="server" />
                         </div>
                         <div class="profile-title-row">
                             <span class="profile-title-hint"><asp:Literal ID="litProfileTitleHint" runat="server" /></span>
@@ -490,7 +492,7 @@
             <div id="tab-exp" class="<%= GetTabPaneClass("tab-exp") %>">
                 <div class="card card-body exp-summary">
                     <div class="exp-summary-title">
-                        <span class="exp-summary-emoji"><asp:Literal ID="litExpTitleEmoji" runat="server" /></span>
+                        <span class="exp-summary-icon"><asp:Literal ID="litExpTitleIcon" runat="server" /></span>
                         <div>
                             <div class="exp-summary-label">Current title</div>
                             <div class="exp-summary-name"><asp:Literal ID="litExpTitleName" runat="server" /></div>
@@ -501,7 +503,7 @@
                             <span><strong><asp:Literal ID="litExpTotal" runat="server">0</asp:Literal></strong> XP earned</span>
                             <span><asp:Literal ID="litExpToNext" runat="server" /></span>
                         </div>
-                        <div class="progress" style="height:8px;"><div class="progress-bar" id="expProgressBar" runat="server" style="background:linear-gradient(90deg, #f59e0b, #d97706);"></div></div>
+                        <div class="progress" style="height:8px;"><div class="progress-bar" id="expProgressBar" runat="server" style="background:#f59e0b;"></div></div>
                     </div>
                 </div>
 
@@ -509,7 +511,7 @@
                     <asp:Repeater ID="rptTitles" runat="server">
                         <ItemTemplate>
                             <div class="card card-body exp-tier <%# Eval("StateClass") %>">
-                                <div class="exp-tier-emoji"><%# Eval("Emoji") %></div>
+                                <div class="exp-tier-icon"><%# Eval("IconHtml") %></div>
                                 <h4><%# Eval("Name") %></h4>
                                 <p class="exp-tier-range"><%# Eval("RangeText") %></p>
                                 <p class="exp-tier-desc"><%# Eval("Description") %></p>
