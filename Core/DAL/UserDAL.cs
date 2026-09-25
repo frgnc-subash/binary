@@ -19,7 +19,7 @@ namespace binary.Core.DAL
         {
             const string sql = @"
                 SELECT u.UserID, u.FirstName, u.LastName, u.Email, u.PasswordHash, u.PasswordSalt,
-                       u.RoleID, r.RoleName, u.IsActive, u.FailedLoginAttempts, u.LockoutEndUtc, u.CreatedDate, u.TotalXP, u.ProfileImageUrl
+                       u.RoleID, r.RoleName, u.IsActive, u.FailedLoginAttempts, u.LockoutEndUtc, u.CreatedDate, u.TotalXP, u.ProfileImageUrl, u.NativeLanguage, u.LearningReason
                 FROM Users u
                 INNER JOIN Roles r ON u.RoleID = r.RoleID
                 WHERE u.Email = @Email;";
@@ -44,7 +44,7 @@ namespace binary.Core.DAL
         {
             const string sql = @"
                 SELECT u.UserID, u.FirstName, u.LastName, u.Email, u.PasswordHash, u.PasswordSalt,
-                       u.RoleID, r.RoleName, u.IsActive, u.FailedLoginAttempts, u.LockoutEndUtc, u.CreatedDate, u.TotalXP, u.ProfileImageUrl
+                       u.RoleID, r.RoleName, u.IsActive, u.FailedLoginAttempts, u.LockoutEndUtc, u.CreatedDate, u.TotalXP, u.ProfileImageUrl, u.NativeLanguage, u.LearningReason
                 FROM Users u
                 INNER JOIN Roles r ON u.RoleID = r.RoleID
                 WHERE u.UserID = @UserID;";
@@ -165,6 +165,20 @@ namespace binary.Core.DAL
             }
         }
 
+        public void UpdateOnboarding(int userId, string nativeLanguage, string learningReason)
+        {
+            const string sql = "UPDATE Users SET NativeLanguage = @NativeLanguage, LearningReason = @LearningReason WHERE UserID = @UserID;";
+
+            using (SqlConnection con = DbHelper.CreateConnection())
+            using (SqlCommand cmd = DbHelper.CreateCommand(con, sql))
+            {
+                DbHelper.AddParam(cmd, "@NativeLanguage", nativeLanguage);
+                DbHelper.AddParam(cmd, "@LearningReason", learningReason);
+                DbHelper.AddParam(cmd, "@UserID", userId);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         public void UpdateProfileImage(int userId, string imageUrl)
         {
             const string sql = "UPDATE Users SET ProfileImageUrl = @ProfileImageUrl WHERE UserID = @UserID;";
@@ -233,7 +247,7 @@ namespace binary.Core.DAL
         {
             const string sql = @"
                 SELECT u.UserID, u.FirstName, u.LastName, u.Email, u.PasswordHash, u.PasswordSalt,
-                       u.RoleID, r.RoleName, u.IsActive, u.FailedLoginAttempts, u.LockoutEndUtc, u.CreatedDate, u.TotalXP, u.ProfileImageUrl
+                       u.RoleID, r.RoleName, u.IsActive, u.FailedLoginAttempts, u.LockoutEndUtc, u.CreatedDate, u.TotalXP, u.ProfileImageUrl, u.NativeLanguage, u.LearningReason
                 FROM Users u
                 INNER JOIN Roles r ON u.RoleID = r.RoleID
                 ORDER BY u.CreatedDate DESC;";
@@ -268,7 +282,9 @@ namespace binary.Core.DAL
                 LockoutEndUtc = reader["LockoutEndUtc"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["LockoutEndUtc"]),
                 CreatedDate = Convert.ToDateTime(reader["CreatedDate"]),
                 TotalXP = Convert.ToInt32(reader["TotalXP"]),
-                ProfileImageUrl = reader["ProfileImageUrl"] == DBNull.Value ? null : reader["ProfileImageUrl"].ToString()
+                ProfileImageUrl = reader["ProfileImageUrl"] == DBNull.Value ? null : reader["ProfileImageUrl"].ToString(),
+                NativeLanguage = reader["NativeLanguage"] == DBNull.Value ? null : reader["NativeLanguage"].ToString(),
+                LearningReason = reader["LearningReason"] == DBNull.Value ? null : reader["LearningReason"].ToString()
             };
         }
 
@@ -302,7 +318,7 @@ namespace binary.Core.DAL
         {
             const string sql = @"
                 SELECT TOP (@Top) u.UserID, u.FirstName, u.LastName, u.Email, u.PasswordHash, u.PasswordSalt,
-                       u.RoleID, r.RoleName, u.IsActive, u.FailedLoginAttempts, u.LockoutEndUtc, u.CreatedDate, u.TotalXP, u.ProfileImageUrl
+                       u.RoleID, r.RoleName, u.IsActive, u.FailedLoginAttempts, u.LockoutEndUtc, u.CreatedDate, u.TotalXP, u.ProfileImageUrl, u.NativeLanguage, u.LearningReason
                 FROM Users u
                 INNER JOIN Roles r ON u.RoleID = r.RoleID
                 WHERE u.IsActive = 1

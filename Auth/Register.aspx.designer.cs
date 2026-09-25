@@ -85,5 +85,10 @@ namespace binary.Auth
         /// RegisterBtn control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Button RegisterBtn;
+
+        protected global::System.Web.UI.WebControls.Panel pnlOnboarding;
+        protected global::System.Web.UI.WebControls.Literal litOnboardingFlag;
+        protected global::System.Web.UI.WebControls.Literal litOnboardingCourse;
+        protected global::System.Web.UI.WebControls.Literal litOnboardingMeta;
     }
 }

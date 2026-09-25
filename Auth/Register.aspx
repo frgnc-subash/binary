@@ -11,6 +11,17 @@
             </div>
             <div class="auth-card-body">
 
+                <%-- choices from the Get Started onboarding, if the visitor came through it --%>
+                <asp:Panel ID="pnlOnboarding" runat="server" Visible="false" CssClass="onb-plan">
+                    <asp:Literal ID="litOnboardingFlag" runat="server" />
+                    <div class="onb-plan-text">
+                        <span class="onb-plan-label">Your plan</span>
+                        <strong><asp:Literal ID="litOnboardingCourse" runat="server" /></strong>
+                        <small><asp:Literal ID="litOnboardingMeta" runat="server" /></small>
+                    </div>
+                    <a class="onb-plan-change" runat="server" href="~/Auth/GetStarted.aspx">Change</a>
+                </asp:Panel>
+
                 <asp:Panel ID="ErrorPanel" runat="server" CssClass="auth-alert auth-alert-error" Visible="false">
                     <asp:Literal ID="litRegisterError" runat="server" />
                 </asp:Panel>
