@@ -41,68 +41,64 @@
         </div>
     </div>
 
-    <div class="admin-main-grid">
-        <div style="display:flex;flex-direction:column;gap:var(--space-6);min-width:0;">
+    <%-- one column: health, top courses, then the activity feed at full width --%>
+    <div style="display:flex;flex-direction:column;gap:var(--space-6);min-width:0;">
 
-            <%-- Published vs Draft --%>
-            <div class="card card-body">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-3);">
-                    <h3 style="font-size:1.05rem;font-weight:700;">Catalogue Health</h3>
-                    <span style="font-size:12.5px;color:var(--text-muted);"><asp:Literal ID="litPublishedCount" runat="server">0</asp:Literal> published &bull; <asp:Literal ID="litDraftCount" runat="server">0</asp:Literal> draft</span>
-                </div>
-                <div class="segment-bar">
-                    <div style="background:#10b981;height:100%;float:left;" runat="server" id="segPublished"></div>
-                    <div style="background:#e2e8f0;height:100%;float:left;" runat="server" id="segDraft"></div>
-                </div>
-                <div style="display:flex;gap:16px;font-size:11.5px;font-weight:600;margin-top:10px;">
-                    <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#10b981;"></span> Published</span>
-                    <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#e2e8f0;"></span> Draft</span>
-                </div>
+        <%-- Published vs Draft --%>
+        <div class="card card-body">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-3);">
+                <h3 style="font-size:1.05rem;font-weight:700;">Catalogue Health</h3>
+                <span style="font-size:12.5px;color:var(--text-muted);"><asp:Literal ID="litPublishedCount" runat="server">0</asp:Literal> published &bull; <asp:Literal ID="litDraftCount" runat="server">0</asp:Literal> draft</span>
             </div>
-
-            <%-- Top Courses --%>
-            <div class="card">
-                <div class="card-header"><h3 style="font-size:1.05rem;">Top Courses by Enrollment</h3></div>
-                <div style="overflow-x:auto;">
-                    <table class="admin-table">
-                        <thead><tr><th>Course</th><th>Language Family</th><th style="text-align:right;">Learners</th></tr></thead>
-                        <tbody>
-                            <asp:Repeater ID="rptTopCourses" runat="server">
-                                <ItemTemplate>
-                                    <tr>
-                                        <td style="font-weight:700;color:var(--text-primary);"><%# HttpUtility.HtmlEncode((string)Eval("CourseTitle")) %></td>
-                                        <td><%# HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
-                                        <td style="text-align:right;font-weight:700;"><%# Eval("EnrollmentCount") %></td>
-                                    </tr>
-                                </ItemTemplate>
-                            </asp:Repeater>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="segment-bar">
+                <div style="background:#10b981;height:100%;float:left;" runat="server" id="segPublished"></div>
+                <div style="background:#e2e8f0;height:100%;float:left;" runat="server" id="segDraft"></div>
             </div>
-
+            <div style="display:flex;gap:16px;font-size:11.5px;font-weight:600;margin-top:10px;">
+                <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#10b981;"></span> Published</span>
+                <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#e2e8f0;"></span> Draft</span>
+            </div>
         </div>
 
-        <%-- Activity Feed --%>
-        <div class="admin-side">
-            <div class="card card-body">
-                <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:var(--space-3);">Recent Activity</h3>
-                <div style="display:flex;flex-direction:column;gap:var(--space-3);">
-                    <asp:Repeater ID="rptActivity" runat="server">
-                        <ItemTemplate>
-                            <div style="display:flex;gap:10px;align-items:flex-start;">
-                                <div style="width:28px;height:28px;border-radius:50%;background:rgba(67,56,202,0.1);color:var(--brand-primary);display:grid;place-items:center;flex-shrink:0;"><%# Eval("Icon") %></div>
-                                <div style="min-width:0;">
-                                    <div style="font-size:13px;color:var(--text-primary);font-weight:600;line-height:1.4;"><%# HttpUtility.HtmlEncode((string)Eval("Text")) %></div>
-                                    <div style="font-size:11px;color:var(--text-muted);"><%# Eval("Date", "{0:MMM d, h:mm tt}") %></div>
-                                </div>
+        <%-- Top Courses --%>
+        <div class="card">
+            <div class="card-header"><h3 style="font-size:1.05rem;">Top Courses by Enrollment</h3></div>
+            <div style="overflow-x:auto;">
+                <table class="admin-table">
+                    <thead><tr><th>Course</th><th>Language Family</th><th style="text-align:right;">Learners</th></tr></thead>
+                    <tbody>
+                        <asp:Repeater ID="rptTopCourses" runat="server">
+                            <ItemTemplate>
+                                <tr>
+                                    <td style="font-weight:700;color:var(--text-primary);"><%# HttpUtility.HtmlEncode((string)Eval("CourseTitle")) %></td>
+                                    <td><%# HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
+                                    <td style="text-align:right;font-weight:700;"><%# Eval("EnrollmentCount") %></td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    <%-- Activity Feed --%>
+        <div class="card card-body">
+            <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:var(--space-3);">Recent Activity</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:var(--space-4) var(--space-6);">
+                <asp:Repeater ID="rptActivity" runat="server">
+                    <ItemTemplate>
+                        <div style="display:flex;gap:10px;align-items:flex-start;">
+                            <div style="width:28px;height:28px;border-radius:50%;background:rgba(67,56,202,0.1);color:var(--brand-primary);display:grid;place-items:center;flex-shrink:0;"><%# Eval("Icon") %></div>
+                            <div style="min-width:0;">
+                                <div style="font-size:13px;color:var(--text-primary);font-weight:600;line-height:1.4;"><%# HttpUtility.HtmlEncode((string)Eval("Text")) %></div>
+                                <div style="font-size:11px;color:var(--text-muted);"><%# Eval("Date", "{0:MMM d, h:mm tt}") %></div>
                             </div>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                    <asp:Panel ID="pnlNoActivity" runat="server" Visible="false" style="text-align:center;color:var(--text-muted);font-size:13px;padding:var(--space-4) 0;">
-                        No activity recorded yet.
-                    </asp:Panel>
-                </div>
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+                <asp:Panel ID="pnlNoActivity" runat="server" Visible="false" style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:13px;padding:var(--space-4) 0;">
+                    No activity recorded yet.
+                </asp:Panel>
             </div>
         </div>
     </div>
