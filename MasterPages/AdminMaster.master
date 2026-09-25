@@ -14,6 +14,10 @@
                         <span class="admin-badge">Admin Panel</span>
                     </div>
                 </a>
+                <%-- collapses the sidebar to icons only; the state is remembered in localStorage --%>
+                <button type="button" class="sidebar-toggle" onclick="BinaryUI.toggleSidebar()" aria-label="Collapse sidebar" title="Collapse sidebar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
 
                 <nav class="admin-sidebar-nav">
                     <div class="admin-nav-group">
@@ -106,6 +110,10 @@
                     <kbd class="search-kbd" title="Press / to search">/</kbd>
                 </div>
                 <div class="admin-global-actions">
+                    <button type="button" class="admin-icon-btn theme-toggle" onclick="BinaryUI.toggleTheme()" aria-label="Switch to dark theme" title="Switch to dark theme">
+                        <svg class="admin-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        <svg class="admin-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                    </button>
                     <bn:NotificationBell ID="NotificationBell" runat="server" />
                     <a class="admin-global-avatar" runat="server" href="~/Admin/Profile.aspx" title="Edit your profile" style="text-decoration:none;color:inherit;"><%= GetAvatarHtml() %></a>
                 </div>
