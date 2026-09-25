@@ -56,7 +56,7 @@
                                         <asp:DropDownList ID="ddlFlag" runat="server" CssClass="form-control" onchange="previewFlag()" />
                                     </div>
                                     <div class="flag-upload">
-                                        <asp:FileUpload ID="fuFlag" runat="server" CssClass="form-control" accept=".png,.jpg,.jpeg,.webp,.gif" onchange="previewFlagFile(this)" />
+                                        <asp:FileUpload ID="fuFlag" runat="server" accept=".png,.jpg,.jpeg,.webp,.gif" data-drop-label="Upload a new flag or drag it here" data-max-mb="1" onchange="previewFlagFile(this)" />
                                         <p class="form-hint">Or upload a new flag (PNG, JPG, WEBP, or GIF, up to 1 MB). It's added to the flag library so you can reuse it.</p>
                                     </div>
                                 </div>
@@ -138,7 +138,7 @@
                                         <asp:TextBox ID="txtLessonVideoUrl" runat="server" CssClass="form-control" placeholder="https://www.youtube.com/watch?v=…  (YouTube, Vimeo, or a direct .mp4 link)" />
                                     </div>
                                     <div id="videoUploadPane" hidden>
-                                        <asp:FileUpload ID="fuLessonVideo" runat="server" CssClass="form-control" accept="video/mp4,video/webm,video/ogg,.mp4,.webm,.ogv" />
+                                        <asp:FileUpload ID="fuLessonVideo" runat="server" accept="video/mp4,video/webm,video/ogg,.mp4,.webm,.ogv" data-drop-label="Choose a video or drag it here" />
                                         <p class="form-hint">MP4 (recommended — plays everywhere), WEBM, or OGV. Up to <%= binary.Core.Helpers.VideoHelper.MaxUploadMegabytes %> MB; for longer videos, upload to YouTube and paste the link.</p>
                                     </div>
 
@@ -319,7 +319,10 @@
             // a file picked earlier would override the link on save, so drop it when switching back
             if (!upload) {
                 var file = document.getElementById('<%= fuLessonVideo.ClientID %>');
-                if (file) file.value = '';
+                if (file && file.value) {
+                    file.value = '';
+                    file.dispatchEvent(new Event('change', { bubbles: true }));   // resets the drop zone
+                }
             }
         }
 

@@ -39,7 +39,7 @@
             <div class="card-body">
                 <div class="form-group">
                     <label class="form-label" for="<%= fuAvatar.ClientID %>">Profile picture</label>
-                    <asp:FileUpload ID="fuAvatar" runat="server" CssClass="form-control" accept="image/jpeg,image/png,image/gif,image/webp" onchange="previewAvatar(this)" />
+                    <asp:FileUpload ID="fuAvatar" runat="server" accept="image/jpeg,image/png,image/gif,image/webp" data-drop-label="Choose a picture or drag it here" data-max-mb="2" onchange="previewAvatar(this)" />
                     <p class="form-hint" id="avatarHint">JPG, PNG, GIF, or WEBP · max 2 MB. The preview updates right away; press Save to keep it.</p>
                 </div>
                 <div class="grid-2">

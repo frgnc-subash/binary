@@ -4690,3 +4690,109 @@ html.theme-switching * {
     padding: 0 16px;
     font-size: 13.5px;
 }
+
+/* =====================================================
+   File uploads: drop zone that replaces the native "Browse" box
+   (built by enhanceFileInput in Scripts/binary-ui.js)
+   ===================================================== */
+.file-drop {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 1.5px dashed var(--border-mid);
+    border-radius: var(--radius-md);
+    background: var(--bg-overlay);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.file-drop:hover,
+.file-drop.is-focused {
+    border-color: var(--brand-primary);
+}
+
+.file-drop.is-focused {
+    box-shadow: 0 0 0 3px var(--brand-primary-soft);
+}
+
+.file-drop.is-dragging {
+    border-color: var(--brand-primary);
+    background: var(--brand-primary-soft);
+}
+
+.file-drop.has-file {
+    border-style: solid;
+    border-color: var(--border-light);
+    background: var(--bg-surface);
+}
+
+/* the real input covers the whole zone: click or drop anywhere on it */
+.file-drop input[type="file"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-drop-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-sm);
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary);
+}
+
+.file-drop-icon svg { width: 20px; height: 20px; }
+
+.file-drop.has-file .file-drop-icon {
+    background: var(--brand-accent-soft);
+    color: var(--brand-accent);
+}
+
+.file-drop-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.file-drop-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-drop-meta {
+    font-size: 12.5px;
+    color: var(--text-muted);
+}
+
+/* sits above the invisible input so it can be clicked */
+.file-drop-remove {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    padding: 6px 10px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--brand-rose);
+    cursor: pointer;
+}
+
+.file-drop-remove:hover { background: var(--brand-rose-soft); }
+.file-drop-remove[hidden] { display: none; }
