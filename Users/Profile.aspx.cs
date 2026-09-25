@@ -133,6 +133,13 @@ namespace binary.Users
                 rptEnrollments.DataBind();
                 pnlNoEnrollments.Visible = enrollments.Count == 0;
 
+                // status tabs above the list; not worth showing for a single course
+                pnlEnrollmentFilter.Visible = enrollments.Count > 1;
+                litCountAll.Text = enrollments.Count.ToString();
+                litCountProgress.Text = enrollments.Count(x => x.ProgressPercent > 0 && x.ProgressPercent < 100).ToString();
+                litCountNew.Text = enrollments.Count(x => x.ProgressPercent <= 0).ToString();
+                litCountDone.Text = enrollments.Count(x => x.ProgressPercent >= 100).ToString();
+
                 User user = _userBll.GetProfile(userId);
                 litTotalXp.Text = user.TotalXP.ToString();
                 litRank.Text = _userBll.GetRank(userId).ToString();
@@ -214,6 +221,15 @@ namespace binary.Users
             // the course page opens the next unfinished lesson automatically
             lnkContinue.HRef = "~/Courses/Detail.aspx?id=" + current.CourseID;
             pnlContinue.Visible = true;
+        }
+
+        // matches the data-status keys used by the My courses filter tabs
+        protected string GetEnrollmentStatusKey(object progressPercent)
+        {
+            int pct = Convert.ToInt32(progressPercent);
+            if (pct >= 100) return "done";
+            if (pct <= 0) return "new";
+            return "progress";
         }
 
         protected string GetEnrollmentStatusBadge(object progressPercent)
