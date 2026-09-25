@@ -128,7 +128,6 @@
     <Content Include="Courses\Default.aspx" />
     <Content Include="Courses\Detail.aspx" />
     <Content Include="App_Data\CreateDatabase.sql" />
-    <Content Include="App_Data\SeedAllLessons.sql" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
