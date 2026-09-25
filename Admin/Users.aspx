@@ -68,22 +68,33 @@
     <div class="card">
         <div class="card-header"><h3 style="font-size:1.05rem;">All Users</h3></div>
 
-        <div class="filter-bar">
+        <%-- filters: dropdowns apply straight away, the search box on Enter --%>
+        <asp:Panel ID="pnlUserFilters" runat="server" CssClass="filter-bar" DefaultButton="btnUserSearch">
             <div class="filter-bar-search">
-                <asp:TextBox ID="txtUserSearch" runat="server" CssClass="form-control" placeholder="Search by name or email…" />
+                <svg class="filter-bar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <asp:TextBox ID="txtUserSearch" runat="server" CssClass="form-control" TextMode="Search" placeholder="Search name or email" aria-label="Search users" />
             </div>
-            <asp:DropDownList ID="ddlRoleFilter" runat="server" CssClass="form-control">
-                <asp:ListItem Text="All Roles" Value="" />
+            <asp:DropDownList ID="ddlRoleFilter" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="UserFilter_Changed" aria-label="Role">
+                <asp:ListItem Text="All roles" Value="" />
                 <asp:ListItem Text="Admin" Value="1" />
                 <asp:ListItem Text="Member" Value="2" />
             </asp:DropDownList>
-            <asp:DropDownList ID="ddlStatusFilter" runat="server" CssClass="form-control">
-                <asp:ListItem Text="All Statuses" Value="" />
+            <asp:DropDownList ID="ddlStatusFilter" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="UserFilter_Changed" aria-label="Status">
+                <asp:ListItem Text="Any status" Value="" />
                 <asp:ListItem Text="Active" Value="active" />
                 <asp:ListItem Text="Inactive" Value="inactive" />
             </asp:DropDownList>
+            <asp:DropDownList ID="ddlUserSort" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="UserFilter_Changed" aria-label="Sort by">
+                <asp:ListItem Text="Newest first" Value="newest" />
+                <asp:ListItem Text="Name A to Z" Value="name" />
+                <asp:ListItem Text="Most XP" Value="xp" />
+            </asp:DropDownList>
             <asp:Button ID="btnUserSearch" runat="server" CssClass="btn btn-outline" Text="Search" OnClick="btnUserSearch_Click" />
-        </div>
+        </asp:Panel>
+        <asp:Panel ID="pnlUserFilterSummary" runat="server" CssClass="filter-summary" Visible="false">
+            <span><asp:Literal ID="litUserFilterSummary" runat="server" /></span>
+            <asp:LinkButton ID="lnkClearUserFilters" runat="server" CssClass="filter-clear" OnClick="lnkClearUserFilters_Click">Clear filters</asp:LinkButton>
+        </asp:Panel>
 
         <asp:Panel ID="pnlUserList" runat="server">
             <div style="overflow-x:auto;">

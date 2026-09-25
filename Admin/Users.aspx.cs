@@ -96,6 +96,7 @@ namespace binary.Admin
         private void BindUsers()
         {
             var all = new UserBLL().GetAllUsers();
+            int totalCount = all.Count;
 
             string search = (txtUserSearch.Text ?? "").Trim();
             if (search.Length > 0)
@@ -117,6 +118,13 @@ namespace binary.Admin
             else if (ddlStatusFilter.SelectedValue == "inactive")
                 all = all.Where(u => !u.IsActive).ToList();
 
+            if (ddlUserSort.SelectedValue == "name")
+                all = all.OrderBy(u => u.FirstName).ThenBy(u => u.LastName).ToList();
+            else if (ddlUserSort.SelectedValue == "xp")
+                all = all.OrderByDescending(u => u.TotalXP).ThenBy(u => u.FirstName).ToList();
+            else
+                all = all.OrderByDescending(u => u.CreatedDate).ToList();
+
             int totalPages = Math.Max(1, (int)Math.Ceiling(all.Count / (double)PageSize));
             int page;
             int.TryParse(hfUsersPage.Value, out page);
@@ -133,6 +141,24 @@ namespace binary.Admin
 
             pnlUserList.Visible = all.Count > 0;
             pnlNoUsers.Visible = all.Count == 0;
+
+            bool filtered = search.Length > 0 || ddlRoleFilter.SelectedIndex > 0 || ddlStatusFilter.SelectedIndex > 0;
+            pnlUserFilterSummary.Visible = filtered;
+            litUserFilterSummary.Text = all.Count + " of " + totalCount + " user" + (totalCount == 1 ? "" : "s") + " match";
+        }
+
+        protected void UserFilter_Changed(object sender, EventArgs e)
+        {
+            hfUsersPage.Value = "1";
+            BindUsers();
+        }
+
+        protected void lnkClearUserFilters_Click(object sender, EventArgs e)
+        {
+            txtUserSearch.Text = "";
+            ddlRoleFilter.SelectedIndex = 0;
+            ddlStatusFilter.SelectedIndex = 0;
+            UserFilter_Changed(sender, e);
         }
 
         protected void btnSaveUser_Click(object sender, EventArgs e)
@@ -170,6 +196,10 @@ namespace binary.Admin
                 pnlUserError.Visible = true;
                 pnlUserForm.Visible = true;
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError("Save user failed: {0}", ex);
@@ -196,14 +226,14 @@ namespace binary.Admin
                 new UserBLL().DeleteUser(userId);
                 Response.Redirect(WithMsg("~/Admin/Users.aspx", "user-deleted"));
             }
-            catch (System.Threading.ThreadAbortException)
-            {
-                throw;   // Response.Redirect ends the request this way; not an error
-            }
             catch (ValidationException vex)
             {
                 litUserError.Text = Server.HtmlEncode(vex.Message);
                 pnlUserError.Visible = true;
+            }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
             }
             catch (Exception ex)
             {
@@ -231,10 +261,6 @@ namespace binary.Admin
         {
             int page;
             int.TryParse(hfUsersPage.Value, out page);
-            catch (System.Threading.ThreadAbortException)
-            {
-                throw;   // Response.Redirect ends the request this way; not an error
-            }
             hfUsersPage.Value = (page + 1).ToString();
             BindUsers();
         }

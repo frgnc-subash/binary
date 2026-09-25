@@ -63,12 +63,17 @@
     <div class="card">
         <div class="card-header"><h3 style="font-size:1.05rem;">All Language Families</h3></div>
 
-        <div class="filter-bar">
+        <asp:Panel ID="pnlLanguageFilters" runat="server" CssClass="filter-bar" DefaultButton="btnLanguageSearch">
             <div class="filter-bar-search">
-                <asp:TextBox ID="txtLanguageSearch" runat="server" CssClass="form-control" placeholder="Search by name…" />
+                <svg class="filter-bar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <asp:TextBox ID="txtLanguageSearch" runat="server" CssClass="form-control" TextMode="Search" placeholder="Search by name" aria-label="Search language families" />
             </div>
             <asp:Button ID="btnLanguageSearch" runat="server" CssClass="btn btn-outline" Text="Search" OnClick="btnLanguageSearch_Click" />
-        </div>
+        </asp:Panel>
+        <asp:Panel ID="pnlLanguageFilterSummary" runat="server" CssClass="filter-summary" Visible="false">
+            <span><asp:Literal ID="litLanguageFilterSummary" runat="server" /></span>
+            <asp:LinkButton ID="lnkClearLanguageFilters" runat="server" CssClass="filter-clear" OnClick="lnkClearLanguageFilters_Click">Clear search</asp:LinkButton>
+        </asp:Panel>
 
         <asp:Panel ID="pnlLanguageList" runat="server">
             <div style="overflow-x:auto;">

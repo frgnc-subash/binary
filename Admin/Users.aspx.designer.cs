@@ -28,10 +28,15 @@ namespace binary.Admin
         protected System.Web.UI.WebControls.CheckBox chkActive;
         protected System.Web.UI.WebControls.Literal litSelfEditNote;
         protected System.Web.UI.WebControls.Button btnSaveUser;
+        protected System.Web.UI.WebControls.Panel pnlUserFilters;
         protected System.Web.UI.WebControls.TextBox txtUserSearch;
         protected System.Web.UI.WebControls.DropDownList ddlRoleFilter;
         protected System.Web.UI.WebControls.DropDownList ddlStatusFilter;
+        protected System.Web.UI.WebControls.DropDownList ddlUserSort;
         protected System.Web.UI.WebControls.Button btnUserSearch;
+        protected System.Web.UI.WebControls.Panel pnlUserFilterSummary;
+        protected System.Web.UI.WebControls.Literal litUserFilterSummary;
+        protected System.Web.UI.WebControls.LinkButton lnkClearUserFilters;
         protected System.Web.UI.WebControls.Panel pnlUserList;
         protected System.Web.UI.WebControls.Repeater rptUsers;
         protected System.Web.UI.WebControls.Literal litPageInfo;
