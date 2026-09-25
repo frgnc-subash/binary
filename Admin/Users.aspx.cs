@@ -196,6 +196,10 @@ namespace binary.Admin
                 new UserBLL().DeleteUser(userId);
                 Response.Redirect(WithMsg("~/Admin/Users.aspx", "user-deleted"));
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             catch (ValidationException vex)
             {
                 litUserError.Text = Server.HtmlEncode(vex.Message);
@@ -227,6 +231,10 @@ namespace binary.Admin
         {
             int page;
             int.TryParse(hfUsersPage.Value, out page);
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             hfUsersPage.Value = (page + 1).ToString();
             BindUsers();
         }

@@ -168,6 +168,10 @@ namespace binary.Admin
 
         protected void rptLanguages_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             if (e.CommandName != "DeleteLanguage") return;
 
             int categoryId = Convert.ToInt32(e.CommandArgument);
@@ -192,6 +196,10 @@ namespace binary.Admin
         protected void btnLanguageSearch_Click(object sender, EventArgs e)
         {
             hfLanguagesPage.Value = "1";
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             BindLanguages();
         }
 
