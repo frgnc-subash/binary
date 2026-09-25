@@ -30,7 +30,7 @@
                                                     <%# HttpUtility.HtmlEncode((string)Eval("FirstName") + " " + (string)Eval("LastName")) %>
                                                     <asp:Literal ID="litYou" runat="server" Visible="false"> <span class="badge badge-primary">You</span></asp:Literal>
                                                 </span>
-                                                <span class="lb-title"><%# HttpUtility.HtmlEncode(binary.Core.BLL.LearnerTitles.For((int)Eval("TotalXP")).Display) %></span>
+                                                <span class="lb-title"><%# binary.Core.BLL.LearnerTitles.For((int)Eval("TotalXP")).Html %></span>
                                             </div>
                                         </div>
                                     </td>
