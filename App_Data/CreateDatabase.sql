@@ -1,4 +1,4 @@
-
+﻿
 -- Create the database if it doesn't exist
 IF DB_ID('BinaryKoData') IS NULL
     CREATE DATABASE BinaryKoData;
@@ -287,97 +287,190 @@ IF NOT EXISTS (SELECT 1 FROM Lessons)
 BEGIN
     -- Spanish
     INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
-        (1, 'Greetings & Introductions',    'Learn how to say hello, goodbye, and introduce yourself in Spanish. Covers: ¡Hola!, Buenos días, ¿Cómo te llamas?, Me llamo...', 1),
+        (1, 'Greetings & Introductions',    N'Learn how to say hello, goodbye, and introduce yourself in Spanish. Covers: ¡Hola!, Buenos días, ¿Cómo te llamas?, Me llamo...', 1),
         (1, 'Numbers 1-100',                'Master counting in Spanish from uno to cien. Practice: Uno, Dos, Tres, Cuatro, Cinco, Diez, Veinte...', 2),
         (1, 'Common Verbs: Ser & Estar',    'Understand the two forms of "to be" in Spanish. SER for permanent traits, ESTAR for temporary states/locations.', 3),
-        (1, 'At the Restaurant',            'Order food and drinks confidently: La cuenta, por favor, ¿Qué recomienda?, Quisiera una paella.', 4),
-        (1, 'Directions & Transportation',  'Navigate cities in Spanish: ¿Dónde está la estación?, Todo recto, A la izquierda, A la derecha.', 5);
+        (1, 'At the Restaurant',            N'Order food and drinks confidently: La cuenta, por favor, ¿Qué recomienda?, Quisiera una paella.', 4),
+        (1, 'Directions & Transportation',  N'Navigate cities in Spanish: ¿Dónde está la estación?, Todo recto, A la izquierda, A la derecha.', 5);
 
     -- French
     INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
-        (2, 'Les Salutations & Politesse',  'Learn polite French greetings: Bonjour, Bonsoir, Comment allez-vous?, Ça va?, S''il vous plaît, Merci beaucoup.', 1),
-        (2, 'Le Passé Composé',             'Master the past tense with avoir and être: J''ai mangé, Je suis allé à Paris.', 2),
-        (2, 'Au Café & Boulangerie',        'Ordering food in Paris: Un café noir, s''il vous plaît, Un croissant au beurre, C''est combien?', 3),
-        (2, 'Se Déplacer dans la Ville',    'Navigating the city: Où est le métro?, Tout droit, À gauche, À droite.', 4);
+        (2, 'Les Salutations & Politesse',  N'Learn polite French greetings: Bonjour, Bonsoir, Comment allez-vous?, Ça va?, S''il vous plaît, Merci beaucoup.', 1),
+        (2, N'Le Passé Composé',             N'Master the past tense with avoir and être: J''ai mangé, Je suis allé à Paris.', 2),
+        (2, N'Au Café & Boulangerie',        N'Ordering food in Paris: Un café noir, s''il vous plaît, Un croissant au beurre, C''est combien?', 3),
+        (2, N'Se Déplacer dans la Ville',    N'Navigating the city: Où est le métro?, Tout droit, À gauche, À droite.', 4);
 
     -- German
     INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
-        (3, 'Begrüßung & Kennenlernen',     'German greetings: Hallo!, Guten Tag!, Wie heißen Sie?, Ich heiße Lukas, Freut mich!', 1),
+        (3, N'Begrüßung & Kennenlernen',     N'German greetings: Hallo!, Guten Tag!, Wie heißen Sie?, Ich heiße Lukas, Freut mich!', 1),
         (3, 'Articles: Der, Die, Das',      'Noun genders in German: Der Mann (masculine), Die Frau (feminine), Das Auto (neuter).', 2),
-        (3, 'Im Restaurant & Bestellen',    'Ordering food: Die Speisekarte bitte, Ich hätte gerne ein Wasser, Zusammen oder getrennt?', 3);
+        (3, 'Im Restaurant & Bestellen',    N'Ordering food: Die Speisekarte bitte, Ich hätte gerne ein Wasser, Zusammen oder getrennt?', 3);
 
     -- Japanese
     INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
-        (4, 'Hiragana: あ to ん',            'Learn the foundational phonetic alphabet with stroke order and pronunciation.', 1),
-        (4, 'Katakana: ア to ン',            'Master katakana characters used for foreign loanwords: コーヒー (Coffee), アメリカ (America).', 2),
-        (4, 'Self-Introduction: 自己紹介',   'Introduce yourself: 初めまして (Nice to meet you), 私は...です (I am...), よろしくお願いします。', 3);
+        (4, N'Hiragana: あ to ん',            'Learn the foundational phonetic alphabet with stroke order and pronunciation.', 1),
+        (4, N'Katakana: ア to ン',            N'Master katakana characters used for foreign loanwords: コーヒー (Coffee), アメリカ (America).', 2),
+        (4, N'Self-Introduction: 自己紹介',   N'Introduce yourself: 初めまして (Nice to meet you), 私は...です (I am...), よろしくお願いします。', 3);
 
     -- Chinese
     INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
         (5, 'The Four Tones & Pinyin',      'Master the 4 tones in Mandarin: 1st (high flat), 2nd (rising), 3rd (dipping), 4th (falling).', 1),
-        (5, 'Essential Greetings: 你好',     'Conversational Chinese: 你好 (Nǐ hǎo), 谢谢 (Xièxie), 不客气 (Bú kèqì), 再见 (Zàijiàn).', 2),
-        (5, 'Numbers & Shopping',           'Count 1-10 (一, 二, 三...) and ask prices: 这个多少钱？ (Zhège duōshǎo qián?).', 3);
+        (5, N'Essential Greetings: 你好',     N'Conversational Chinese: 你好 (Nǐ hǎo), 谢谢 (Xièxie), 不客气 (Bú kèqì), 再见 (Zàijiàn).', 2),
+        (5, 'Numbers & Shopping',           N'Count 1-10 (一, 二, 三...) and ask prices: 这个多少钱？ (Zhège duōshǎo qián?).', 3);
 
     -- Korean
     INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
-        (6, 'Hangul Masterclass',           'Consonants (ㄱ, ㄴ, ㄷ) and vowels (ㅏ, ㅓ, ㅗ) combined into syllabic blocks: 한 (h-a-n) 글 (g-eu-l).', 1),
-        (6, 'K-Drama Expressions',          'Everyday phrases: 안녕하세요 (Hello), 감사합니다 (Thank you), 대박! (Daebak!), 화이팅! (Fighting!).', 2),
-        (6, 'Ordering Korean Food',         'K-Food phrases: 삼겹살 2인분 주세요 (2 servings of pork belly, please), 물 좀 주세요 (Water please).', 3);
+        (6, 'Hangul Masterclass',           N'Consonants (ㄱ, ㄴ, ㄷ) and vowels (ㅏ, ㅓ, ㅗ) combined into syllabic blocks: 한 (h-a-n) 글 (g-eu-l).', 1),
+        (6, 'K-Drama Expressions',          N'Everyday phrases: 안녕하세요 (Hello), 감사합니다 (Thank you), 대박! (Daebak!), 화이팅! (Fighting!).', 2),
+        (6, 'Ordering Korean Food',         N'K-Food phrases: 삼겹살 2인분 주세요 (2 servings of pork belly, please), 물 좀 주세요 (Water please).', 3);
 
     -- Italian
     INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
         (7, 'Saluti & Cortesia',            'Italian basics: Ciao!, Buongiorno, Per favore, Grazie mille.', 1),
-        (7, 'Al Ristorante & Caffè',        'Order like a local: Un espresso per favore, Una pizza margherita, Il conto per favore.', 2);
+        (7, N'Al Ristorante & Caffè',        'Order like a local: Un espresso per favore, Una pizza margherita, Il conto per favore.', 2);
 
     -- Portuguese
     INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
         (8, 'Tudo Bem? Greetings',          'Brazilian greetings: Oi! Tudo bem?, Tudo bom!, Por favor, Obrigado/Obrigada.', 1),
-        (8, 'Na Praia & Na Cidade',         'City & beach phrases: Onde fica a praia?, Uma água de coco por favor.', 2);
+        (8, 'Na Praia & Na Cidade',         N'City & beach phrases: Onde fica a praia?, Uma água de coco por favor.', 2);
 
     -- Arabic
     INSERT INTO Lessons (CourseID, Title, Content, SortOrder) VALUES
-        (9, 'The Arabic Alphabet',          'Right-to-left script: Alif (أ), Baa (ب), Taa (ت), Thaa (ث).', 1),
-        (9, 'Essential Greetings',          'Greetings: السلام عليكم (As-salamu alaykum), شكراً (Shukran).', 2);
+        (9, 'The Arabic Alphabet',          N'Right-to-left script: Alif (أ), Baa (ب), Taa (ت), Thaa (ث).', 1),
+        (9, 'Essential Greetings',          N'Greetings: السلام عليكم (As-salamu alaykum), شكراً (Shukran).', 2);
 END
 GO
 
--- Sample quiz for "Spanish for Beginners"
-IF NOT EXISTS (SELECT 1 FROM Quizzes)
-BEGIN
-    INSERT INTO Quizzes (CourseID, Title) VALUES
-        (1, 'Spanish Basics Quiz');
+-- Practice quizzes for every seeded course (5 questions, 4 options each).
+-- Safe to re-run: courses are matched by title and only missing quizzes, questions
+-- and options are added, so existing attempts and admin edits are left alone.
+DECLARE @QuizSeed TABLE (
+    CourseTitle  NVARCHAR(200),
+    QuizTitle    NVARCHAR(200),
+    SortOrder    INT,
+    QuestionText NVARCHAR(500),
+    OptionA      NVARCHAR(200),
+    OptionB      NVARCHAR(200),
+    OptionC      NVARCHAR(200),
+    OptionD      NVARCHAR(200),
+    Correct      CHAR(1)
+);
 
-    DECLARE @QuizID INT = SCOPE_IDENTITY();
+INSERT INTO @QuizSeed VALUES
+        (N'Spanish for Beginners', N'Spanish Basics Quiz', 1, N'How do you say "Good morning" in Spanish?',
+            N'Buenas noches', N'Buenos días', N'Buenas tardes', N'Hola', 'B'),
+        (N'Spanish for Beginners', N'Spanish Basics Quiz', 2, N'What does "Me llamo" mean?',
+            N'My name is', N'I like', N'I want', N'I have', 'A'),
+        (N'Spanish for Beginners', N'Spanish Basics Quiz', 3, N'Which verb means "to be" (permanent state)?',
+            N'Estar', N'Tener', N'Ser', N'Haber', 'C'),
+        (N'Spanish for Beginners', N'Spanish Basics Quiz', 4, N'How do you ask for the bill in a restaurant?',
+            N'Mucho gusto', N'¿Dónde está la estación?', N'¿Qué recomienda?', N'La cuenta, por favor', 'D'),
+        (N'Spanish for Beginners', N'Spanish Basics Quiz', 5, N'What does "A la izquierda" mean?',
+            N'To the right', N'To the left', N'Straight ahead', N'Next to', 'B'),
+        (N'French Immersion', N'French Immersion Quiz', 1, N'Which greeting is used in the evening?',
+            N'Bonjour', N'Bonsoir', N'Salut', N'Merci', 'B'),
+        (N'French Immersion', N'French Immersion Quiz', 2, N'What does "S''il vous plaît" mean?',
+            N'Thank you', N'Excuse me', N'Please', N'You''re welcome', 'C'),
+        (N'French Immersion', N'French Immersion Quiz', 3, N'"Je suis allé à Paris" uses which helper verb?',
+            N'Être', N'Avoir', N'Aller', N'Faire', 'A'),
+        (N'French Immersion', N'French Immersion Quiz', 4, N'How do you ask "How much is it?"',
+            N'Où est le métro ?', N'Ça va ?', N'Tout droit', N'C''est combien ?', 'D'),
+        (N'French Immersion', N'French Immersion Quiz', 5, N'What does "À droite" mean?',
+            N'To the left', N'Straight ahead', N'To the right', N'Behind', 'C'),
+        (N'German: Start to Fluent', N'German Basics Quiz', 1, N'How do you say "My name is Lukas"?',
+            N'Ich heiße Lukas', N'Wie heißen Sie?', N'Freut mich', N'Guten Tag, Lukas', 'A'),
+        (N'German: Start to Fluent', N'German Basics Quiz', 2, N'Which article goes with "Frau" (woman)?',
+            N'Der', N'Die', N'Das', N'Den', 'B'),
+        (N'German: Start to Fluent', N'German Basics Quiz', 3, N'Which article goes with "Auto" (car)?',
+            N'Der', N'Die', N'Dem', N'Das', 'D'),
+        (N'German: Start to Fluent', N'German Basics Quiz', 4, N'What does "Freut mich!" mean?',
+            N'Good night!', N'See you later!', N'Nice to meet you!', N'Thank you!', 'C'),
+        (N'German: Start to Fluent', N'German Basics Quiz', 5, N'"Zusammen oder getrennt?" asks whether you want to...',
+            N'order now or later', N'pay together or separately', N'sit inside or outside', N'have water or juice', 'B'),
+        (N'Japanese: Zero to N3', N'Japanese Basics Quiz', 1, N'Which script is mainly used for foreign loanwords?',
+            N'Hiragana', N'Kanji', N'Katakana', N'Romaji', 'C'),
+        (N'Japanese: Zero to N3', N'Japanese Basics Quiz', 2, N'What does 初めまして (hajimemashite) mean?',
+            N'Nice to meet you', N'Good morning', N'Goodbye', N'Thank you', 'A'),
+        (N'Japanese: Zero to N3', N'Japanese Basics Quiz', 3, N'How is コーヒー read?',
+            N'kēki (cake)', N'kōhī (coffee)', N'kōra (cola)', N'hoteru (hotel)', 'B'),
+        (N'Japanese: Zero to N3', N'Japanese Basics Quiz', 4, N'In 私は...です, what does 私 (watashi) mean?',
+            N'You', N'We', N'He', N'I', 'D'),
+        (N'Japanese: Zero to N3', N'Japanese Basics Quiz', 5, N'Which character is the hiragana "a"?',
+            N'ア', N'い', N'あ', N'ん', 'C'),
+        (N'Mandarin Chinese Essentials', N'Mandarin Basics Quiz', 1, N'How many main tones does Mandarin have?',
+            N'Two', N'Four', N'Three', N'Six', 'B'),
+        (N'Mandarin Chinese Essentials', N'Mandarin Basics Quiz', 2, N'What does 谢谢 (xièxie) mean?',
+            N'Thank you', N'Hello', N'Goodbye', N'Sorry', 'A'),
+        (N'Mandarin Chinese Essentials', N'Mandarin Basics Quiz', 3, N'Which tone falls sharply from high to low?',
+            N'1st tone', N'2nd tone', N'3rd tone', N'4th tone', 'D'),
+        (N'Mandarin Chinese Essentials', N'Mandarin Basics Quiz', 4, N'What does 再见 (zàijiàn) mean?',
+            N'You''re welcome', N'Excuse me', N'Goodbye', N'Good morning', 'C'),
+        (N'Mandarin Chinese Essentials', N'Mandarin Basics Quiz', 5, N'How do you ask "How much is this?"',
+            N'你好', N'这个多少钱？', N'不客气', N'谢谢', 'B'),
+        (N'Korean for K-Culture Fans', N'Korean Basics Quiz', 1, N'What is the Korean alphabet called?',
+            N'Hangul', N'Kanji', N'Hiragana', N'Pinyin', 'A'),
+        (N'Korean for K-Culture Fans', N'Korean Basics Quiz', 2, N'What does 감사합니다 mean?',
+            N'Hello', N'Goodbye', N'Please', N'Thank you', 'D'),
+        (N'Korean for K-Culture Fans', N'Korean Basics Quiz', 3, N'Which of these is a vowel?',
+            N'ㄱ', N'ㅏ', N'ㄴ', N'ㄷ', 'B'),
+        (N'Korean for K-Culture Fans', N'Korean Basics Quiz', 4, N'How do you ask for some water?',
+            N'안녕하세요', N'대박!', N'물 좀 주세요', N'화이팅!', 'C'),
+        (N'Korean for K-Culture Fans', N'Korean Basics Quiz', 5, N'What does 안녕하세요 mean?',
+            N'Thank you', N'Cheers', N'Delicious', N'Hello', 'D'),
+        (N'Italian: La Dolce Lingua', N'Italian Basics Quiz', 1, N'What does "Grazie mille" mean?',
+            N'Good morning', N'Thanks a lot', N'Excuse me', N'See you soon', 'B'),
+        (N'Italian: La Dolce Lingua', N'Italian Basics Quiz', 2, N'How do you ask for the bill?',
+            N'Il conto, per favore', N'Un espresso, per favore', N'Buongiorno', N'Ciao', 'A'),
+        (N'Italian: La Dolce Lingua', N'Italian Basics Quiz', 3, N'Which one means "Good morning"?',
+            N'Ciao', N'Arrivederci', N'Grazie', N'Buongiorno', 'D'),
+        (N'Italian: La Dolce Lingua', N'Italian Basics Quiz', 4, N'What does "Per favore" mean?',
+            N'Thank you', N'Please', N'Sorry', N'You''re welcome', 'B'),
+        (N'Italian: La Dolce Lingua', N'Italian Basics Quiz', 5, N'Where would you say "Una pizza margherita, per favore"?',
+            N'At the airport', N'At the doctor', N'At a restaurant', N'At the train station', 'C'),
+        (N'Portuguese: Brazil Edition', N'Portuguese Basics Quiz', 1, N'What does "Tudo bem?" mean?',
+            N'Where is it?', N'How are you?', N'How much is it?', N'Good night', 'B'),
+        (N'Portuguese: Brazil Edition', N'Portuguese Basics Quiz', 2, N'How does a man say "thank you"?',
+            N'Obrigado', N'Obrigada', N'Por favor', N'Oi', 'A'),
+        (N'Portuguese: Brazil Edition', N'Portuguese Basics Quiz', 3, N'What does "Onde fica a praia?" ask?',
+            N'Is the beach open?', N'How far is the city?', N'Do you like the beach?', N'Where is the beach?', 'D'),
+        (N'Portuguese: Brazil Edition', N'Portuguese Basics Quiz', 4, N'"Uma água de coco, por favor" is asking for...',
+            N'a cold juice', N'a coffee', N'a coconut water', N'a bottle of water', 'C'),
+        (N'Portuguese: Brazil Edition', N'Portuguese Basics Quiz', 5, N'Which one is an informal "Hi"?',
+            N'Tchau', N'Bom dia', N'Obrigado', N'Oi', 'D'),
+        (N'Arabic Script & Basics', N'Arabic Basics Quiz', 1, N'Which direction is Arabic written?',
+            N'Left to right', N'Right to left', N'Top to bottom', N'Either way', 'B'),
+        (N'Arabic Script & Basics', N'Arabic Basics Quiz', 2, N'What does شكراً (shukran) mean?',
+            N'Hello', N'Please', N'Thank you', N'Goodbye', 'C'),
+        (N'Arabic Script & Basics', N'Arabic Basics Quiz', 3, N'Which letter is Baa?',
+            N'أ', N'ت', N'ث', N'ب', 'D'),
+        (N'Arabic Script & Basics', N'Arabic Basics Quiz', 4, N'When do you say السلام عليكم (as-salamu alaykum)?',
+            N'When greeting someone', N'When saying sorry', N'When asking a price', N'When saying thank you', 'A'),
+        (N'Arabic Script & Basics', N'Arabic Basics Quiz', 5, N'Which letter is Alif?',
+            N'ب', N'أ', N'ت', N'ث', 'B');
 
-    INSERT INTO Questions (QuizID, QuestionText, SortOrder) VALUES
-        (@QuizID, 'How do you say "Good morning" in Spanish?', 1),
-        (@QuizID, 'What does "Me llamo" mean?', 2),
-        (@QuizID, 'Which verb means "to be" (permanent state)?', 3);
+INSERT INTO Quizzes (CourseID, Title)
+SELECT DISTINCT c.CourseID, s.QuizTitle
+FROM @QuizSeed s
+INNER JOIN Courses c ON c.Title = s.CourseTitle
+WHERE NOT EXISTS (SELECT 1 FROM Quizzes q WHERE q.CourseID = c.CourseID);
 
-    -- Q1 options
-    DECLARE @Q1 INT = (SELECT TOP 1 QuestionID FROM Questions WHERE QuestionText LIKE '%Good morning%');
-    INSERT INTO QuestionOptions (QuestionID, OptionText, IsCorrect) VALUES
-        (@Q1, 'Buenos días', 1),
-        (@Q1, 'Buenas noches', 0),
-        (@Q1, 'Buenas tardes', 0),
-        (@Q1, 'Hola', 0);
+INSERT INTO Questions (QuizID, QuestionText, SortOrder)
+SELECT q.QuizID, s.QuestionText, s.SortOrder
+FROM @QuizSeed s
+INNER JOIN Courses c ON c.Title = s.CourseTitle
+INNER JOIN Quizzes q ON q.CourseID = c.CourseID AND q.Title = s.QuizTitle
+WHERE NOT EXISTS (SELECT 1 FROM Questions x WHERE x.QuizID = q.QuizID AND x.QuestionText = s.QuestionText)
+ORDER BY q.QuizID, s.SortOrder;
 
-    -- Q2 options
-    DECLARE @Q2 INT = (SELECT TOP 1 QuestionID FROM Questions WHERE QuestionText LIKE '%Me llamo%');
-    INSERT INTO QuestionOptions (QuestionID, OptionText, IsCorrect) VALUES
-        (@Q2, 'My name is', 1),
-        (@Q2, 'I like', 0),
-        (@Q2, 'I want', 0),
-        (@Q2, 'I have', 0);
-
-    -- Q3 options
-    DECLARE @Q3 INT = (SELECT TOP 1 QuestionID FROM Questions WHERE QuestionText LIKE '%permanent state%');
-    INSERT INTO QuestionOptions (QuestionID, OptionText, IsCorrect) VALUES
-        (@Q3, 'Ser', 1),
-        (@Q3, 'Estar', 0),
-        (@Q3, 'Tener', 0),
-        (@Q3, 'Haber', 0);
-END
+INSERT INTO QuestionOptions (QuestionID, OptionText, IsCorrect)
+SELECT x.QuestionID, o.OptionText, CASE WHEN o.Letter = s.Correct THEN 1 ELSE 0 END
+FROM @QuizSeed s
+INNER JOIN Courses c ON c.Title = s.CourseTitle
+INNER JOIN Quizzes q ON q.CourseID = c.CourseID AND q.Title = s.QuizTitle
+INNER JOIN Questions x ON x.QuizID = q.QuizID AND x.QuestionText = s.QuestionText
+CROSS APPLY (VALUES ('A', s.OptionA), ('B', s.OptionB), ('C', s.OptionC), ('D', s.OptionD)) o (Letter, OptionText)
+WHERE NOT EXISTS (SELECT 1 FROM QuestionOptions y WHERE y.QuestionID = x.QuestionID)
+ORDER BY x.QuestionID, o.Letter;
 GO
 
 PRINT 'Database setup complete. Tables created and seed data inserted.';
