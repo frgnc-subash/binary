@@ -221,11 +221,11 @@ p {
 }
 
 .brand-subtitle {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
     color: var(--text-muted);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
 }
 
 .nav-menu {
@@ -4813,4 +4813,193 @@ html.theme-switching * {
 .quiz-play {
     margin-left: auto;
     margin-right: auto;
+}
+
+
+/* =====================================================
+   Responsive: slide-in drawers and small-screen tidy-ups
+   (drawer open/close logic: setDrawer in Scripts/binary-ui.js)
+   ===================================================== */
+
+/* only exist on small screens */
+.nav-backdrop,
+.nav-drawer-head,
+.dash-backdrop,
+.dash-menu-btn {
+    display: none;
+}
+
+/* ---------- public site: menu slides in from the right ---------- */
+@media (max-width: 860px) {
+    /* a blurred (backdrop-filter) navbar would trap the fixed drawer inside its own box */
+    .site-navbar,
+    html[data-theme="dark"] .site-navbar {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        background: var(--bg-surface);
+    }
+
+    .nav-content { min-height: 60px; }
+
+    .brand-logo { width: 34px; height: 34px; }
+    .brand-name { font-size: 17px; }
+    .brand-subtitle { font-size: 9px; }
+
+    .nav-menu {
+        display: flex;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: auto;
+        width: min(320px, 86vw);
+        height: 100dvh;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: var(--space-4);
+        padding: var(--space-4) var(--space-5) var(--space-6);
+        background: var(--bg-surface);
+        border-left: 1px solid var(--border-light);
+        border-bottom: 0;
+        box-shadow: -16px 0 40px rgba(0, 0, 0, 0.18);
+        overflow-y: auto;
+        z-index: 2;
+        transform: translateX(100%);
+        visibility: hidden;
+        transition: transform 0.25s ease, visibility 0s linear 0.25s;
+    }
+
+    html.nav-drawer-open .nav-menu {
+        transform: none;
+        visibility: visible;
+        transition: transform 0.25s ease;
+    }
+
+    .nav-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        background: rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+    }
+
+    html.nav-drawer-open .nav-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    html.nav-drawer-open body { overflow: hidden; }
+
+    .nav-drawer-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: var(--space-3);
+        border-bottom: 1px solid var(--border-light);
+        font-family: var(--font-heading);
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .nav-links a {
+        height: 46px;
+        font-size: 15px;
+    }
+
+    /* Sign in / Get Started (or the avatar) sit at the bottom of the drawer */
+    .nav-actions {
+        margin-top: auto;
+        border-top: 1px solid var(--border-light);
+    }
+
+    .section { padding: var(--space-8) 0; }
+    .section-sm { padding: var(--space-6) 0; }
+}
+
+@media (max-width: 600px) {
+    .site-container { width: calc(100% - 32px); }
+}
+
+/* ---------- dashboards: sidebar becomes a drawer from the left ---------- */
+@media (max-width: 900px) {
+    .admin-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(290px, 86vw);
+        height: 100dvh;
+        z-index: 300;
+        box-shadow: 16px 0 40px rgba(0, 0, 0, 0.18);
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.25s ease, visibility 0s linear 0.25s;
+    }
+
+    html.dash-drawer-open .admin-sidebar {
+        transform: none;
+        visibility: visible;
+        transition: transform 0.25s ease;
+    }
+
+    .dash-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 290;
+        background: rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+    }
+
+    html.dash-drawer-open .dash-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    html.dash-drawer-open body { overflow: hidden; }
+
+    .dash-menu-btn { display: inline-grid; }
+
+    .admin-global-bar {
+        padding: var(--space-3) var(--space-4);
+        gap: var(--space-2);
+    }
+
+    .admin-global-search {
+        flex: 1;
+        width: auto;
+        min-width: 0;
+    }
+
+    .search-kbd { display: none; }
+
+    .admin-global-actions { gap: var(--space-2); }
+
+    .admin-topbar {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .admin-topbar > div:last-child { flex-wrap: wrap; }
+}
+
+@media (max-width: 480px) {
+    /* keep the header bar to one row: the search box shrinks to fit */
+    .admin-global-search { padding: 8px 12px; }
+    .admin-icon-btn { width: 36px; height: 36px; }
+    .dash-page-title { font-size: 1.2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-menu,
+    .nav-backdrop,
+    .admin-sidebar,
+    .dash-backdrop { transition: none !important; }
 }
