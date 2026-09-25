@@ -48,6 +48,18 @@
                                         </asp:DropDownList>
                                     </div>
                                 </div>
+                                <%-- flag: pick from the library in Content/images/flags or upload a new one --%>
+                                <div class="form-group">
+                                    <label class="form-label" for="<%= ddlFlag.ClientID %>">Flag</label>
+                                    <div class="flag-picker">
+                                        <span class="flag-picker-preview" id="flagPreview" data-base="<%= ResolveUrl(binary.Core.Helpers.FlagHelper.FlagFolderVirtualPath) %>"></span>
+                                        <asp:DropDownList ID="ddlFlag" runat="server" CssClass="form-control" onchange="previewFlag()" />
+                                    </div>
+                                    <div class="flag-upload">
+                                        <asp:FileUpload ID="fuFlag" runat="server" CssClass="form-control" accept=".png,.jpg,.jpeg,.webp,.gif" onchange="previewFlagFile(this)" />
+                                        <p class="form-hint">Or upload a new flag (PNG, JPG, WEBP, or GIF, up to 1 MB). It's added to the flag library so you can reuse it.</p>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="form-label" for="txtThumbnailUrl">Thumbnail URL (optional)</label>
                                     <asp:TextBox ID="txtThumbnailUrl" runat="server" CssClass="form-control" placeholder="https://..." />
@@ -111,7 +123,7 @@
                                     <label class="form-label">Lesson Video (optional)</label>
 
                                     <asp:Panel ID="pnlCurrentVideo" runat="server" Visible="false" CssClass="current-video">
-                                        <span class="current-video-label">🎬 Current: <asp:Literal ID="litCurrentVideo" runat="server" /></span>
+                                        <span class="current-video-label"><svg class="ui-icon ui-icon-before" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Current: <asp:Literal ID="litCurrentVideo" runat="server" /></span>
                                         <label class="current-video-remove"><asp:CheckBox ID="chkRemoveVideo" runat="server" /> Remove video</label>
                                     </asp:Panel>
 
@@ -168,7 +180,7 @@
                                         <asp:Repeater ID="rptCourses" runat="server" OnItemCommand="rptCourses_ItemCommand">
                                             <ItemTemplate>
                                                 <tr>
-                                                    <td><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></td>
+                                                    <td><span class="course-title-cell"><%# binary.Core.Helpers.FlagHelper.Render((string)Eval("FlagImageUrl"), (string)Eval("Title"), "flag-sm") %><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></span></td>
                                                     <td><%# HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
                                                     <td><%# HttpUtility.HtmlEncode((string)Eval("Level")) %></td>
                                                     <td><%# GetPublishBadge(Eval("IsPublished")) %></td>
@@ -230,6 +242,33 @@
             </div>
 
     <script>
+        function previewFlag() {
+            var select = document.getElementById('<%= ddlFlag.ClientID %>');
+            var box = document.getElementById('flagPreview');
+            if (!select || !box) return;
+            box.innerHTML = '';
+            if (!select.value) { box.classList.add('is-empty'); return; }
+            box.classList.remove('is-empty');
+            var img = document.createElement('img');
+            img.alt = '';
+            img.src = box.getAttribute('data-base') + encodeURIComponent(select.value);
+            box.appendChild(img);
+        }
+
+        function previewFlagFile(input) {
+            var box = document.getElementById('flagPreview');
+            var file = input.files && input.files[0];
+            if (!file || !box) return;
+            box.innerHTML = '';
+            box.classList.remove('is-empty');
+            var img = document.createElement('img');
+            img.alt = '';
+            img.src = URL.createObjectURL(file);
+            box.appendChild(img);
+        }
+
+        previewFlag();
+
         function setVideoSource(source) {
             var upload = source === 'upload';
             document.getElementById('videoLinkPane').hidden = upload;

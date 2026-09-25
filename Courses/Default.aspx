@@ -24,7 +24,7 @@
                         <div class="clean-course-card" data-lang="<%# HttpUtility.HtmlAttributeEncode(((string)Eval("Title")).ToLowerInvariant()) %>">
                             <div class="course-card-top">
                                 <div class="course-lang-badge">
-                                    <span class="course-lang-icon"><%# binary.Core.Helpers.DisplayHelper.GetTitleMonogram((string)Eval("Title")) %></span>
+                                    <%# binary.Core.Helpers.FlagHelper.Render((string)Eval("FlagImageUrl"), (string)Eval("Title"), "flag-md") %>
                                     <span><%# HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></span>
                                 </div>
                                 <span class="badge badge-primary"><%# HttpUtility.HtmlEncode((string)Eval("Level")) %></span>

@@ -59,7 +59,7 @@ namespace binary.Core.DAL
         public List<Enrollment> SelectByUser(int userId)
         {
             const string sql = @"
-                SELECT e.EnrollmentID, e.UserID, e.CourseID, c.Title AS CourseTitle, c.Level AS CourseLevel, 
+                SELECT e.EnrollmentID, e.UserID, e.CourseID, c.Title AS CourseTitle, c.Level AS CourseLevel, c.FlagImageUrl AS CourseFlagUrl, 
                        e.ProgressPercent, e.EnrolledDate
                 FROM Enrollments e
                 INNER JOIN Courses c ON e.CourseID = c.CourseID
@@ -82,6 +82,7 @@ namespace binary.Core.DAL
                             CourseID = Convert.ToInt32(reader["CourseID"]),
                             CourseTitle = reader["CourseTitle"].ToString(),
                             CourseLevel = reader["CourseLevel"].ToString(),
+                            CourseFlagUrl = reader["CourseFlagUrl"] == DBNull.Value ? null : reader["CourseFlagUrl"].ToString(),
                             ProgressPercent = Convert.ToInt32(reader["ProgressPercent"]),
                             EnrolledDate = Convert.ToDateTime(reader["EnrolledDate"])
                         });
@@ -94,7 +95,7 @@ namespace binary.Core.DAL
         public Enrollment SelectByUserAndCourse(int userId, int courseId)
         {
             const string sql = @"
-                SELECT e.EnrollmentID, e.UserID, e.CourseID, c.Title AS CourseTitle, c.Level AS CourseLevel,
+                SELECT e.EnrollmentID, e.UserID, e.CourseID, c.Title AS CourseTitle, c.Level AS CourseLevel, c.FlagImageUrl AS CourseFlagUrl,
                        e.ProgressPercent, e.EnrolledDate
                 FROM Enrollments e
                 INNER JOIN Courses c ON e.CourseID = c.CourseID
@@ -116,6 +117,7 @@ namespace binary.Core.DAL
                             CourseID = Convert.ToInt32(reader["CourseID"]),
                             CourseTitle = reader["CourseTitle"].ToString(),
                             CourseLevel = reader["CourseLevel"].ToString(),
+                            CourseFlagUrl = reader["CourseFlagUrl"] == DBNull.Value ? null : reader["CourseFlagUrl"].ToString(),
                             ProgressPercent = Convert.ToInt32(reader["ProgressPercent"]),
                             EnrolledDate = Convert.ToDateTime(reader["EnrolledDate"])
                         };

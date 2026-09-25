@@ -12,6 +12,7 @@ namespace binary.Models
         public int CourseID { get; set; }
         public string CourseTitle { get; set; }
         public string CourseLevel { get; set; }
+        public string CourseFlagUrl { get; set; }
         public int ProgressPercent { get; set; }
         public DateTime EnrolledDate { get; set; }
     }

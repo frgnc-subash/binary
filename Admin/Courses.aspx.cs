@@ -55,6 +55,7 @@ namespace binary.Admin
                 BindCategoriesDropdown();
                 BindCategoryList();
                 BindCategoryFilterDropdown();
+                BindFlagDropdown();
 
                 // arriving from the admin header search box (?q=...)
                 if (!string.IsNullOrWhiteSpace(Request.QueryString["q"]))
@@ -98,6 +99,14 @@ namespace binary.Admin
         {
             ddlCategory.DataSource = new CategoryBLL().GetAllCategories();
             ddlCategory.DataBind();
+        }
+
+        private void BindFlagDropdown()
+        {
+            ddlFlag.Items.Clear();
+            ddlFlag.Items.Add(new ListItem("No flag", ""));
+            foreach (FlagOption flag in FlagHelper.GetLibrary())
+                ddlFlag.Items.Add(new ListItem(flag.Label, flag.FileName));
         }
 
         private void BindCategoryFilterDropdown()
@@ -190,6 +199,8 @@ namespace binary.Admin
                 ddlCategory.SelectedValue = c.CategoryID.ToString();
                 ddlLevel.SelectedValue = c.Level;
                 txtThumbnailUrl.Text = c.ThumbnailUrl;
+                ListItem flagItem = ddlFlag.Items.FindByValue(FlagHelper.ToFileName(c.FlagImageUrl));
+                if (flagItem != null) ddlFlag.SelectedValue = flagItem.Value;
                 chkPublished.Checked = c.IsPublished;
                 pnlCourseForm.Visible = true;
             }
@@ -226,6 +237,8 @@ namespace binary.Admin
                     CategoryID = categoryId,
                     Level = ddlLevel.SelectedValue,
                     ThumbnailUrl = string.IsNullOrWhiteSpace(txtThumbnailUrl.Text) ? null : txtThumbnailUrl.Text.Trim(),
+                    // a newly uploaded flag wins; otherwise the one picked from the library (validated against it)
+                    FlagImageUrl = fuFlag.HasFile ? FlagHelper.SaveUpload(fuFlag.PostedFile) : FlagHelper.ToVirtualPath(ddlFlag.SelectedValue),
                     IsPublished = chkPublished.Checked
                 };
 
@@ -398,7 +411,7 @@ namespace binary.Admin
             string url = videoUrl as string;
             if (string.IsNullOrEmpty(url))
                 return "<span style=\"color:var(--text-subtle);\">—</span>";
-            return "<span class=\"badge badge-primary\">🎬 " + Server.HtmlEncode(VideoHelper.GetSourceLabel(url)) + "</span>";
+            return "<span class=\"badge badge-primary\">" + Icons.Svg("video", "ui-icon ui-icon-before") + Server.HtmlEncode(VideoHelper.GetSourceLabel(url)) + "</span>";
         }
 
         protected void rptLessons_ItemCommand(object source, RepeaterCommandEventArgs e)

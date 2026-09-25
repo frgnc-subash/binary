@@ -22,6 +22,8 @@ namespace binary.Admin
         protected System.Web.UI.WebControls.TextBox txtDescription;
         protected System.Web.UI.WebControls.DropDownList ddlCategory;
         protected System.Web.UI.WebControls.DropDownList ddlLevel;
+        protected System.Web.UI.WebControls.DropDownList ddlFlag;
+        protected System.Web.UI.WebControls.FileUpload fuFlag;
         protected System.Web.UI.WebControls.TextBox txtThumbnailUrl;
         protected System.Web.UI.WebControls.CheckBox chkPublished;
         protected System.Web.UI.WebControls.Button btnSaveCourse;
