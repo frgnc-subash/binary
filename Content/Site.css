@@ -4796,3 +4796,21 @@ html.theme-switching * {
 
 .file-drop-remove:hover { background: var(--brand-rose-soft); }
 .file-drop-remove[hidden] { display: none; }
+
+/* =====================================================
+   Wide screens: keep dashboard content in a centred 1200px column.
+   Padding (not max-width) so the header bar and page background still run edge to edge.
+   ===================================================== */
+@media (min-width: 1400px) {
+    .admin-topbar,
+    .admin-content-container {
+        padding-left: max(var(--space-8), calc((100% - 1200px) / 2));
+        padding-right: max(var(--space-8), calc((100% - 1200px) / 2));
+    }
+}
+
+/* the quiz and its results sit in the middle rather than hugging the left edge */
+.quiz-play {
+    margin-left: auto;
+    margin-right: auto;
+}
