@@ -31,6 +31,8 @@ CREATE TABLE Users (
     CreatedDate         DATETIME       NOT NULL DEFAULT GETUTCDATE(),
     TotalXP             INT            NOT NULL DEFAULT 0,  -- Moved here to avoid ALTER TABLE issues
     ProfileImageUrl     NVARCHAR(500)  NULL,
+    NativeLanguage      NVARCHAR(50)   NULL,   -- onboarding: the language the learner already speaks
+    LearningReason      NVARCHAR(50)   NULL,   -- onboarding: why they're learning
     CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
 );
 GO
@@ -38,6 +40,14 @@ GO
 -- Safety net for databases created before ProfileImageUrl existed
 IF COL_LENGTH('Users', 'ProfileImageUrl') IS NULL
     ALTER TABLE Users ADD ProfileImageUrl NVARCHAR(500) NULL;
+GO
+
+IF COL_LENGTH('Users', 'NativeLanguage') IS NULL
+    ALTER TABLE Users ADD NativeLanguage NVARCHAR(50) NULL;
+GO
+
+IF COL_LENGTH('Users', 'LearningReason') IS NULL
+    ALTER TABLE Users ADD LearningReason NVARCHAR(50) NULL;
 GO
 
 -- ── Categories ──
@@ -57,12 +67,18 @@ CREATE TABLE Courses (
     CategoryID   INT            NOT NULL,
     Level        NVARCHAR(50)   NOT NULL DEFAULT 'Beginner',
     ThumbnailUrl NVARCHAR(500)  NULL,
+    FlagImageUrl NVARCHAR(300)  NULL,   -- e.g. ~/Content/images/flags/spain.png
     IsPublished  BIT            NOT NULL DEFAULT 0,
     CreatedBy    INT            NULL,
     CreatedDate  DATETIME       NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT FK_Courses_Categories FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID),
     CONSTRAINT FK_Courses_Users      FOREIGN KEY (CreatedBy)  REFERENCES Users(UserID)
 );
+GO
+
+-- Safety net for databases created before FlagImageUrl existed
+IF COL_LENGTH('Courses', 'FlagImageUrl') IS NULL
+    ALTER TABLE Courses ADD FlagImageUrl NVARCHAR(300) NULL;
 GO
 
 -- ── Lessons ──
@@ -251,6 +267,19 @@ BEGIN
         ('Portuguese: Brazil Edition',  'Brazilian Portuguese with a focus on everyday conversation, slang, and pronunciation unique to Brazil.', 1, 'Intermediate', 1),
         ('Arabic Script & Basics',      'Learn to read and write Arabic script, plus essential greetings, numbers, and basic grammar.', 3, 'Beginner', 1);
 END
+GO
+
+-- Flags for the seeded courses (files in Content/images/flags). Only fills empty values,
+-- so a flag an admin picks later is never overwritten by re-running this script.
+UPDATE Courses SET FlagImageUrl = '~/Content/images/flags/spain.png'       WHERE FlagImageUrl IS NULL AND Title LIKE 'Spanish%';
+UPDATE Courses SET FlagImageUrl = '~/Content/images/flags/france.png'      WHERE FlagImageUrl IS NULL AND Title LIKE 'French%';
+UPDATE Courses SET FlagImageUrl = '~/Content/images/flags/germany.png'     WHERE FlagImageUrl IS NULL AND Title LIKE 'German%';
+UPDATE Courses SET FlagImageUrl = '~/Content/images/flags/japan.png'       WHERE FlagImageUrl IS NULL AND Title LIKE 'Japanese%';
+UPDATE Courses SET FlagImageUrl = '~/Content/images/flags/china.png'       WHERE FlagImageUrl IS NULL AND Title LIKE 'Mandarin%';
+UPDATE Courses SET FlagImageUrl = '~/Content/images/flags/south-korea.png' WHERE FlagImageUrl IS NULL AND Title LIKE 'Korean%';
+UPDATE Courses SET FlagImageUrl = '~/Content/images/flags/italy.png'       WHERE FlagImageUrl IS NULL AND Title LIKE 'Italian%';
+UPDATE Courses SET FlagImageUrl = '~/Content/images/flags/portugal.png'    WHERE FlagImageUrl IS NULL AND Title LIKE 'Portuguese%';
+UPDATE Courses SET FlagImageUrl = '~/Content/images/flags/arab-league.png' WHERE FlagImageUrl IS NULL AND Title LIKE 'Arabic%';
 GO
 
 -- Sample lessons for all courses

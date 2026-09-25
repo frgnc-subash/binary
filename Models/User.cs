@@ -19,6 +19,8 @@ namespace binary.Models
         public DateTime CreatedDate { get; set; }
         public int TotalXP { get; set; }
         public string ProfileImageUrl { get; set; }
+        public string NativeLanguage { get; set; }
+        public string LearningReason { get; set; }
 
         public string FullName
         {

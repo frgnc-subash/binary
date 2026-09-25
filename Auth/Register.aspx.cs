@@ -1,6 +1,7 @@
 using System;
 using System.Web.UI;
 using binary.Core.BLL;
+using binary.Core.Helpers;
 using binary.Models;
 
 namespace binary.Auth
@@ -15,6 +16,16 @@ namespace binary.Auth
                 {
                     Response.Redirect(GetPostAuthRedirect(), true);
                 }
+            }
+
+            OnboardingChoice plan = OnboardingBLL.Current;
+            if (plan != null)
+            {
+                pnlOnboarding.Visible = true;
+                litOnboardingFlag.Text = FlagHelper.Render(plan.CourseFlagUrl, plan.CourseTitle, "flag-md");
+                litOnboardingCourse.Text = Server.HtmlEncode(plan.CourseTitle);
+                litOnboardingMeta.Text = Server.HtmlEncode("You speak " + plan.NativeLanguage +
+                    (string.IsNullOrEmpty(plan.Reason) ? "" : " · Goal: " + plan.Reason));
             }
         }
 
@@ -56,10 +67,10 @@ namespace binary.Auth
                 string email = EmailInput.Text.Trim();
                 string password = PasswordInput.Text;
 
+                int newUserId;
                 try
                 {
-                    var userBll = new UserBLL();
-                    userBll.Register(firstName, lastName, email, password);
+                    newUserId = new UserBLL().Register(firstName, lastName, email, password);
                 }
                 catch (ValidationException vex)
                 {
@@ -90,8 +101,16 @@ namespace binary.Auth
                 litRegisterSuccess.Text = "Welcome to Binary! Your account has been created.";
                 SuccessPanel.Visible = true;
 
-                // redirect to return url (e.g. the course they were trying to enroll in) or the dashboard
-                Response.Redirect(GetPostAuthRedirect(), false);
+                // save the onboarding answers and enroll them in the course they picked
+                int onboardingCourseId = OnboardingBLL.ApplyToNewUser(newUserId);
+
+                // a return url (e.g. the course they were trying to enroll in) wins; otherwise straight
+                // into the course chosen during onboarding, or the dashboard
+                string returnUrl = Request.QueryString["ReturnUrl"];
+                if (!AuthBLL.IsSafeReturnUrl(returnUrl) && onboardingCourseId > 0)
+                    Response.Redirect("~/Courses/Detail.aspx?id=" + onboardingCourseId + "&welcome=1", false);
+                else
+                    Response.Redirect(GetPostAuthRedirect(), false);
             }
         }
     }

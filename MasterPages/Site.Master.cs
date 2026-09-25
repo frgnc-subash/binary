@@ -93,9 +93,19 @@ namespace binary.MasterPages
         // Matched against the page's .aspx file, not the request URL. FriendlyUrls serves
         // ~/Users/Profile.aspx at /Users/Profile and ~/Admin/Default.aspx at /Admin, so any
         // URL-based check misses those routes.
+        // Public pages that still render full-screen without navbar/footer (they have their own header).
+        private static readonly string[] FocusPagePaths =
+        {
+            "~/Auth/GetStarted.aspx",
+        };
+
         private bool IsPublicPage()
         {
             string pagePath = Page.AppRelativeVirtualPath ?? "";
+            foreach (string path in FocusPagePaths)
+            {
+                if (pagePath.Equals(path, StringComparison.OrdinalIgnoreCase)) return false;
+            }
             foreach (string path in PublicPagePaths)
             {
                 bool matches = path.EndsWith("/")

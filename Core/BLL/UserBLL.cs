@@ -178,6 +178,20 @@ namespace binary.Core.BLL
             _dal.UpdateProfile(user);
         }
 
+        public void SaveOnboarding(int userId, string nativeLanguage, string learningReason)
+        {
+            if (userId <= 0)
+                throw new ValidationException("Invalid user ID.");
+            _dal.UpdateOnboarding(userId, Limit(nativeLanguage, 50), Limit(learningReason, 50));
+        }
+
+        private static string Limit(string value, int max)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return null;
+            value = value.Trim();
+            return value.Length > max ? value.Substring(0, max) : value;
+        }
+
         // Validates, stores, and assigns an uploaded profile picture, then removes the old file.
         // Shared by the learner and admin profile pages.
         public void SaveProfilePicture(int userId, System.Web.HttpPostedFile file)
