@@ -107,6 +107,7 @@
     <Content Include="Admin\Reports.aspx" />
     <Content Include="Admin\Languages.aspx" />
     <Content Include="Admin\Profile.aspx" />
+    <Content Include="Admin\LessonQuiz.aspx" />
     <Content Include="Leaderboard\Default.aspx" />
     <Content Include="Auth\Login.aspx" />
     <Content Include="Auth\Logout.aspx" />
@@ -219,6 +220,13 @@
     </Compile>
     <Compile Include="Admin\Languages.aspx.designer.cs">
       <DependentUpon>Languages.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\LessonQuiz.aspx.cs">
+      <DependentUpon>LessonQuiz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\LessonQuiz.aspx.designer.cs">
+      <DependentUpon>LessonQuiz.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\Profile.aspx.cs">
       <DependentUpon>Profile.aspx</DependentUpon>

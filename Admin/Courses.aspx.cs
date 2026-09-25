@@ -23,6 +23,7 @@ namespace binary.Admin
             { "category-added", "Category added." },
             { "category-renamed", "Category renamed." },
             { "category-deleted", "Category deleted." },
+            { "quiz-deleted", "Lesson quiz deleted." },
         };
 
         // appends a success flag to a redirect target, replacing any existing msg param
@@ -151,10 +152,24 @@ namespace binary.Admin
             return HttpUtility.HtmlAttributeEncode((course.Title + " " + course.CategoryName).ToLowerInvariant());
         }
 
+        // lessonId -> quiz, for the Quiz column of the lesson table
+        private Dictionary<int, Quiz> _lessonQuizzes = new Dictionary<int, Quiz>();
+
         private void BindLessons(int courseId)
         {
+            _lessonQuizzes = new QuizBLL().GetLessonQuizzes(courseId);
             rptLessons.DataSource = new LessonBLL().GetLessonsByCourse(courseId);
             rptLessons.DataBind();
+        }
+
+        protected string GetQuizBadge(int lessonId)
+        {
+            Quiz quiz;
+            if (!_lessonQuizzes.TryGetValue(lessonId, out quiz))
+                return "<span style=\"color:var(--text-subtle);\">None</span>";
+            return quiz.QuestionCount == 0
+                ? "<span class=\"badge badge-warning\">No questions</span>"
+                : "<span class=\"badge badge-success\">" + quiz.QuestionCount + (quiz.QuestionCount == 1 ? " question" : " questions") + "</span>";
         }
 
         private void LoadCourseForEdit(int courseId)

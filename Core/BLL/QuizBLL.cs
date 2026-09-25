@@ -104,6 +104,94 @@ namespace binary.Core.BLL
             return new QuizResult { Score = score, MaxScore = maxScore, XpAwarded = xpAwarded, Review = review };
         }
 
+        /* ---------- admin: one quiz per lesson ---------- */
+
+        public const int MaxOptions = 4;
+
+        // the lesson's quiz with its questions, or null if the lesson has none yet
+        public Quiz GetLessonQuiz(int lessonId)
+        {
+            Quiz quiz = _dal.SelectByLesson(lessonId);
+            if (quiz != null) quiz.Questions = _dal.SelectQuestionsWithOptions(quiz.QuizID);
+            return quiz;
+        }
+
+        // lessonId -> quiz for a course's lessons (question counts included, no questions)
+        public Dictionary<int, Quiz> GetLessonQuizzes(int courseId)
+        {
+            return courseId <= 0 ? new Dictionary<int, Quiz>() : _dal.SelectLessonQuizzesByCourse(courseId);
+        }
+
+        public int CreateLessonQuiz(int lessonId, string title)
+        {
+            Lesson lesson = new LessonBLL().GetLessonById(lessonId);
+            if (_dal.SelectByLesson(lessonId) != null)
+                throw new ValidationException("This lesson already has a quiz.");
+            return _dal.InsertQuiz(lesson.CourseID, lesson.LessonID, CleanTitle(title));
+        }
+
+        public void RenameQuiz(int quizId, string title)
+        {
+            if (quizId <= 0) throw new ValidationException("Invalid quiz.");
+            _dal.UpdateTitle(quizId, CleanTitle(title));
+        }
+
+        public void DeleteQuiz(int quizId)
+        {
+            if (quizId <= 0) throw new ValidationException("Invalid quiz.");
+            _dal.DeleteQuiz(quizId);
+        }
+
+        // Adds (questionId 0) or updates a multiple-choice question. Blank option boxes are ignored;
+        // at least two options are needed and the one marked correct must have text.
+        public void SaveQuestion(int quizId, int questionId, string questionText, IList<string> optionTexts, int correctIndex)
+        {
+            if (quizId <= 0) throw new ValidationException("Invalid quiz.");
+
+            questionText = (questionText ?? "").Trim();
+            if (questionText.Length == 0)
+                throw new ValidationException("Please write the question.");
+            if (questionText.Length > 500)
+                throw new ValidationException("Questions must be 500 characters or fewer.");
+
+            var options = new List<QuestionOption>();
+            bool correctHasText = false;
+            for (int i = 0; i < Math.Min(optionTexts == null ? 0 : optionTexts.Count, MaxOptions); i++)
+            {
+                string text = (optionTexts[i] ?? "").Trim();
+                if (text.Length == 0) continue;
+                if (text.Length > 200)
+                    throw new ValidationException("Answer options must be 200 characters or fewer.");
+                if (options.Any(o => string.Equals(o.OptionText, text, StringComparison.OrdinalIgnoreCase)))
+                    throw new ValidationException("Two answer options are the same. Each option needs different text.");
+
+                bool isCorrect = i == correctIndex;
+                if (isCorrect) correctHasText = true;
+                options.Add(new QuestionOption { OptionText = text, IsCorrect = isCorrect });
+            }
+
+            if (options.Count < 2)
+                throw new ValidationException("Add at least two answer options.");
+            if (!correctHasText)
+                throw new ValidationException("Mark which answer is correct.");
+
+            _dal.SaveQuestion(quizId, questionId, questionText, options);
+        }
+
+        public void DeleteQuestion(int quizId, int questionId)
+        {
+            if (quizId <= 0 || questionId <= 0) throw new ValidationException("Invalid question.");
+            _dal.DeleteQuestion(quizId, questionId);
+        }
+
+        private static string CleanTitle(string title)
+        {
+            title = (title ?? "").Trim();
+            if (title.Length == 0) throw new ValidationException("Please give the quiz a title.");
+            if (title.Length > 200) throw new ValidationException("Quiz titles must be 200 characters or fewer.");
+            return title;
+        }
+
         public List<QuizAttempt> GetUserAttempts(int userId)
         {
             if (userId <= 0) return new List<QuizAttempt>();

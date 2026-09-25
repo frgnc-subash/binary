@@ -126,7 +126,14 @@ namespace binary.Core.DAL
 
         public void Delete(int courseId)
         {
-            const string sql = "DELETE FROM Courses WHERE CourseID = @CourseID;";
+            // lesson quizzes reference their lesson without a cascade, so remove them before the
+            // course's own cascade deletes the lessons; all or nothing
+            const string sql = @"
+                SET XACT_ABORT ON;
+                BEGIN TRAN;
+                DELETE FROM Quizzes WHERE LessonID IN (SELECT LessonID FROM Lessons WHERE CourseID = @CourseID);
+                DELETE FROM Courses WHERE CourseID = @CourseID;
+                COMMIT;";
 
             using (SqlConnection con = DbHelper.CreateConnection())
             using (SqlCommand cmd = DbHelper.CreateCommand(con, sql))
