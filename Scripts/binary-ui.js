@@ -436,11 +436,102 @@ var BinaryUI = (function () {
         for (var i = 0; i < lists.length; i++) initList(lists[i]);
     }
 
+    /* ---------- file uploads ---------- */
+
+    // Replaces the browser's "Browse... / No file selected" box with a drop zone. The real
+    // <input type="file"> stays in the form, stretched invisibly over the zone, so clicking,
+    // keyboard focus, drag-and-drop and the postback all keep working unchanged.
+    // Optional attributes on the input: data-drop-label="Choose a flag image", data-max-mb="2".
+    var UPLOAD_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
+    var FILE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+
+    function formatSize(bytes) {
+        if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+    }
+
+    // "image/jpeg,.png,video/mp4" -> "JPEG, PNG, MP4"
+    function describeAccept(accept) {
+        var seen = {}, out = [];
+        (accept || '').split(',').forEach(function (part) {
+            var name = part.trim().replace(/^\./, '').replace(/^[a-z]+\//i, '').toUpperCase();
+            if (name && name !== '*' && !seen[name]) { seen[name] = true; out.push(name); }
+        });
+        return out.join(', ');
+    }
+
+    function enhanceFileInput(input) {
+        if (input.hasAttribute('data-enhanced')) return;
+        input.setAttribute('data-enhanced', 'true');
+
+        var accept = input.getAttribute('accept') || '';
+        var kind = /video/i.test(accept) ? 'a video' : /image|png|jpe?g|gif|webp/i.test(accept) ? 'an image' : 'a file';
+        var maxMb = parseFloat(input.getAttribute('data-max-mb')) || 0;
+        var meta = [describeAccept(accept), maxMb ? 'up to ' + maxMb + ' MB' : ''].filter(Boolean).join(' · ');
+
+        var zone = document.createElement('div');
+        zone.className = 'file-drop';
+        zone.innerHTML =
+            '<span class="file-drop-icon">' + UPLOAD_ICON + '</span>' +
+            '<span class="file-drop-text">' +
+                '<strong class="file-drop-title"></strong>' +
+                '<span class="file-drop-meta"></span>' +
+            '</span>' +
+            '<button type="button" class="file-drop-remove" hidden>Remove</button>';
+        var title = zone.querySelector('.file-drop-title');
+        var sub = zone.querySelector('.file-drop-meta');
+        var icon = zone.querySelector('.file-drop-icon');
+        var remove = zone.querySelector('.file-drop-remove');
+        var emptyTitle = input.getAttribute('data-drop-label') || ('Choose ' + kind + ' or drag it here');
+
+        input.parentNode.insertBefore(zone, input);
+        zone.appendChild(input);
+
+        function render() {
+            var file = input.files && input.files[0];
+            zone.classList.toggle('has-file', !!file);
+            remove.hidden = !file;
+            icon.innerHTML = file ? FILE_ICON : UPLOAD_ICON;
+            title.textContent = file ? file.name : emptyTitle;
+            sub.textContent = file ? formatSize(file.size) + ' · ready to upload' : meta;
+        }
+
+        input.addEventListener('change', function () {
+            var file = input.files && input.files[0];
+            if (file && maxMb && file.size > maxMb * 1024 * 1024) {
+                toast(file.name + ' is larger than ' + maxMb + ' MB. Please choose a smaller file.', 'error');
+                input.value = '';
+            }
+            render();
+        });
+
+        // highlight while a file is dragged over the zone
+        input.addEventListener('dragenter', function () { zone.classList.add('is-dragging'); });
+        input.addEventListener('dragleave', function () { zone.classList.remove('is-dragging'); });
+        input.addEventListener('drop', function () { zone.classList.remove('is-dragging'); });
+        input.addEventListener('focus', function () { zone.classList.add('is-focused'); });
+        input.addEventListener('blur', function () { zone.classList.remove('is-focused'); });
+
+        remove.addEventListener('click', function () {
+            input.value = '';
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            input.focus();
+        });
+
+        render();
+    }
+
+    function enhanceFileInputs() {
+        var inputs = document.querySelectorAll('input[type="file"]');
+        for (var i = 0; i < inputs.length; i++) enhanceFileInput(inputs[i]);
+    }
+
     function init() {
         syncThemeButtons();
         syncSidebar();
         promoteAlerts();
         initLists();
+        enhanceFileInputs();
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
