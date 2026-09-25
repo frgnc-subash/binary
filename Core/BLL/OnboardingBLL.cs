@@ -16,14 +16,16 @@ namespace binary.Core.BLL
     }
 
     // What a visitor picked in the Get Started flow, kept in session until their account exists.
+    // Every step allows more than one answer.
     [Serializable]
     public class OnboardingChoice
     {
-        public int CourseId { get; set; }
-        public string CourseTitle { get; set; }
-        public string CourseFlagUrl { get; set; }
-        public string NativeLanguage { get; set; }   // label, e.g. "Nepali"
-        public string Reason { get; set; }           // label, e.g. "Travel"; null if skipped
+        public List<int> CourseIds { get; set; }
+        public int CourseId { get; set; }             // the first course picked; registration opens it
+        public string CourseTitle { get; set; }       // all picked titles, e.g. "Spanish for Beginners, French Immersion"
+        public string CourseFlagUrl { get; set; }     // flag of the first course
+        public string NativeLanguage { get; set; }    // labels, e.g. "English, Nepali"
+        public string Reason { get; set; }            // labels, e.g. "Travel, Career"; null if skipped
     }
 
     public static class OnboardingBLL
@@ -64,37 +66,44 @@ namespace binary.Core.BLL
             }
         }
 
-        // validates the form values (they come straight from the browser) and remembers them
-        public static OnboardingChoice Save(string courseIdValue, string nativeKey, string reasonKey)
+        // validates the form values (they come straight from the browser) and remembers them;
+        // unknown ids and keys are ignored, and each list keeps the order the options are shown in
+        public static OnboardingChoice Save(string[] courseIdValues, string[] nativeKeys, string[] reasonKeys)
         {
-            int courseId;
-            if (!int.TryParse(courseIdValue, out courseId))
-                throw new ValidationException("Please choose a language to learn.");
+            var wanted = new HashSet<string>(courseIdValues ?? new string[0]);
+            List<Course> courses = new CourseBLL().GetPublishedCourses()
+                .Where(c => wanted.Contains(c.CourseID.ToString()))
+                .ToList();
+            if (courses.Count == 0)
+                throw new ValidationException("Please choose at least one language to learn.");
 
-            Course course = new CourseBLL().GetPublishedCourses().FirstOrDefault(c => c.CourseID == courseId);
-            if (course == null)
-                throw new ValidationException("That course isn't available. Please choose another.");
+            List<OnboardingOption> natives = Pick(NativeLanguages, nativeKeys);
+            if (natives.Count == 0)
+                throw new ValidationException("Please tell us which languages you speak.");
 
-            OnboardingOption native = NativeLanguages.FirstOrDefault(o => o.Key == nativeKey);
-            if (native == null)
-                throw new ValidationException("Please tell us which language you speak.");
-
-            OnboardingOption reason = Reasons.FirstOrDefault(o => o.Key == reasonKey);   // optional
+            List<OnboardingOption> reasons = Pick(Reasons, reasonKeys);   // optional
 
             var choice = new OnboardingChoice
             {
-                CourseId = course.CourseID,
-                CourseTitle = course.Title,
-                CourseFlagUrl = course.FlagImageUrl,
-                NativeLanguage = native.Label,
-                Reason = reason == null ? null : reason.Label
+                CourseIds = courses.Select(c => c.CourseID).ToList(),
+                CourseId = courses[0].CourseID,
+                CourseTitle = string.Join(", ", courses.Select(c => c.Title)),
+                CourseFlagUrl = courses[0].FlagImageUrl,
+                NativeLanguage = string.Join(", ", natives.Select(o => o.Label)),
+                Reason = reasons.Count == 0 ? null : string.Join(", ", reasons.Select(o => o.Label))
             };
             HttpContext.Current.Session[SessionKey] = choice;
             return choice;
         }
 
+        private static List<OnboardingOption> Pick(IList<OnboardingOption> options, string[] keys)
+        {
+            var wanted = new HashSet<string>(keys ?? new string[0]);
+            return options.Where(o => wanted.Contains(o.Key)).ToList();
+        }
+
         // Called right after registration. Saves the answers to the profile and enrolls the learner in
-        // the course they picked. Returns that course's id, or 0 if there was nothing to apply.
+        // every course they picked. Returns the first course's id, or 0 if there was nothing to apply.
         public static int ApplyToNewUser(int userId)
         {
             OnboardingChoice choice = Current;
@@ -104,15 +113,28 @@ namespace binary.Core.BLL
             try
             {
                 new UserBLL().SaveOnboarding(userId, choice.NativeLanguage, choice.Reason);
-                new EnrollmentBLL().Enroll(userId, choice.CourseId);
-                return choice.CourseId;
             }
             catch (Exception ex)
             {
-                // the account already exists; a failed enrollment just means they pick a course themselves
-                System.Diagnostics.Trace.TraceError("Applying onboarding for user {0} failed: {1}", userId, ex);
-                return 0;
+                System.Diagnostics.Trace.TraceError("Saving onboarding answers for user {0} failed: {1}", userId, ex);
             }
+
+            // the account already exists; a failed enrollment just means they pick that course themselves
+            int firstEnrolled = 0;
+            var enrollmentBll = new EnrollmentBLL();
+            foreach (int courseId in choice.CourseIds ?? new List<int> { choice.CourseId })
+            {
+                try
+                {
+                    enrollmentBll.Enroll(userId, courseId);
+                    if (firstEnrolled == 0) firstEnrolled = courseId;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.TraceError("Onboarding enrollment in course {0} for user {1} failed: {2}", courseId, userId, ex);
+                }
+            }
+            return firstEnrolled;
         }
     }
 }

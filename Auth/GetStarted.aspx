@@ -23,8 +23,8 @@
                 <h1 id="onbWelcomeTitle">Welcome to Binary</h1>
                 <p class="onb-lead">Let's set up your learning in three quick questions. It takes less than a minute.</p>
                 <ul class="onb-welcome-list">
-                    <li><span class="onb-welcome-icon"><%= binary.Core.Helpers.Icons.Svg("book") %></span>Choose the language you want to learn</li>
-                    <li><span class="onb-welcome-icon"><%= binary.Core.Helpers.Icons.Svg("globe") %></span>Tell us the language you already speak</li>
+                    <li><span class="onb-welcome-icon"><%= binary.Core.Helpers.Icons.Svg("book") %></span>Choose the languages you want to learn</li>
+                    <li><span class="onb-welcome-icon"><%= binary.Core.Helpers.Icons.Svg("globe") %></span>Tell us the languages you already speak</li>
                     <li><span class="onb-welcome-icon"><%= binary.Core.Helpers.Icons.Svg("target") %></span>Share why you're learning, then create your account</li>
                 </ul>
                 <div class="onb-actions onb-actions-center">
@@ -36,12 +36,12 @@
             <section class="onb-step" data-step="1" data-field="onbCourse" aria-labelledby="onbLearnTitle">
                 <span class="onb-step-label">Step 1 of 3</span>
                 <h2 id="onbLearnTitle">What do you want to learn?</h2>
-                <p class="onb-lead">Pick a course to start with. You can enroll in more any time.</p>
+                <p class="onb-lead">Pick one or more courses. We'll enroll you in all of them, and you can add more any time.</p>
                 <div class="onb-grid">
                     <asp:Repeater ID="rptCourses" runat="server">
                         <ItemTemplate>
                             <label class="onb-option">
-                                <input type="radio" name="onbCourse" value="<%# Eval("CourseID") %>" <%# IsChecked("onbCourse", Eval("CourseID")) %> data-label="<%# HttpUtility.HtmlAttributeEncode((string)Eval("Title")) %>" />
+                                <input type="checkbox" name="onbCourse" value="<%# Eval("CourseID") %>" <%# IsChecked("onbCourse", Eval("CourseID")) %> data-label="<%# HttpUtility.HtmlAttributeEncode((string)Eval("Title")) %>" />
                                 <%# binary.Core.Helpers.FlagHelper.Render((string)Eval("FlagImageUrl"), (string)Eval("Title"), "flag-md") %>
                                 <span class="onb-option-text">
                                     <strong><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></strong>
@@ -56,6 +56,7 @@
                 </asp:Panel>
                 <div class="onb-actions">
                     <button type="button" class="btn btn-outline" onclick="onboarding.back()">Back</button>
+                    <span class="onb-count" aria-live="polite"></span>
                     <button type="button" class="btn btn-primary onb-continue" onclick="onboarding.next()" disabled>Continue</button>
                 </div>
             </section>
@@ -63,13 +64,13 @@
             <%-- step 2: what do you speak --%>
             <section class="onb-step" data-step="2" data-field="onbNative" aria-labelledby="onbSpeakTitle">
                 <span class="onb-step-label">Step 2 of 3</span>
-                <h2 id="onbSpeakTitle">Which language do you already speak?</h2>
-                <p class="onb-lead">We'll use this to personalise your learning.</p>
+                <h2 id="onbSpeakTitle">Which languages do you already speak?</h2>
+                <p class="onb-lead">Select all that apply. We'll use this to personalise your learning.</p>
                 <div class="onb-grid onb-grid-compact">
                     <asp:Repeater ID="rptNative" runat="server">
                         <ItemTemplate>
                             <label class="onb-option">
-                                <input type="radio" name="onbNative" value="<%# Eval("Key") %>" <%# IsChecked("onbNative", Eval("Key")) %> data-label="<%# HttpUtility.HtmlAttributeEncode((string)Eval("Label")) %>" />
+                                <input type="checkbox" name="onbNative" value="<%# Eval("Key") %>" <%# IsChecked("onbNative", Eval("Key")) %> data-label="<%# HttpUtility.HtmlAttributeEncode((string)Eval("Label")) %>" />
                                 <%# RenderOptionBadge(Container.DataItem) %>
                                 <span class="onb-option-text"><strong><%# HttpUtility.HtmlEncode((string)Eval("Label")) %></strong></span>
                             </label>
@@ -78,6 +79,7 @@
                 </div>
                 <div class="onb-actions">
                     <button type="button" class="btn btn-outline" onclick="onboarding.back()">Back</button>
+                    <span class="onb-count" aria-live="polite"></span>
                     <button type="button" class="btn btn-primary onb-continue" onclick="onboarding.next()" disabled>Continue</button>
                 </div>
             </section>
@@ -86,12 +88,12 @@
             <section class="onb-step" data-step="3" data-field="onbReason" data-optional="true" aria-labelledby="onbWhyTitle">
                 <span class="onb-step-label">Step 3 of 3</span>
                 <h2 id="onbWhyTitle">Why are you learning?</h2>
-                <p class="onb-lead">Optional, but it helps us keep you motivated.</p>
+                <p class="onb-lead">Select all that apply. Optional, but it helps us keep you motivated.</p>
                 <div class="onb-grid onb-grid-compact">
                     <asp:Repeater ID="rptReasons" runat="server">
                         <ItemTemplate>
                             <label class="onb-option">
-                                <input type="radio" name="onbReason" value="<%# Eval("Key") %>" <%# IsChecked("onbReason", Eval("Key")) %> data-label="<%# HttpUtility.HtmlAttributeEncode((string)Eval("Label")) %>" />
+                                <input type="checkbox" name="onbReason" value="<%# Eval("Key") %>" <%# IsChecked("onbReason", Eval("Key")) %> data-label="<%# HttpUtility.HtmlAttributeEncode((string)Eval("Label")) %>" />
                                 <%# RenderOptionBadge(Container.DataItem) %>
                                 <span class="onb-option-text"><strong><%# HttpUtility.HtmlEncode((string)Eval("Label")) %></strong></span>
                             </label>
@@ -101,6 +103,7 @@
                 <div class="onb-actions">
                     <button type="button" class="btn btn-outline" onclick="onboarding.back()">Back</button>
                     <button type="button" class="btn btn-ghost" onclick="onboarding.skip()">Skip</button>
+                    <span class="onb-count" aria-live="polite"></span>
                     <button type="button" class="btn btn-primary onb-continue" onclick="onboarding.next()" disabled>Continue</button>
                 </div>
             </section>
@@ -109,11 +112,11 @@
             <section class="onb-step" data-step="4" aria-labelledby="onbDoneTitle">
                 <span class="onb-done-icon"><%= binary.Core.Helpers.Icons.Svg("check") %></span>
                 <h2 id="onbDoneTitle">You're all set</h2>
-                <p class="onb-lead">Here's your plan. Create a free account and we'll enroll you straight away.</p>
+                <p class="onb-lead">Here's your plan. Create a free account and we'll enroll you in your courses straight away.</p>
                 <dl class="onb-summary">
                     <div><dt>Learning</dt><dd id="sumCourse">-</dd></div>
                     <div><dt>You speak</dt><dd id="sumNative">-</dd></div>
-                    <div><dt>Goal</dt><dd id="sumReason">-</dd></div>
+                    <div><dt>Goals</dt><dd id="sumReason">-</dd></div>
                 </dl>
                 <div class="onb-actions onb-actions-center">
                     <button type="button" class="btn btn-outline" onclick="onboarding.back()">Back</button>
@@ -130,7 +133,13 @@
             var current = 0;
 
             function selected(name) {
-                return document.querySelector('input[name="' + name + '"]:checked');
+                return document.querySelectorAll('input[name="' + name + '"]:checked');
+            }
+
+            function labels(name) {
+                var picked = selected(name), out = [];
+                for (var i = 0; i < picked.length; i++) out.push(picked[i].getAttribute('data-label'));
+                return out.join(', ');
             }
 
             function show(index) {
@@ -144,39 +153,40 @@
             }
 
             function fillSummary() {
-                var course = selected('onbCourse'), native = selected('onbNative'), reason = selected('onbReason');
-                document.getElementById('sumCourse').textContent = course ? course.getAttribute('data-label') : 'Choose later';
-                document.getElementById('sumNative').textContent = native ? native.getAttribute('data-label') : '-';
-                document.getElementById('sumReason').textContent = reason ? reason.getAttribute('data-label') : 'Not set';
+                document.getElementById('sumCourse').textContent = labels('onbCourse') || 'Choose later';
+                document.getElementById('sumNative').textContent = labels('onbNative') || '-';
+                document.getElementById('sumReason').textContent = labels('onbReason') || 'Not set';
             }
 
-            // a step's Continue button unlocks once one of its options is picked
-            function markSelected(input) {
-                var group = document.querySelectorAll('input[name="' + input.name + '"]');
-                for (var i = 0; i < group.length; i++) group[i].closest('.onb-option').classList.toggle('is-selected', group[i].checked);
+            // highlight picked options; a step's Continue button is enabled while anything in it is picked
+            function refreshStep(step) {
+                var inputs = step.querySelectorAll('.onb-option input');
+                var any = false;
+                for (var i = 0; i < inputs.length; i++) {
+                    inputs[i].closest('.onb-option').classList.toggle('is-selected', inputs[i].checked);
+                    if (inputs[i].checked) any = true;
+                }
+                var btn = step.querySelector('.onb-continue');
+                if (btn && inputs.length) btn.disabled = !any;
+                var count = step.querySelector('.onb-count');
+                if (count) count.textContent = any ? selected(inputs[0].name).length + ' selected' : '';
             }
 
             document.addEventListener('change', function (e) {
                 if (!e.target.matches('.onb-option input')) return;
-                markSelected(e.target);
-                var step = e.target.closest('.onb-step');
-                var btn = step.querySelector('.onb-continue');
-                if (btn) btn.disabled = false;
+                refreshStep(e.target.closest('.onb-step'));
             });
 
             function skip() {
-                var reason = selected('onbReason');
-                if (reason) { reason.checked = false; markSelected(reason); }
+                var step = steps[current];
+                var picked = step.querySelectorAll('.onb-option input:checked');
+                for (var i = 0; i < picked.length; i++) picked[i].checked = false;
+                refreshStep(step);
                 show(current + 1);
             }
 
-            // answers restored after a server round trip: unlock those steps' Continue buttons
-            var answered = document.querySelectorAll('.onb-option input:checked');
-            for (var i = 0; i < answered.length; i++) {
-                markSelected(answered[i]);
-                var btn = answered[i].closest('.onb-step').querySelector('.onb-continue');
-                if (btn) btn.disabled = false;
-            }
+            // answers restored after a server round trip
+            for (var s = 0; s < steps.length; s++) refreshStep(steps[s]);
 
             // with no courses published there's nothing to pick; let people through to the account step
             var courseStep = document.querySelector('.onb-step[data-step="1"]');

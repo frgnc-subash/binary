@@ -12,8 +12,6 @@ namespace binary.Admin
 {
     public partial class AdminCourses : System.Web.UI.Page
     {
-        private const int PageSize = 8;
-
         private static readonly Dictionary<string, string> ActionMessages = new Dictionary<string, string>
         {
             { "course-saved", "Course saved successfully." },
@@ -57,9 +55,7 @@ namespace binary.Admin
                 BindCategoryFilterDropdown();
                 BindFlagDropdown();
 
-                // arriving from the admin header search box (?q=...)
-                if (!string.IsNullOrWhiteSpace(Request.QueryString["q"]))
-                    txtCourseSearch.Text = Request.QueryString["q"].Trim();
+                // the admin header search box arrives as ?q=...; the list script reads it from the URL
 
                 string msgKey = Request.QueryString["msg"];
                 string msgText;
@@ -139,98 +135,20 @@ namespace binary.Admin
             litCategoryTotal.Text = rows.Count.ToString();
         }
 
-        protected bool IsActiveCategory(int categoryId)
-        {
-            return ddlCategoryFilter.SelectedValue == categoryId.ToString();
-        }
-
+        // Every course is rendered; search, filters and paging happen in the browser
+        // (Scripts/binary-ui.js), so filtering never reloads the page.
         private void BindCourseList()
         {
             var courses = new CourseBLL().GetAllCourses();
-            int totalCount = courses.Count;
-
-            string search = (txtCourseSearch.Text ?? "").Trim();
-            if (search.Length > 0)
-            {
-                courses = courses.Where(c =>
-                    c.Title.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    (c.CategoryName ?? "").IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0
-                ).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(ddlLevelFilter.SelectedValue))
-                courses = courses.Where(c => c.Level == ddlLevelFilter.SelectedValue).ToList();
-
-            if (!string.IsNullOrEmpty(ddlCategoryFilter.SelectedValue))
-            {
-                int categoryId = int.Parse(ddlCategoryFilter.SelectedValue);
-                courses = courses.Where(c => c.CategoryID == categoryId).ToList();
-            }
-
-            if (ddlStatusFilter.SelectedValue == "published")
-                courses = courses.Where(c => c.IsPublished).ToList();
-            else if (ddlStatusFilter.SelectedValue == "draft")
-                courses = courses.Where(c => !c.IsPublished).ToList();
-
-            int totalPages = Math.Max(1, (int)Math.Ceiling(courses.Count / (double)PageSize));
-            int page;
-            int.TryParse(hfCoursesPage.Value, out page);
-            page = Math.Max(1, Math.Min(page <= 0 ? 1 : page, totalPages));
-            hfCoursesPage.Value = page.ToString();
-
-            var paged = courses.Skip((page - 1) * PageSize).Take(PageSize).ToList();
-            rptCourses.DataSource = paged;
+            rptCourses.DataSource = courses;
             rptCourses.DataBind();
-
-            litCoursePageInfo.Text = "Page " + page + " of " + totalPages + " (" + courses.Count + " course" + (courses.Count == 1 ? "" : "s") + ")";
-            lnkCoursePrevPage.CssClass = page > 1 ? "btn btn-outline" : "btn btn-outline btn-disabled";
-            lnkCourseNextPage.CssClass = page < totalPages ? "btn btn-outline" : "btn btn-outline btn-disabled";
-
-            pnlCourseList.Visible = courses.Count > 0;
-            pnlNoCourses.Visible = courses.Count == 0;
-
-            bool filtered = search.Length > 0 || ddlCategoryFilter.SelectedIndex > 0 ||
-                            ddlLevelFilter.SelectedIndex > 0 || ddlStatusFilter.SelectedIndex > 0;
-            pnlCourseFilterSummary.Visible = filtered;
-            litCourseFilterSummary.Text = courses.Count + " of " + totalCount + " course" + (totalCount == 1 ? "" : "s") + " match";
         }
 
-        protected void btnCourseSearch_Click(object sender, EventArgs e)
+        // what the search box matches against: title and category, lower-cased
+        protected string GetCourseSearchText(object dataItem)
         {
-            hfCoursesPage.Value = "1";
-            BindCourseList();
-        }
-
-        protected void CourseFilter_Changed(object sender, EventArgs e)
-        {
-            hfCoursesPage.Value = "1";
-            BindCourseList();
-            BindCategoryList();   // keeps the active category highlighted
-        }
-
-        protected void lnkClearCourseFilters_Click(object sender, EventArgs e)
-        {
-            txtCourseSearch.Text = "";
-            ddlCategoryFilter.SelectedIndex = 0;
-            ddlLevelFilter.SelectedIndex = 0;
-            ddlStatusFilter.SelectedIndex = 0;
-            CourseFilter_Changed(sender, e);
-        }
-
-        protected void lnkCoursePrevPage_Click(object sender, EventArgs e)
-        {
-            int page;
-            int.TryParse(hfCoursesPage.Value, out page);
-            hfCoursesPage.Value = Math.Max(1, page - 1).ToString();
-            BindCourseList();
-        }
-
-        protected void lnkCourseNextPage_Click(object sender, EventArgs e)
-        {
-            int page;
-            int.TryParse(hfCoursesPage.Value, out page);
-            hfCoursesPage.Value = (page + 1).ToString();
-            BindCourseList();
+            var course = (Course)dataItem;
+            return HttpUtility.HtmlAttributeEncode((course.Title + " " + course.CategoryName).ToLowerInvariant());
         }
 
         private void BindLessons(int courseId)
@@ -552,17 +470,6 @@ namespace binary.Admin
         protected void rptCategories_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             int categoryId = Convert.ToInt32(e.CommandArgument);
-
-            // clicking a category name filters the course list (click again to show all)
-            if (e.CommandName == "FilterCategory")
-            {
-                bool alreadyActive = IsActiveCategory(categoryId);
-                ddlCategoryFilter.ClearSelection();
-                ListItem item = alreadyActive ? null : ddlCategoryFilter.Items.FindByValue(categoryId.ToString());
-                if (item != null) item.Selected = true;
-                CourseFilter_Changed(source, e);
-                return;
-            }
 
             try
             {

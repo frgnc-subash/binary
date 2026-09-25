@@ -113,7 +113,7 @@
     </section>
 
     <%-- FAQ (native <details>, works without JavaScript) --%>
-    <section class="section" id="faq" style="background:#ffffff;border-top:1px solid var(--border-light);">
+    <section class="section" id="faq" style="background:var(--bg-surface);border-top:1px solid var(--border-light);">
         <div class="site-container" style="max-width:780px;">
             <header class="section-header">
                 <span class="eyebrow">FAQ</span>
@@ -158,7 +158,7 @@
 
     <style>
         .contact-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--space-8); align-items: start; margin-top: calc(-1 * var(--space-10)); position: relative; }
-        .contact-card { background: #ffffff; box-shadow: var(--shadow-card); }
+        .contact-card { background: var(--bg-surface); box-shadow: var(--shadow-card); }
         .contact-card .card-header h2 { font-size: 1.25rem; font-weight: 800; }
         .contact-card .card-header p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
         .req { color: var(--brand-rose); }
@@ -175,14 +175,14 @@
         .contact-result-error .contact-result-icon { background: var(--brand-rose); }
         .contact-result-icon svg { width: 16px; height: 16px; }
         .contact-side { display: flex; flex-direction: column; gap: var(--space-4); }
-        .contact-info { display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-5); background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-subtle); }
+        .contact-info { display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-5); background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-subtle); }
         .contact-info h3 { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
         .contact-info p { font-size: 13.5px; color: var(--text-secondary); line-height: 1.55; }
         .contact-info a { display: inline-block; font-size: 13.5px; font-weight: 700; color: var(--brand-primary); margin-top: 4px; }
         .contact-info a:hover { text-decoration: underline; }
         .faq-list { display: flex; flex-direction: column; gap: var(--space-3); }
         .faq-item { border: 1px solid var(--border-light); border-radius: var(--radius-md); background: var(--bg-page); transition: border-color 0.15s ease, background 0.15s ease; }
-        .faq-item[open] { background: #ffffff; border-color: rgba(67, 56, 202, 0.25); box-shadow: var(--shadow-subtle); }
+        .faq-item[open] { background: var(--bg-surface); border-color: rgba(67, 56, 202, 0.25); box-shadow: var(--shadow-subtle); }
         .faq-item summary { list-style: none; cursor: pointer; padding: var(--space-4) var(--space-5); font-weight: 700; color: var(--text-primary); display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
         .faq-item summary::-webkit-details-marker { display: none; }
         .faq-item summary::after { content: ''; width: 18px; height: 18px; flex-shrink: 0; transition: transform 0.2s ease; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") center / 18px no-repeat; }

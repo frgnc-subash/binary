@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.UI.WebControls;
 using binary.Core.BLL;
 using binary.Models;
@@ -9,8 +10,6 @@ namespace binary.Admin
 {
     public partial class AdminUsers : System.Web.UI.Page
     {
-        private const int PageSize = 8;
-
         private static readonly Dictionary<string, string> ActionMessages = new Dictionary<string, string>
         {
             { "user-saved", "User saved successfully." },
@@ -93,72 +92,19 @@ namespace binary.Admin
             }
         }
 
+        // Every user is rendered; search, filters, sorting and paging happen in the browser
+        // (Scripts/binary-ui.js), so filtering never reloads the page.
         private void BindUsers()
         {
-            var all = new UserBLL().GetAllUsers();
-            int totalCount = all.Count;
-
-            string search = (txtUserSearch.Text ?? "").Trim();
-            if (search.Length > 0)
-            {
-                all = all.Where(u =>
-                    (u.FirstName + " " + u.LastName).IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    u.Email.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0
-                ).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(ddlRoleFilter.SelectedValue))
-            {
-                int roleId = int.Parse(ddlRoleFilter.SelectedValue);
-                all = all.Where(u => u.RoleID == roleId).ToList();
-            }
-
-            if (ddlStatusFilter.SelectedValue == "active")
-                all = all.Where(u => u.IsActive).ToList();
-            else if (ddlStatusFilter.SelectedValue == "inactive")
-                all = all.Where(u => !u.IsActive).ToList();
-
-            if (ddlUserSort.SelectedValue == "name")
-                all = all.OrderBy(u => u.FirstName).ThenBy(u => u.LastName).ToList();
-            else if (ddlUserSort.SelectedValue == "xp")
-                all = all.OrderByDescending(u => u.TotalXP).ThenBy(u => u.FirstName).ToList();
-            else
-                all = all.OrderByDescending(u => u.CreatedDate).ToList();
-
-            int totalPages = Math.Max(1, (int)Math.Ceiling(all.Count / (double)PageSize));
-            int page;
-            int.TryParse(hfUsersPage.Value, out page);
-            page = Math.Max(1, Math.Min(page <= 0 ? 1 : page, totalPages));
-            hfUsersPage.Value = page.ToString();
-
-            var paged = all.Skip((page - 1) * PageSize).Take(PageSize).ToList();
-            rptUsers.DataSource = paged;
+            rptUsers.DataSource = new UserBLL().GetAllUsers();
             rptUsers.DataBind();
-
-            litPageInfo.Text = "Page " + page + " of " + totalPages + " (" + all.Count + " user" + (all.Count == 1 ? "" : "s") + ")";
-            lnkPrevPage.CssClass = page > 1 ? "btn btn-outline" : "btn btn-outline btn-disabled";
-            lnkNextPage.CssClass = page < totalPages ? "btn btn-outline" : "btn btn-outline btn-disabled";
-
-            pnlUserList.Visible = all.Count > 0;
-            pnlNoUsers.Visible = all.Count == 0;
-
-            bool filtered = search.Length > 0 || ddlRoleFilter.SelectedIndex > 0 || ddlStatusFilter.SelectedIndex > 0;
-            pnlUserFilterSummary.Visible = filtered;
-            litUserFilterSummary.Text = all.Count + " of " + totalCount + " user" + (totalCount == 1 ? "" : "s") + " match";
         }
 
-        protected void UserFilter_Changed(object sender, EventArgs e)
+        // what the search box matches against: full name and email, lower-cased
+        protected string GetUserSearchText(object dataItem)
         {
-            hfUsersPage.Value = "1";
-            BindUsers();
-        }
-
-        protected void lnkClearUserFilters_Click(object sender, EventArgs e)
-        {
-            txtUserSearch.Text = "";
-            ddlRoleFilter.SelectedIndex = 0;
-            ddlStatusFilter.SelectedIndex = 0;
-            UserFilter_Changed(sender, e);
+            var user = (binary.Models.User)dataItem;
+            return HttpUtility.HtmlAttributeEncode((user.FirstName + " " + user.LastName + " " + user.Email).ToLowerInvariant());
         }
 
         protected void btnSaveUser_Click(object sender, EventArgs e)
@@ -224,7 +170,7 @@ namespace binary.Admin
             try
             {
                 new UserBLL().DeleteUser(userId);
-                Response.Redirect(WithMsg("~/Admin/Users.aspx", "user-deleted"));
+                Response.Redirect(WithMsg(Request.RawUrl, "user-deleted"));
             }
             catch (ValidationException vex)
             {
@@ -241,28 +187,6 @@ namespace binary.Admin
                 litUserError.Text = "Something went wrong. Please try again.";
                 pnlUserError.Visible = true;
             }
-        }
-
-        protected void btnUserSearch_Click(object sender, EventArgs e)
-        {
-            hfUsersPage.Value = "1";
-            BindUsers();
-        }
-
-        protected void lnkPrevPage_Click(object sender, EventArgs e)
-        {
-            int page;
-            int.TryParse(hfUsersPage.Value, out page);
-            hfUsersPage.Value = Math.Max(1, page - 1).ToString();
-            BindUsers();
-        }
-
-        protected void lnkNextPage_Click(object sender, EventArgs e)
-        {
-            int page;
-            int.TryParse(hfUsersPage.Value, out page);
-            hfUsersPage.Value = (page + 1).ToString();
-            BindUsers();
         }
     }
 }

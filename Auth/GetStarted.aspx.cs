@@ -39,12 +39,12 @@ namespace binary.Auth
 
         protected void btnFinish_Click(object sender, EventArgs e)
         {
-            string course = Request.Form["onbCourse"];
-            string native = Request.Form["onbNative"];
-            string reason = Request.Form["onbReason"];
+            string[] courses = Request.Form.GetValues("onbCourse");
+            string[] natives = Request.Form.GetValues("onbNative");
+            string[] reasons = Request.Form.GetValues("onbReason");
 
             // nothing published to enroll in: go straight to the account form
-            if (string.IsNullOrEmpty(course) && pnlNoCourses.Visible)
+            if (courses == null && pnlNoCourses.Visible)
             {
                 Response.Redirect("~/Auth/Register.aspx", true);
                 return;
@@ -52,13 +52,13 @@ namespace binary.Auth
 
             try
             {
-                OnboardingBLL.Save(course, native, reason);
+                OnboardingBLL.Save(courses, natives, reasons);
             }
             catch (ValidationException vex)
             {
                 litError.Text = Server.HtmlEncode(vex.Message);
                 pnlError.Visible = true;
-                InitialStep = string.IsNullOrEmpty(native) && !string.IsNullOrEmpty(course) ? 2 : 1;
+                InitialStep = natives == null && courses != null ? 2 : 1;
                 return;
             }
 
@@ -71,10 +71,11 @@ namespace binary.Auth
             return _lessonCounts.TryGetValue(courseId, out count) ? count : 0;
         }
 
-        // keeps a radio selected after a postback (these are plain inputs, not server controls)
+        // keeps a checkbox ticked after a postback (these are plain inputs, not server controls)
         protected string IsChecked(string field, object value)
         {
-            return string.Equals(Request.Form[field], Convert.ToString(value), StringComparison.Ordinal) ? "checked" : "";
+            string[] posted = Request.Form.GetValues(field);
+            return posted != null && Array.IndexOf(posted, Convert.ToString(value)) >= 0 ? "checked" : "";
         }
 
         // flag if we have one, otherwise an icon, otherwise a short code badge ("EN")

@@ -322,7 +322,7 @@ namespace binary.Users
                     litMemberSince.Text = user.CreatedDate.ToString("MMMM yyyy");
                     litOnboardingInfo.Text =
                         (string.IsNullOrEmpty(user.NativeLanguage) ? "" : "<span>Speaks " + Server.HtmlEncode(user.NativeLanguage) + "</span>") +
-                        (string.IsNullOrEmpty(user.LearningReason) ? "" : "<span>Goal: " + Server.HtmlEncode(user.LearningReason) + "</span>");
+                        (string.IsNullOrEmpty(user.LearningReason) ? "" : "<span>" + (user.LearningReason.Contains(",") ? "Goals: " : "Goal: ") + Server.HtmlEncode(user.LearningReason) + "</span>");
 
                     // calculate initials for avatar
                     string initials = "U";
