@@ -69,60 +69,6 @@
                     </asp:Repeater>
                 </div>
             </div>
-
-            <%-- Recent Users --%>
-            <div class="card">
-                <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
-                    <div>
-                        <h3 style="font-size:1.1rem;font-weight:700;">Recent Registrations</h3>
-                        <p style="font-size:12.5px;color:var(--text-muted);margin-top:2px;">Latest learners joined on Binary</p>
-                    </div>
-                    <a class="btn btn-outline" style="height:32px;font-size:12px;padding:0 12px;" runat="server" href="~/Admin/Users.aspx">View All Users<svg class="ui-icon ui-icon-after" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
-                </div>
-                <asp:Panel ID="pnlRecentUsers" runat="server">
-                    <div style="overflow-x:auto;">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Learner</th>
-                                    <th>Email</th>
-                                    <th>Joined</th>
-                                    <th>Status</th>
-                                    <th style="text-align:right;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <asp:Repeater ID="rptRecentUsers" runat="server">
-                                    <ItemTemplate>
-                                        <tr>
-                                            <td>
-                                                <div class="tbl-user">
-                                                    <div class="tbl-avatar"><%# binary.Core.Helpers.DisplayHelper.GetInitials((string)Eval("FirstName"), (string)Eval("LastName")) %></div>
-                                                    <span><%# HttpUtility.HtmlEncode((string)Eval("FirstName") + " " + (string)Eval("LastName")) %></span>
-                                                </div>
-                                            </td>
-                                            <td><%# HttpUtility.HtmlEncode((string)Eval("Email")) %></td>
-                                            <td style="color:var(--text-muted);"><%# Eval("CreatedDate", "{0:MMM d, yyyy}") %></td>
-                                            <td>
-                                                <%# (bool)Eval("IsActive") ? "<span class=\"badge badge-success\">Active</span>" : "<span class=\"badge badge-muted\">Suspended</span>" %>
-                                            </td>
-                                            <td style="text-align:right;">
-                                                <a class="btn btn-ghost" style="height:28px;font-size:12px;padding:0 8px;" runat="server" href="~/Admin/Users.aspx">Manage</a>
-                                            </td>
-                                        </tr>
-                                    </ItemTemplate>
-                                </asp:Repeater>
-                            </tbody>
-                        </table>
-                    </div>
-                </asp:Panel>
-                <asp:Panel ID="pnlNoRecentUsers" runat="server" Visible="false" style="text-align:center;color:var(--text-muted);padding:var(--space-8) var(--space-4);">
-                    <div style="width:44px;height:44px;margin:0 auto var(--space-3);border-radius:50%;background:rgba(67,56,202,0.1);color:var(--brand-primary);display:grid;place-items:center;"><svg class="admin-icon" style="width:22px;height:22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"></path><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"></path></svg></div>
-                    <h4 style="font-weight:700;color:var(--text-primary);">No learners yet</h4>
-                    <p style="font-size:13.5px;">New registrations will show up here.</p>
-                </asp:Panel>
-            </div>
-
         </div>
 
         <%-- Quick Actions --%>
@@ -158,5 +104,58 @@
             </div>
         </div>
 
+    </div>
+
+    <%-- Recent Users: full width under the chart and tools --%>
+    <div class="card" style="margin-top:var(--space-6);">
+        <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+                <h3 style="font-size:1.1rem;font-weight:700;">Recent Registrations</h3>
+                <p style="font-size:12.5px;color:var(--text-muted);margin-top:2px;">Latest learners joined on Binary</p>
+            </div>
+            <a class="btn btn-outline" style="height:32px;font-size:12px;padding:0 12px;" runat="server" href="~/Admin/Users.aspx">View All Users<svg class="ui-icon ui-icon-after" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+        </div>
+        <asp:Panel ID="pnlRecentUsers" runat="server">
+            <div style="overflow-x:auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Learner</th>
+                            <th>Email</th>
+                            <th>Joined</th>
+                            <th>Status</th>
+                            <th style="text-align:right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <asp:Repeater ID="rptRecentUsers" runat="server">
+                            <ItemTemplate>
+                                <tr>
+                                    <td>
+                                        <div class="tbl-user">
+                                            <div class="tbl-avatar"><%# binary.Core.Helpers.DisplayHelper.GetInitials((string)Eval("FirstName"), (string)Eval("LastName")) %></div>
+                                            <span><%# HttpUtility.HtmlEncode((string)Eval("FirstName") + " " + (string)Eval("LastName")) %></span>
+                                        </div>
+                                    </td>
+                                    <td><%# HttpUtility.HtmlEncode((string)Eval("Email")) %></td>
+                                    <td style="color:var(--text-muted);white-space:nowrap;"><%# Eval("CreatedDate", "{0:MMM d, yyyy}") %></td>
+                                    <td>
+                                        <%# (bool)Eval("IsActive") ? "<span class=\"badge badge-success\">Active</span>" : "<span class=\"badge badge-muted\">Suspended</span>" %>
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <a class="btn btn-ghost" style="height:28px;font-size:12px;padding:0 8px;" runat="server" href="~/Admin/Users.aspx">Manage</a>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </tbody>
+                </table>
+            </div>
+        </asp:Panel>
+        <asp:Panel ID="pnlNoRecentUsers" runat="server" Visible="false" style="text-align:center;color:var(--text-muted);padding:var(--space-8) var(--space-4);">
+            <div style="width:44px;height:44px;margin:0 auto var(--space-3);border-radius:50%;background:rgba(67,56,202,0.1);color:var(--brand-primary);display:grid;place-items:center;"><svg class="admin-icon" style="width:22px;height:22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"></path><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"></path></svg></div>
+            <h4 style="font-weight:700;color:var(--text-primary);">No learners yet</h4>
+            <p style="font-size:13.5px;">New registrations will show up here.</p>
+        </asp:Panel>
     </div>
 </asp:Content>
