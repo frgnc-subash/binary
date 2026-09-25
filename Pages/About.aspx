@@ -5,15 +5,11 @@
     <%-- hero --%>
     <section class="page-hero">
         <div class="site-container">
-            <div class="page-hero-badge">
-                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h6a4 4 0 0 1 4 4v11a3 3 0 0 0-3-3H2z"></path><path d="M22 4.5h-6a4 4 0 0 0-4 4v11a3 3 0 0 1 3-3h7z"></path></svg>
-                About Binary
-            </div>
-            <h1>Learn a new language, <span class="gradient-text">one lesson at a time</span></h1>
+            <h1>Learn a new language, one lesson at a time</h1>
             <p class="lead">Binary is a free web-based language learning platform with structured courses, video lessons, vocabulary quizzes, and progress you can actually see.</p>
             <div class="page-hero-actions">
                 <a class="btn btn-primary btn-lg" runat="server" href="~/Courses">Browse courses</a>
-                <a class="btn btn-outline btn-lg" id="lnkHeroSecondary" runat="server" href="~/Auth/Register.aspx">Create a free account</a>
+                <a class="btn btn-outline btn-lg" id="lnkHeroSecondary" runat="server" href="~/Auth/GetStarted.aspx">Create a free account</a>
             </div>
         </div>
     </section>
@@ -168,7 +164,7 @@
                     <h2>Ready to start your first lesson?</h2>
                     <p>Every course is free. Pick a language and earn your first XP today.</p>
                 </div>
-                <a class="btn btn-lg about-cta-btn" id="lnkCtaBottom" runat="server" href="~/Auth/Register.aspx">Get started free</a>
+                <a class="btn btn-lg about-cta-btn" id="lnkCtaBottom" runat="server" href="~/Auth/GetStarted.aspx">Get started free</a>
             </div>
         </div>
     </section>
@@ -185,7 +181,7 @@
         .about-check { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; background: var(--brand-accent-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / 12px no-repeat; }
         .about-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
         .about-feature { padding: var(--space-6); border: 1px solid var(--border-light); border-radius: var(--radius-lg); background: var(--bg-page); transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
-        .about-feature:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); border-color: rgba(67, 56, 202, 0.25); background: #ffffff; }
+        .about-feature:hover { border-color: var(--border-mid); background: #ffffff; }
         .about-feature h3 { font-size: 1.05rem; font-weight: 800; margin: var(--space-4) 0 var(--space-2); }
         .about-feature p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
         .about-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); counter-reset: none; }
@@ -195,14 +191,14 @@
         .about-step p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
         .about-team { display: grid; grid-template-columns: repeat(3, minmax(0, 220px)); justify-content: center; gap: var(--space-5); }
         .about-member { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: var(--space-6) var(--space-4); border: 1px solid var(--border-light); border-radius: var(--radius-lg); background: var(--bg-page); text-align: center; }
-        .about-member-avatar { width: 64px; height: 64px; border-radius: 50%; margin-bottom: var(--space-3); display: grid; place-items: center; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #ffffff; font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; }
+        .about-member-avatar { width: 64px; height: 64px; border-radius: 50%; margin-bottom: var(--space-3); display: grid; place-items: center; background: var(--brand-primary); color: #ffffff; font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; }
         .about-member strong { font-size: 15px; color: var(--text-primary); }
         .about-member span:last-child { font-size: 12.5px; color: var(--text-muted); }
-        .about-cta { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; padding: var(--space-8) var(--space-10); border-radius: var(--radius-xl); background: linear-gradient(135deg, var(--brand-primary) 0%, #6d28d9 100%); color: #ffffff; box-shadow: var(--shadow-float); }
+        .about-cta { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; padding: var(--space-8) var(--space-10); border-radius: var(--radius-xl); background: var(--text-primary); color: #ffffff; }
         .about-cta h2 { color: #ffffff; font-size: 1.6rem; font-weight: 800; }
-        .about-cta p { color: rgba(255, 255, 255, 0.82); margin-top: 4px; }
-        .about-cta-btn { background: #ffffff; color: var(--brand-primary); }
-        .about-cta-btn:hover { background: var(--brand-primary-soft); transform: translateY(-1px); }
+        .about-cta p { color: rgba(255, 255, 255, 0.75); margin-top: 4px; }
+        .about-cta-btn { background: #ffffff; color: var(--text-primary); }
+        .about-cta-btn:hover { background: var(--bg-subtle); }
         @media (max-width: 900px) {
             .about-stats { grid-template-columns: repeat(2, 1fr); }
             .about-mission, .about-features, .about-steps { grid-template-columns: 1fr; }

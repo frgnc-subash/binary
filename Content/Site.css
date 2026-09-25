@@ -302,7 +302,6 @@ p {
 .primary-action:hover {
     background: var(--brand-primary-hover);
     box-shadow: 0 4px 12px var(--brand-primary-glow);
-    transform: translateY(-1px);
 }
 
 .btn-outline,
@@ -345,15 +344,6 @@ p {
 }
 :not(.btn) > .ui-icon-after {
     margin-left: 4px;
-}
-
-a:hover > .ui-icon-after,
-button:hover > .ui-icon-after {
-    transform: translateX(2px);
-}
-
-.ui-icon-after {
-    transition: transform 0.15s ease;
 }
 
 /* course syllabus chevron: an inline-grid box so the open/close rotation actually applies */
@@ -520,7 +510,6 @@ html.is-submitting * {
 }
 
 .clean-course-card:hover {
-    transform: translateY(-4px);
     box-shadow: var(--shadow-card-hover);
     border-color: var(--border-mid);
 }
@@ -987,7 +976,7 @@ input[type="radio"] {
 }
 
 .admin-sidebar {
-    width: 268px;
+    width: 292px;
     background: #ffffff;
     color: var(--text-primary);
     display: flex;
@@ -1081,10 +1070,13 @@ a.admin-sidebar-header:hover {
 }
 
 .admin-nav-item.active {
-    background: var(--brand-primary-soft);
-    color: var(--brand-primary);
+    background: var(--bg-subtle);
+    color: var(--text-primary);
     font-weight: 700;
-    box-shadow: inset 3px 0 0 var(--brand-primary);
+}
+
+.admin-nav-item.active .admin-nav-icon {
+    color: var(--brand-primary);
 }
 
 /* the learner dashboard's tab switchers are <button>s; make them identical to the link items */
@@ -1229,11 +1221,7 @@ a.admin-user-info:hover .admin-user-name {
     gap: var(--space-6);
     padding: var(--space-6);
     margin-bottom: var(--space-6);
-    background: linear-gradient(
-        135deg,
-        #ffffff 0%,
-        var(--brand-primary-soft) 100%
-    );
+    background: #ffffff;
     box-shadow: var(--shadow-card);
 }
 
@@ -1241,7 +1229,7 @@ a.admin-user-info:hover .admin-user-name {
     width: 96px;
     height: 96px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    background: var(--brand-primary);
     color: #ffffff;
     font-family: var(--font-heading);
     font-size: 2rem;
@@ -1607,15 +1595,20 @@ a.admin-user-info:hover .admin-user-name {
     gap: var(--space-3);
 }
 
-.exp-summary-emoji {
+.exp-summary-icon {
     width: 56px;
     height: 56px;
     border-radius: 50%;
     background: var(--brand-warm-soft);
     border: 1px solid #fde68a;
+    color: var(--brand-warm);
     display: grid;
     place-items: center;
-    font-size: 1.8rem;
+}
+
+.exp-summary-icon .exp-icon {
+    width: 28px;
+    height: 28px;
 }
 
 .exp-summary-label {
@@ -1661,9 +1654,25 @@ a.admin-user-info:hover .admin-user-name {
     font-weight: 800;
 }
 
-.exp-tier-emoji {
-    font-size: 2.5rem;
-    margin-bottom: var(--space-2);
+.exp-tier-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: var(--space-3);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--brand-accent-soft);
+    color: var(--brand-accent);
+}
+
+.exp-tier-icon .exp-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.exp-tier-current .exp-tier-icon {
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary);
 }
 
 .exp-tier-range {
@@ -1687,9 +1696,9 @@ a.admin-user-info:hover .admin-user-name {
         var(--shadow-card);
 }
 
-.exp-tier-locked .exp-tier-emoji {
-    filter: grayscale(1);
-    opacity: 0.45;
+.exp-tier-locked .exp-tier-icon {
+    background: var(--bg-subtle);
+    color: var(--text-subtle);
 }
 
 @media (max-width: 600px) {
@@ -2225,7 +2234,6 @@ body.notif-open {
     border-color: #6366f1;
     background: rgba(99, 102, 241, 0.06);
     color: #4f46e5;
-    transform: translateX(2px);
 }
 
 .quick-action-icon {
@@ -2375,31 +2383,6 @@ body.notif-open {
 /* =====================================================
    LEARNER DASHBOARD & XP SYSTEM
    ===================================================== */
-.learner-hero {
-    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
-    color: #ffffff;
-    border-radius: var(--radius-xl);
-    padding: var(--space-8);
-    margin-bottom: var(--space-8);
-    box-shadow: 0 12px 32px rgba(67, 56, 202, 0.18);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-6);
-    flex-wrap: wrap;
-}
-
-.learner-profile-header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-5);
-}
-
-.learner-hero-stats {
-    display: flex;
-    gap: var(--space-4);
-    flex-wrap: wrap;
-}
 
 .hero-stat-card {
     background: rgba(255, 255, 255, 0.12);
@@ -2761,7 +2744,7 @@ body.notif-open {
 }
 
 .bar-pill.active {
-    background: linear-gradient(180deg, #818cf8 0%, #4f46e5 100%);
+    background: var(--brand-primary);
     box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
 }
 
@@ -2830,11 +2813,7 @@ body.notif-open {
     flex-wrap: wrap;
     padding: var(--space-6);
     margin-bottom: var(--space-6);
-    background: linear-gradient(
-        135deg,
-        #ffffff 0%,
-        var(--brand-primary-soft) 100%
-    );
+    background: #ffffff;
     box-shadow: var(--shadow-card);
 }
 
@@ -2957,7 +2936,7 @@ body.notif-open {
     width: 36px;
     height: 36px;
     border-radius: var(--radius-sm);
-    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    background: var(--brand-primary-soft);
     color: #4338ca;
     font-weight: 800;
     font-size: 13px;
@@ -3037,20 +3016,9 @@ body.notif-open {
    ===================================================== */
 .page-hero {
     position: relative;
-    padding: var(--space-16) 0 var(--space-12);
+    padding: var(--space-12) 0 var(--space-10);
     text-align: center;
-    background:
-        radial-gradient(
-            circle at 15% 20%,
-            rgba(99, 102, 241, 0.1),
-            transparent 40%
-        ),
-        radial-gradient(
-            circle at 85% 0%,
-            rgba(16, 185, 129, 0.08),
-            transparent 35%
-        ),
-        linear-gradient(180deg, #ffffff 0%, var(--bg-page) 100%);
+    background: #ffffff;
     border-bottom: 1px solid var(--border-light);
 }
 
@@ -3068,42 +3036,12 @@ body.notif-open {
     margin: 0 auto;
 }
 
-.page-hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 14px;
-    margin-bottom: var(--space-4);
-    border-radius: var(--radius-pill);
-    background: var(--brand-primary-soft);
-    color: var(--brand-primary);
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.page-hero-badge .ui-icon {
-    width: 15px;
-    height: 15px;
-}
-
 .page-hero-actions {
     display: flex;
     justify-content: center;
     gap: var(--space-3);
     flex-wrap: wrap;
     margin-top: var(--space-6);
-}
-
-.gradient-text {
-    background: linear-gradient(
-        135deg,
-        var(--brand-primary) 0%,
-        #7c3aed 60%,
-        #059669 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .lead {
@@ -3181,4 +3119,456 @@ body.notif-open {
 .profile-role-pill .ui-icon {
     width: 14px;
     height: 14px;
+}
+
+/* title icon inside pills (sidebar role line, profile, greeting, leaderboard) */
+.profile-title-pill .ui-icon,
+.admin-user-role .ui-icon,
+.lb-title .ui-icon {
+    width: 14px;
+    height: 14px;
+    vertical-align: -2px;
+}
+
+/* quiz result: icon in a round tile instead of an emoji */
+.quiz-result-badge {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto var(--space-3);
+    border-radius: 50%;
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary);
+    display: grid;
+    place-items: center;
+}
+
+.quiz-result-icon {
+    width: 34px;
+    height: 34px;
+}
+
+/* =====================================================
+   Flags (Content/images/flags) + admin flag picker
+   ===================================================== */
+.flag {
+    display: inline-block;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 4px;
+    background: var(--bg-subtle);
+    /* hairline so flags with white edges (Japan, Korea) still read as a flag */
+    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.10);
+}
+
+.flag-sm { width: 24px; height: 16px; border-radius: 3px; }
+.flag-md { width: 36px; height: 24px; }
+.flag-lg { width: 48px; height: 32px; border-radius: 6px; }
+
+/* non-rectangular flags (e.g. Nepal) are shown whole instead of cropped */
+.flag-contain {
+    object-fit: contain;
+    background: transparent;
+    box-shadow: none;
+}
+
+.flag-fallback {
+    display: inline-grid;
+    place-items: center;
+    background: var(--brand-primary-soft);
+    color: #4338ca;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.course-title-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.course-detail-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    font-size: 2rem;
+    margin: var(--space-3) 0 var(--space-2);
+}
+
+.clean-lang-chip .flag {
+    margin-bottom: 6px;
+}
+
+.flag-picker {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.flag-picker-preview {
+    width: 48px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.10);
+    background: var(--bg-subtle);
+}
+
+.flag-picker-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.flag-picker-preview.is-empty {
+    box-shadow: none;
+    border: 1px dashed var(--border-mid);
+}
+
+.flag-upload {
+    margin-top: var(--space-2);
+}
+
+/* =====================================================
+   Get Started onboarding (Auth/GetStarted.aspx)
+   ===================================================== */
+.onb-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-page);
+}
+
+.onb-top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-4) var(--space-8);
+}
+
+.onb-progress {
+    flex: 1;
+    max-width: 480px;
+    height: 6px;
+    margin: 0 auto;
+    border-radius: var(--radius-pill);
+    background: var(--border-light);
+    overflow: hidden;
+}
+
+.onb-progress-bar {
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--brand-primary);
+    transition: width 0.35s ease;
+}
+
+.onb-signin {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.onb-signin:hover {
+    color: var(--brand-primary);
+}
+
+.onb-main {
+    flex: 1;
+    width: min(760px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: var(--space-8) 0 var(--space-12);
+}
+
+.onb-error {
+    margin-bottom: var(--space-5);
+}
+
+.onb-step {
+    display: none;
+    animation: onb-in 0.3s ease both;
+}
+
+.onb-step.is-active {
+    display: block;
+}
+
+@keyframes onb-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+.onb-step h1,
+.onb-step h2 {
+    font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-align: center;
+    outline: none;
+}
+
+.onb-lead {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 16px;
+    margin: var(--space-2) auto var(--space-8);
+    max-width: 520px;
+}
+
+.onb-step-label {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand-primary);
+    margin-bottom: var(--space-2);
+}
+
+.onb-hero-logo {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--space-5);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+    object-fit: contain;
+}
+
+.onb-welcome-list {
+    list-style: none;
+    margin: 0 auto var(--space-8);
+    padding: 0;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.onb-welcome-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 14.5px;
+}
+
+.onb-welcome-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary);
+}
+
+.onb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-3);
+}
+
+.onb-grid-compact {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+/* each answer is a card; the radio itself is hidden but still keyboard-focusable */
+.onb-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: #ffffff;
+    border: 1.5px solid var(--border-light);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.onb-option:hover {
+    border-color: var(--border-mid);
+}
+
+.onb-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.onb-option.is-selected,
+.onb-option:has(input:checked) {
+    border-color: var(--brand-primary);
+    background: var(--brand-primary-soft);
+    box-shadow: 0 0 0 3px var(--brand-primary-glow);
+}
+
+.onb-option:has(input:focus-visible) {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+}
+
+.onb-option-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.onb-option-text strong {
+    font-size: 14.5px;
+    color: var(--text-primary);
+}
+
+.onb-option-text small {
+    font-size: 12.5px;
+    color: var(--text-muted);
+}
+
+.onb-option-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: var(--bg-subtle);
+    color: var(--brand-primary);
+}
+
+.onb-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+}
+
+.onb-actions .btn-ghost {
+    margin-left: auto;
+}
+
+.onb-actions-center {
+    justify-content: center;
+}
+
+.onb-empty {
+    text-align: center;
+    padding: var(--space-6);
+    color: var(--text-muted);
+    background: #ffffff;
+    border: 1px dashed var(--border-mid);
+    border-radius: var(--radius-md);
+}
+
+.onb-done-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-4);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--brand-accent);
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.25);
+}
+
+.onb-done-icon .ui-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.onb-summary {
+    max-width: 440px;
+    margin: 0 auto;
+    padding: var(--space-2) var(--space-5);
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+}
+
+.onb-summary div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-3) 0;
+}
+
+.onb-summary div + div {
+    border-top: 1px solid var(--border-light);
+}
+
+.onb-summary dt {
+    color: var(--text-muted);
+    font-size: 13.5px;
+    font-weight: 600;
+}
+
+.onb-summary dd {
+    margin: 0;
+    font-weight: 800;
+    color: var(--text-primary);
+    text-align: right;
+}
+
+/* registration page: the plan chosen during onboarding */
+.onb-plan {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-5);
+    border-radius: var(--radius-md);
+    background: var(--brand-primary-soft);
+    border: 1px solid rgba(67, 56, 202, 0.2);
+}
+
+.onb-plan-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.onb-plan-label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--brand-primary);
+}
+
+.onb-plan-text strong {
+    font-size: 14.5px;
+    color: var(--text-primary);
+}
+
+.onb-plan-text small {
+    font-size: 12.5px;
+    color: var(--text-muted);
+}
+
+.onb-plan-change {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--brand-primary);
+}
+
+@media (max-width: 600px) {
+    .onb-top { padding: var(--space-3) var(--space-4); gap: var(--space-3); }
+    .onb-signin { font-size: 12.5px; }
+    .onb-grid, .onb-grid-compact { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .onb-step { animation: none; }
+    .onb-progress-bar { transition: none; }
 }
