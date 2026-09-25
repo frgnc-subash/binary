@@ -1,11 +1,6 @@
 ﻿
 -- Create the database if it doesn't exist
-IF DB_ID('BinaryDB') IS NULL
-    CREATE DATABASE BinaryDB;
-GO
 
-USE BinaryDB;
-GO
 
 -- ── Roles ──
 IF OBJECT_ID('Roles', 'U') IS NULL
