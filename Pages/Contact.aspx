@@ -4,11 +4,7 @@
 
     <section class="page-hero">
         <div class="site-container">
-            <div class="page-hero-badge">
-                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 6-10 7L2 6"></path></svg>
-                Get in touch
-            </div>
-            <h1>We'd love to <span class="gradient-text">hear from you</span></h1>
+            <h1>We'd love to hear from you</h1>
             <p class="lead">Questions about a course, trouble with your account, or an idea to make Binary better — send us a message and we'll get back to you.</p>
         </div>
     </section>

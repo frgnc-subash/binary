@@ -2,10 +2,9 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <section class="page-hero" style="background:linear-gradient(160deg,hsl(230,30%,98%),hsl(246,40%,96%));">
+    <section class="page-hero">
         <div class="site-container">
-            <div class="page-hero-badge">&#128101; Community</div>
-            <h1>Learn Together with <span class="gradient-text">Fellow Polyglots</span></h1>
+            <h1>Learn Together with Fellow Polyglots</h1>
             <p class="lead">Connect with learners around the world, compare XP, and practice together.</p>
         </div>
     </section>

@@ -9,34 +9,30 @@
 
                 <%-- left column: value prop & cta --%>
                 <div class="hero-clean-text">
-                    <div class="hero-badge">
-                        <span class="hero-badge-dot"></span>
-                        <span>Language Learning Reimagined</span>
-                    </div>
                     <h1 class="hero-clean-title">
-                        Master real conversational fluency, one step at a time.
+                        Learn a new language, one short lesson at a time.
                     </h1>
                     <p class="hero-clean-lead">
-                        Structured lessons, contextual vocabulary drills, and practical pronunciation practice designed for steady, lasting progress.
+                        Pick a course, work through video and reading lessons, then check yourself with a quick quiz. Your progress and XP are saved as you go.
                     </p>
                     <div class="hero-clean-actions">
-                        <a class="btn btn-primary btn-lg" runat="server" href="~/Auth/Register.aspx">Start Learning Free</a>
-                        <a class="btn btn-outline btn-lg" runat="server" href="~/Courses">Explore Courses</a>
+                        <a class="btn btn-primary btn-lg" runat="server" href="~/Auth/GetStarted.aspx">Get started</a>
+                        <a class="btn btn-outline btn-lg" runat="server" href="~/Courses">Browse courses</a>
                     </div>
                     <div class="hero-clean-stats">
                         <div class="stat-clean-item">
-                            <span class="stat-clean-num">50+</span>
-                            <span class="stat-clean-label">Structured Courses</span>
+                            <span class="stat-clean-num">Free</span>
+                            <span class="stat-clean-label">No payment needed</span>
                         </div>
                         <div class="stat-divider"></div>
                         <div class="stat-clean-item">
-                            <span class="stat-clean-num">15 min</span>
-                            <span class="stat-clean-label">Daily Study Rhythm</span>
+                            <span class="stat-clean-num">Video</span>
+                            <span class="stat-clean-label">And reading lessons</span>
                         </div>
                         <div class="stat-divider"></div>
                         <div class="stat-clean-item">
-                            <span class="stat-clean-num">100%</span>
-                            <span class="stat-clean-label">Free Access</span>
+                            <span class="stat-clean-num">Quizzes</span>
+                            <span class="stat-clean-label">After each lesson</span>
                         </div>
                     </div>
                 </div>
@@ -89,26 +85,32 @@
         <div class="site-container">
             <div class="clean-lang-strip">
                 <a class="clean-lang-chip" runat="server" href="~/Courses?lang=Spanish">
+                    <img class="flag flag-sm" runat="server" src="~/Content/images/flags/spain.png" alt="" />
                     <span class="lang-chip-name">Spanish</span>
                     <span class="lang-chip-level">A1 &ndash; B2</span>
                 </a>
                 <a class="clean-lang-chip" runat="server" href="~/Courses?lang=French">
+                    <img class="flag flag-sm" runat="server" src="~/Content/images/flags/france.png" alt="" />
                     <span class="lang-chip-name">French</span>
                     <span class="lang-chip-level">A1 &ndash; B2</span>
                 </a>
                 <a class="clean-lang-chip" runat="server" href="~/Courses?lang=Japanese">
+                    <img class="flag flag-sm" runat="server" src="~/Content/images/flags/japan.png" alt="" />
                     <span class="lang-chip-name">Japanese</span>
                     <span class="lang-chip-level">N5 &ndash; N3</span>
                 </a>
                 <a class="clean-lang-chip" runat="server" href="~/Courses?lang=German">
+                    <img class="flag flag-sm" runat="server" src="~/Content/images/flags/germany.png" alt="" />
                     <span class="lang-chip-name">German</span>
                     <span class="lang-chip-level">A1 &ndash; B1</span>
                 </a>
                 <a class="clean-lang-chip" runat="server" href="~/Courses?lang=Korean">
+                    <img class="flag flag-sm" runat="server" src="~/Content/images/flags/south-korea.png" alt="" />
                     <span class="lang-chip-name">Korean</span>
                     <span class="lang-chip-level">Beginner</span>
                 </a>
                 <a class="clean-lang-chip" runat="server" href="~/Courses?lang=Italian">
+                    <img class="flag flag-sm" runat="server" src="~/Content/images/flags/italy.png" alt="" />
                     <span class="lang-chip-name">Italian</span>
                     <span class="lang-chip-level">A1 &ndash; B1</span>
                 </a>
@@ -120,9 +122,8 @@
     <section class="section">
         <div class="site-container">
             <div style="text-align:center;max-width:580px;margin:0 auto var(--space-10);">
-                <span class="badge badge-primary" style="margin-bottom:var(--space-2);">Learning Methodology</span>
-                <h2 style="font-size:2rem;margin-bottom:var(--space-2);">Designed for Natural Retention</h2>
-                <p style="color:var(--text-secondary);font-size:15px;">A structured curriculum that balances listening, reading, speaking, and quiz validation.</p>
+                <h2 style="font-size:2rem;margin-bottom:var(--space-2);">How it works</h2>
+                <p style="color:var(--text-secondary);font-size:15px;">Every course is split into small lessons so you can make progress in a few minutes a day.</p>
             </div>
 
             <div class="grid-3">
@@ -130,22 +131,22 @@
                     <div class="clean-icon-wrap">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                     </div>
-                    <h3>Bite-Sized Modules</h3>
-                    <p>Short, 10-15 minute interactive modules that seamlessly fit into your daily routine without burnout.</p>
+                    <h3>Short lessons</h3>
+                    <p>Each lesson covers one topic, with a video or reading and example phrases you can come back to.</p>
                 </div>
                 <div class="card card-body clean-feature-card">
                     <div class="clean-icon-wrap">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                     </div>
-                    <h3>Spaced Repetition</h3>
-                    <p>Review difficult vocabulary at optimal intervals to convert short-term memory into long-term recall.</p>
+                    <h3>Vocabulary practice</h3>
+                    <p>Drill the words from your courses in a practice session whenever you want a quick review.</p>
                 </div>
                 <div class="card card-body clean-feature-card">
                     <div class="clean-icon-wrap">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     </div>
-                    <h3>Immediate Feedback</h3>
-                    <p>Validate your understanding after every lesson with automated grading and detailed explanations.</p>
+                    <h3>Quizzes and XP</h3>
+                    <p>Answer a short quiz to finish a lesson. You earn XP, unlock titles and can see where you stand on the leaderboard.</p>
                 </div>
             </div>
         </div>
@@ -154,17 +155,15 @@
     <%-- clean cta banner --%>
     <section class="section-sm" style="background:#ffffff;border-top:1px solid var(--border-light);text-align:center;padding:var(--space-12) 0;">
         <div class="site-container" style="max-width:620px;margin:0 auto;">
-            <h2 style="font-size:1.9rem;margin-bottom:var(--space-3);">Start your learning journey today</h2>
-            <p style="color:var(--text-secondary);font-size:15px;margin-bottom:var(--space-6);">Create your free account in 30 seconds and start practicing immediately.</p>
-            <a class="btn btn-primary btn-lg" runat="server" href="~/Auth/Register.aspx">Create Free Account</a>
+            <h2 style="font-size:1.9rem;margin-bottom:var(--space-3);">Ready to try it?</h2>
+            <p style="color:var(--text-secondary);font-size:15px;margin-bottom:var(--space-6);">Answer a few quick questions, create your account and start your first lesson.</p>
+            <a class="btn btn-primary btn-lg" runat="server" href="~/Auth/GetStarted.aspx">Get started</a>
         </div>
     </section>
 
     <style>
         .hero-clean-section { padding: var(--space-12) 0; }
         .hero-clean-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: var(--space-10); align-items: center; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: var(--radius-pill); background: var(--brand-primary-soft); color: var(--brand-primary); font-size: 13px; font-weight: 700; margin-bottom: var(--space-4); }
-        .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand-primary); }
         .hero-clean-title { font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: var(--space-4); color: var(--text-primary); }
         .hero-clean-lead { font-size: 16px; color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--space-6); }
         .hero-clean-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-8); }
