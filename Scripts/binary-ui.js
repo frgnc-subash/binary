@@ -98,6 +98,59 @@ var BinaryUI = (function () {
         syncSidebar();
     }
 
+    /* ---------- slide-in drawers (phones and tablets) ---------- */
+
+    // Two drawers share this: the public site menu ("nav-drawer-open", slides in from the right)
+    // and the dashboard sidebar ("dash-drawer-open", slides in from the left). The open state is a
+    // class on <html>, so CSS does the sliding and locks the page scroll.
+    var DRAWERS = ['nav-drawer-open', 'dash-drawer-open'];
+
+    function setDrawer(name, open) {
+        if (open === undefined) open = !root.classList.contains(name);
+        root.classList.toggle(name, open);
+        var triggers = document.querySelectorAll('[data-drawer="' + name + '"]');
+        for (var i = 0; i < triggers.length; i++) triggers[i].setAttribute('aria-expanded', open ? 'true' : 'false');
+
+        if (open) {
+            // move focus into the drawer so keyboard users land in it
+            var panel = document.querySelector(name === 'nav-drawer-open' ? '#navMenu' : '.admin-sidebar');
+            var first = panel && panel.querySelector('a, button');
+            if (first) first.focus({ preventScroll: true });
+        }
+    }
+
+    function closeDrawers() {
+        for (var i = 0; i < DRAWERS.length; i++) {
+            if (root.classList.contains(DRAWERS[i])) setDrawer(DRAWERS[i], false);
+        }
+    }
+
+    function initDrawers() {
+        // dashboard: a dimmed backdrop behind the open sidebar; tapping it closes the drawer
+        var shell = document.querySelector('.admin-shell');
+        if (shell && !shell.querySelector('.dash-backdrop')) {
+            var backdrop = document.createElement('div');
+            backdrop.className = 'dash-backdrop';
+            backdrop.addEventListener('click', function () { setDrawer('dash-drawer-open', false); });
+            shell.appendChild(backdrop);
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeDrawers();
+        });
+
+        // picking a dashboard tab or link closes the drawer so the page is visible again
+        document.addEventListener('click', function (e) {
+            if (!root.classList.contains('dash-drawer-open')) return;
+            if (e.target.closest && e.target.closest('.admin-sidebar .admin-nav-item')) setDrawer('dash-drawer-open', false);
+        });
+
+        // rotating a tablet or widening the window past the breakpoint: back to the normal layout
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 900) closeDrawers();
+        });
+    }
+
     /* ---------- confirmation dialog ---------- */
 
     var dialog = null;
@@ -532,10 +585,17 @@ var BinaryUI = (function () {
         promoteAlerts();
         initLists();
         enhanceFileInputs();
+        initDrawers();
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
 
-    return { toggleTheme: toggleTheme, toggleSidebar: toggleSidebar, confirm: confirm, toast: toast };
+    return {
+        toggleTheme: toggleTheme,
+        toggleSidebar: toggleSidebar,
+        toggleDrawer: setDrawer,
+        confirm: confirm,
+        toast: toast
+    };
 })();
