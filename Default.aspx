@@ -32,7 +32,7 @@
                         <div class="stat-divider"></div>
                         <div class="stat-clean-item">
                             <span class="stat-clean-num">Quizzes</span>
-                            <span class="stat-clean-label">After each lesson</span>
+                            <span class="stat-clean-label">One for every course</span>
                         </div>
                     </div>
                 </div>
@@ -146,7 +146,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     </div>
                     <h3>Quizzes and XP</h3>
-                    <p>Answer a short quiz to finish a lesson. You earn XP, unlock titles and can see where you stand on the leaderboard.</p>
+                    <p>Each course has a short practice quiz. Correct answers earn XP, XP unlocks titles, and the leaderboard shows where you stand.</p>
                 </div>
             </div>
         </div>
