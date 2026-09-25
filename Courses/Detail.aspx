@@ -104,6 +104,7 @@
                                     </div>
 
                                     <div class="lesson-card-actions">
+                                        <%# GetLessonQuizLink((int)Eval("LessonID")) %>
                                         <asp:LinkButton ID="btnMarkComplete" runat="server" CssClass="btn btn-primary" style="height:38px;padding:0 18px;font-size:13.5px;box-shadow:0 2px 8px var(--brand-primary-glow);" CommandName="MarkComplete" CommandArgument='<%# Eval("LessonID") %>'>
                                             <span>Complete Lesson & Earn +<%# binary.Core.BLL.EnrollmentBLL.LessonXpReward %> XP<svg class="ui-icon ui-icon-after" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
                                         </asp:LinkButton>

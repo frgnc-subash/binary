@@ -341,7 +341,7 @@
                                         <%# binary.Core.Helpers.FlagHelper.Render((string)Eval("CourseFlagUrl"), (string)Eval("CourseTitle"), "flag-md") %>
                                         <div class="quiz-card-text">
                                             <h3><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></h3>
-                                            <p><%# HttpUtility.HtmlEncode((string)Eval("CourseTitle")) %></p>
+                                            <p><%# HttpUtility.HtmlEncode((string)Eval("CourseTitle") + (Eval("LessonTitle") == null ? "" : " · " + Eval("LessonTitle"))) %></p>
                                         </div>
                                     </div>
                                     <div class="quiz-card-meta">

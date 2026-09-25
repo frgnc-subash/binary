@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.UI;
 using binary.Core.BLL;
@@ -49,9 +50,17 @@ namespace binary.MasterPages
             }
         }
 
+        // pages that live under another sidebar entry (a lesson's quiz is part of Courses & Lessons)
+        private static readonly Dictionary<string, string> SectionOf = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "~/Admin/LessonQuiz.aspx", "~/Admin/Courses.aspx" },
+        };
+
         public string GetActiveClass(string relativeUrl)
         {
-            return CurrentPath.Equals(relativeUrl, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+            string section;
+            string path = SectionOf.TryGetValue(CurrentPath, out section) ? section : CurrentPath;
+            return path.Equals(relativeUrl, StringComparison.OrdinalIgnoreCase) ? "active" : "";
         }
 
         // renders the admin's uploaded profile picture, falling back to initials

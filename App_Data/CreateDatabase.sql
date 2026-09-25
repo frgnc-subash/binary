@@ -130,9 +130,26 @@ IF OBJECT_ID('Quizzes', 'U') IS NULL
 CREATE TABLE Quizzes (
     QuizID   INT IDENTITY(1,1) PRIMARY KEY,
     CourseID INT            NOT NULL,
+    LessonID INT            NULL,   -- set for a lesson's own quiz; NULL for a course-wide practice quiz
     Title    NVARCHAR(200)  NOT NULL,
     CONSTRAINT FK_Quizzes_Courses FOREIGN KEY (CourseID) REFERENCES Courses(CourseID) ON DELETE CASCADE
 );
+GO
+
+-- Safety net for databases created before lesson quizzes existed
+IF COL_LENGTH('Quizzes', 'LessonID') IS NULL
+    ALTER TABLE Quizzes ADD LessonID INT NULL;
+GO
+
+-- No cascade here: SQL Server rejects a second cascade path from Courses. The app deletes a
+-- lesson's quiz itself before deleting the lesson (LessonDAL.Delete / CourseDAL.Delete).
+IF OBJECT_ID('FK_Quizzes_Lessons', 'F') IS NULL
+    ALTER TABLE Quizzes ADD CONSTRAINT FK_Quizzes_Lessons FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID);
+GO
+
+-- at most one quiz per lesson
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'UX_Quizzes_Lesson' AND object_id = OBJECT_ID('Quizzes'))
+    CREATE UNIQUE INDEX UX_Quizzes_Lesson ON Quizzes (LessonID) WHERE LessonID IS NOT NULL;
 GO
 
 -- ── Questions ──

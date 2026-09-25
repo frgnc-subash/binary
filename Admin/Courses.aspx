@@ -83,7 +83,7 @@
                             <div class="card-header"><h3 style="font-size:1.05rem;">Lessons</h3></div>
                             <div style="overflow-x:auto;">
                                 <table class="admin-table">
-                                    <thead><tr><th>Order</th><th>Title</th><th>Video</th><th>Action</th></tr></thead>
+                                    <thead><tr><th>Order</th><th>Title</th><th>Video</th><th>Quiz</th><th>Action</th></tr></thead>
                                     <tbody>
                                         <asp:Repeater ID="rptLessons" runat="server" OnItemCommand="rptLessons_ItemCommand">
                                             <ItemTemplate>
@@ -91,9 +91,11 @@
                                                     <td><%# Eval("SortOrder") %></td>
                                                     <td><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></td>
                                                     <td><%# GetVideoBadge(Eval("VideoUrl")) %></td>
+                                                    <td><%# GetQuizBadge((int)Eval("LessonID")) %></td>
                                                     <td>
+                                                        <a class="btn btn-ghost" style="height:30px;font-size:12px;padding:0 10px;" href='<%# ResolveUrl("~/Admin/LessonQuiz.aspx?lesson=" + Eval("LessonID")) %>'>Quiz</a>
                                                         <asp:LinkButton runat="server" CssClass="btn btn-ghost" style="height:30px;font-size:12px;padding:0 10px;" CommandName="EditLesson" CommandArgument='<%# Eval("LessonID") %>'>Edit</asp:LinkButton>
-                                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteLesson" CommandArgument='<%# Eval("LessonID") %>' OnClientClick="return BinaryUI.confirm(this, { title: 'Delete this lesson?', text: 'The lesson and its video link are removed from the course. This cannot be undone.', ok: 'Delete lesson' });">Delete</asp:LinkButton>
+                                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteLesson" CommandArgument='<%# Eval("LessonID") %>' OnClientClick="return BinaryUI.confirm(this, { title: 'Delete this lesson?', text: 'The lesson, its video link and its quiz are removed from the course. This cannot be undone.', ok: 'Delete lesson' });">Delete</asp:LinkButton>
                                                     </td>
                                                 </tr>
                                             </ItemTemplate>

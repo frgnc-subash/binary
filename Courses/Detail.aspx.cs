@@ -13,6 +13,7 @@ namespace binary.Courses
     {
         private int _courseId;
         private List<int> _completedLessonIds = new List<int>();
+        private Dictionary<int, Quiz> _lessonQuizzes = new Dictionary<int, Quiz>();
 
         // first lesson not yet completed; the page opens it so learners resume where they left off
         protected int OpenLessonId { get; private set; }
@@ -122,6 +123,9 @@ namespace binary.Courses
                 }
             }
 
+            if (_mode == AccessMode.Enrolled || _mode == AccessMode.AdminPreview)
+                _lessonQuizzes = new QuizBLL().GetLessonQuizzes(_courseId);
+
             litSyllabusHint.Text = _mode == AccessMode.Enrolled || _mode == AccessMode.AdminPreview
                 ? "Click any lesson to expand & study"
                 : "Preview — enroll to unlock lessons and videos";
@@ -134,13 +138,30 @@ namespace binary.Courses
         // the course's practice quiz, if it has one with questions
         private void BindCourseQuiz(int userId)
         {
-            Quiz quiz = new QuizBLL().GetQuizzesForEnrolledCourses(userId).FirstOrDefault(q => q.CourseID == _courseId);
+            // the course-wide practice quiz; each lesson's own quiz is linked from inside that lesson
+            Quiz quiz = new QuizBLL().GetQuizzesForEnrolledCourses(userId).FirstOrDefault(q => q.CourseID == _courseId && q.LessonID == null);
             phCourseQuiz.Visible = quiz != null;
             if (quiz == null) return;
 
             litCourseQuizTitle.Text = Server.HtmlEncode(quiz.Title);
             litCourseQuizMeta.Text = quiz.QuestionCount + " questions &middot; +" + QuizBLL.XpPerCorrectAnswer + " XP per correct answer";
             lnkCourseQuiz.HRef = ResolveUrl("~/Users/Profile.aspx?quiz=" + quiz.QuizID);
+        }
+
+        // "Take the lesson quiz" for learners, "Edit lesson quiz" in the admin preview
+        protected string GetLessonQuizLink(int lessonId)
+        {
+            Quiz quiz;
+            if (!_lessonQuizzes.TryGetValue(lessonId, out quiz)) return "";
+
+            if (_mode == AccessMode.AdminPreview)
+                return "<a class=\"btn btn-outline lesson-quiz-btn\" href=\"" + ResolveUrl("~/Admin/LessonQuiz.aspx?lesson=" + lessonId) + "\">" +
+                       Icons.Svg("practice", "ui-icon ui-icon-before") + "Edit lesson quiz</a>";
+
+            if (_mode != AccessMode.Enrolled || quiz.QuestionCount == 0) return "";
+            return "<a class=\"btn btn-outline lesson-quiz-btn\" href=\"" + ResolveUrl("~/Users/Profile.aspx?quiz=" + quiz.QuizID) + "\">" +
+                   Icons.Svg("practice", "ui-icon ui-icon-before") + "Take the lesson quiz &middot; " + quiz.QuestionCount +
+                   (quiz.QuestionCount == 1 ? " question" : " questions") + "</a>";
         }
 
         protected string GetLessonKindLabel(object videoUrl)
