@@ -112,6 +112,24 @@ namespace binary.Users
         protected global::System.Web.UI.WebControls.Panel pnlQuizPlay;
 
         /// <summary>
+        /// litPlayQuizFlag control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litPlayQuizFlag;
+
+        /// <summary>
+        /// litPlayQuizCourse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litPlayQuizCourse;
+
+        /// <summary>
         /// litPlayQuizTitle control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Literal litPlayQuizTitle;
@@ -157,9 +175,27 @@ namespace binary.Users
         protected global::System.Web.UI.WebControls.Literal litResultMessage;
 
         /// <summary>
+        /// pnlResultXp control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlResultXp;
+
+        /// <summary>
         /// litResultXp control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Literal litResultXp;
+
+        /// <summary>
+        /// rptReview control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptReview;
 
         /// <summary>
         /// lnkRetryQuiz control.

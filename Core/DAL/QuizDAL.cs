@@ -34,7 +34,8 @@ namespace binary.Core.DAL
             var paramNames = new List<string>();
             var sb = new StringBuilder();
             sb.Append(@"
-                SELECT q.QuizID, q.CourseID, q.Title, c.Title AS CourseTitle
+                SELECT q.QuizID, q.CourseID, q.Title, c.Title AS CourseTitle, c.FlagImageUrl AS CourseFlagUrl,
+                       (SELECT COUNT(*) FROM Questions x WHERE x.QuizID = q.QuizID) AS QuestionCount
                 FROM Quizzes q
                 INNER JOIN Courses c ON q.CourseID = c.CourseID
                 WHERE q.CourseID IN (");
@@ -62,7 +63,9 @@ namespace binary.Core.DAL
                             QuizID = Convert.ToInt32(reader["QuizID"]),
                             CourseID = Convert.ToInt32(reader["CourseID"]),
                             Title = reader["Title"].ToString(),
-                            CourseTitle = reader["CourseTitle"].ToString()
+                            CourseTitle = reader["CourseTitle"].ToString(),
+                            CourseFlagUrl = reader["CourseFlagUrl"] == DBNull.Value ? null : reader["CourseFlagUrl"].ToString(),
+                            QuestionCount = Convert.ToInt32(reader["QuestionCount"])
                         });
                     }
                 }
