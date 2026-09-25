@@ -59,7 +59,7 @@
     </section>
 
     <%-- what you can do --%>
-    <section class="section" style="background:#ffffff;border-top:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">
+    <section class="section" style="background:var(--bg-surface);border-top:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">
         <div class="site-container">
             <header class="section-header">
                 <span class="eyebrow">What you can do</span>
@@ -129,7 +129,7 @@
     </section>
 
     <%-- team --%>
-    <section class="section" style="background:#ffffff;border-top:1px solid var(--border-light);">
+    <section class="section" style="background:var(--bg-surface);border-top:1px solid var(--border-light);">
         <div class="site-container">
             <header class="section-header">
                 <span class="eyebrow">The team</span>
@@ -171,21 +171,21 @@
 
     <style>
         .about-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin-top: calc(-1 * var(--space-12)); position: relative; }
-        .about-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: var(--space-5); background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+        .about-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: var(--space-5); background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
         .about-stat-num { font-family: var(--font-heading); font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; color: var(--brand-primary); }
         .about-stat-label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
         .about-mission { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-12); align-items: center; }
         .about-mission h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; letter-spacing: -0.02em; }
-        .about-checklist { list-style: none; margin: 0; padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+        .about-checklist { list-style: none; margin: 0; padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
         .about-checklist li { display: flex; align-items: flex-start; gap: var(--space-3); font-size: 14.5px; font-weight: 600; color: var(--text-primary); }
         .about-check { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; background: var(--brand-accent-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / 12px no-repeat; }
         .about-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
         .about-feature { padding: var(--space-6); border: 1px solid var(--border-light); border-radius: var(--radius-lg); background: var(--bg-page); transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
-        .about-feature:hover { border-color: var(--border-mid); background: #ffffff; }
+        .about-feature:hover { border-color: var(--border-mid); background: var(--bg-surface); }
         .about-feature h3 { font-size: 1.05rem; font-weight: 800; margin: var(--space-4) 0 var(--space-2); }
         .about-feature p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
         .about-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); counter-reset: none; }
-        .about-step { position: relative; padding: var(--space-6); background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-subtle); }
+        .about-step { position: relative; padding: var(--space-6); background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-subtle); }
         .about-step-num { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--brand-primary); color: #ffffff; font-weight: 800; box-shadow: 0 4px 10px var(--brand-primary-glow); }
         .about-step h3 { font-size: 1.05rem; font-weight: 800; margin: var(--space-4) 0 var(--space-2); }
         .about-step p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
@@ -194,10 +194,10 @@
         .about-member-avatar { width: 64px; height: 64px; border-radius: 50%; margin-bottom: var(--space-3); display: grid; place-items: center; background: var(--brand-primary); color: #ffffff; font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; }
         .about-member strong { font-size: 15px; color: var(--text-primary); }
         .about-member span:last-child { font-size: 12.5px; color: var(--text-muted); }
-        .about-cta { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; padding: var(--space-8) var(--space-10); border-radius: var(--radius-xl); background: var(--text-primary); color: #ffffff; }
+        .about-cta { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; padding: var(--space-8) var(--space-10); border-radius: var(--radius-xl); background: #0f172a; color: #ffffff; border: 1px solid var(--border-light); }
         .about-cta h2 { color: #ffffff; font-size: 1.6rem; font-weight: 800; }
         .about-cta p { color: rgba(255, 255, 255, 0.75); margin-top: 4px; }
-        .about-cta-btn { background: #ffffff; color: var(--text-primary); }
+        .about-cta-btn { background: #ffffff; color: #0f172a; }
         .about-cta-btn:hover { background: var(--bg-subtle); }
         @media (max-width: 900px) {
             .about-stats { grid-template-columns: repeat(2, 1fr); }

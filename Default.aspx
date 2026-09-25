@@ -81,7 +81,7 @@
     </section>
 
     <%-- language tracks bar --%>
-    <section style="background:#ffffff;border-top:1px solid var(--border-light);border-bottom:1px solid var(--border-light);padding:var(--space-6) 0;">
+    <section style="background:var(--bg-surface);border-top:1px solid var(--border-light);border-bottom:1px solid var(--border-light);padding:var(--space-6) 0;">
         <div class="site-container">
             <div class="clean-lang-strip">
                 <a class="clean-lang-chip" runat="server" href="~/Courses?lang=Spanish">
@@ -153,7 +153,7 @@
     </section>
 
     <%-- clean cta banner --%>
-    <section class="section-sm" style="background:#ffffff;border-top:1px solid var(--border-light);text-align:center;padding:var(--space-12) 0;">
+    <section class="section-sm" style="background:var(--bg-surface);border-top:1px solid var(--border-light);text-align:center;padding:var(--space-12) 0;">
         <div class="site-container" style="max-width:620px;margin:0 auto;">
             <h2 style="font-size:1.9rem;margin-bottom:var(--space-3);">Ready to try it?</h2>
             <p style="color:var(--text-secondary);font-size:15px;margin-bottom:var(--space-6);">Answer a few quick questions, create your account and start your first lesson.</p>
@@ -172,7 +172,7 @@
         .stat-clean-num { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; color: var(--text-primary); }
         .stat-clean-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
         .stat-divider { width: 1px; height: 28px; background: var(--border-light); }
-        .hero-preview-card { background: #ffffff; box-shadow: var(--shadow-card); }
+        .hero-preview-card { background: var(--bg-surface); box-shadow: var(--shadow-card); }
         .vocab-card { text-align: center; padding: var(--space-4) var(--space-2); background: var(--bg-subtle); border-radius: var(--radius-md); margin-bottom: var(--space-4); }
         .vocab-word { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 800; color: var(--brand-primary); }
         .vocab-phonetic { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
@@ -184,7 +184,7 @@
         .choice-radio.active { border-color: var(--brand-primary); background: var(--brand-primary); }
         .clean-lang-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-3); }
         .clean-lang-chip { display: flex; flex-direction: column; padding: 10px 14px; border-radius: var(--radius-md); background: var(--bg-subtle); border: 1px solid transparent; transition: all 0.15s ease; }
-        .clean-lang-chip:hover { background: #ffffff; border-color: var(--brand-primary); box-shadow: var(--shadow-subtle); }
+        .clean-lang-chip:hover { background: var(--bg-surface); border-color: var(--brand-primary); box-shadow: var(--shadow-subtle); }
         .lang-chip-name { font-weight: 700; font-size: 14px; color: var(--text-primary); }
         .lang-chip-level { font-size: 12px; color: var(--text-muted); font-weight: 500; }
         .clean-feature-card { display: flex; flex-direction: column; gap: var(--space-2); }

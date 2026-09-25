@@ -70,7 +70,7 @@
 
     <style>
         .auth-page { display: flex; justify-content: center; align-items: flex-start; padding: var(--space-10) var(--space-4); min-height: calc(100vh - 120px); }
-        .auth-card { width: 100%; max-width: 460px; background: #ffffff; }
+        .auth-card { width: 100%; max-width: 460px; background: var(--bg-surface); }
         .auth-card-header { text-align: center; padding: var(--space-6) var(--space-8) var(--space-2); }
         .auth-card-body { padding: var(--space-4) var(--space-8) var(--space-6); display: flex; flex-direction: column; }
     </style>
