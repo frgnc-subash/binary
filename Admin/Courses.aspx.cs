@@ -313,6 +313,10 @@ namespace binary.Admin
             string newUpload = null;   // video saved during this request; removed again if the save fails
 
             try
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             {
                 courseId = int.Parse(hfCourseId.Value);
                 int sortOrder;
@@ -350,6 +354,10 @@ namespace binary.Admin
                 newUpload = null;
             }
             catch (ValidationException vex)
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             {
                 VideoHelper.TryDeleteUploadedFile(newUpload);
                 litLessonError.Text = Server.HtmlEncode(vex.Message);
@@ -505,6 +513,10 @@ namespace binary.Admin
                 pnlCategoryError.Visible = true;
             }
             catch (Exception ex)
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             {
                 System.Diagnostics.Trace.TraceError("Category action '{0}' failed for category {1}: {2}", e.CommandName, categoryId, ex);
                 litCategoryError.Text = "Something went wrong. Please try again.";
@@ -513,3 +525,11 @@ namespace binary.Admin
         }
     }
 }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
