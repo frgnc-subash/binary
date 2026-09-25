@@ -112,6 +112,7 @@ namespace binary.Courses
 
                     litProgressPercent.Text = enrollment.ProgressPercent.ToString();
                     progressBarFill.Style["width"] = enrollment.ProgressPercent + "%";
+                    BindCourseQuiz(userId);
                 }
                 else
                 {
@@ -128,6 +129,18 @@ namespace binary.Courses
             pnlSyllabus.Visible = lessons.Count > 0;
             rptLessons.DataSource = lessons;
             rptLessons.DataBind();
+        }
+
+        // the course's practice quiz, if it has one with questions
+        private void BindCourseQuiz(int userId)
+        {
+            Quiz quiz = new QuizBLL().GetQuizzesForEnrolledCourses(userId).FirstOrDefault(q => q.CourseID == _courseId);
+            phCourseQuiz.Visible = quiz != null;
+            if (quiz == null) return;
+
+            litCourseQuizTitle.Text = Server.HtmlEncode(quiz.Title);
+            litCourseQuizMeta.Text = quiz.QuestionCount + " questions &middot; +" + QuizBLL.XpPerCorrectAnswer + " XP per correct answer";
+            lnkCourseQuiz.HRef = ResolveUrl("~/Users/Profile.aspx?quiz=" + quiz.QuizID);
         }
 
         protected string GetLessonKindLabel(object videoUrl)

@@ -31,6 +31,10 @@ namespace binary.Courses
         protected System.Web.UI.WebControls.Panel pnlEnrolled;
         protected System.Web.UI.WebControls.Literal litProgressPercent;
         protected System.Web.UI.HtmlControls.HtmlGenericControl progressBarFill;
+        protected System.Web.UI.WebControls.PlaceHolder phCourseQuiz;
+        protected System.Web.UI.WebControls.Literal litCourseQuizTitle;
+        protected System.Web.UI.WebControls.Literal litCourseQuizMeta;
+        protected System.Web.UI.HtmlControls.HtmlAnchor lnkCourseQuiz;
         protected System.Web.UI.WebControls.Panel pnlAdminPreview;
         protected System.Web.UI.WebControls.Panel pnlSyllabus;
         protected System.Web.UI.WebControls.Literal litSyllabusHint;

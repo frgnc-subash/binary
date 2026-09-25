@@ -48,6 +48,15 @@
                         <span class="badge badge-success" style="font-size:13px;padding:4px 12px;"><asp:Literal ID="litProgressPercent" runat="server" />% Completed</span>
                     </div>
                     <div class="progress" style="height:10px;"><div id="progressBarFill" runat="server" class="progress-bar" style="background:#10b981;"></div></div>
+                    <asp:PlaceHolder ID="phCourseQuiz" runat="server" Visible="false">
+                        <div class="course-quiz-strip">
+                            <div>
+                                <strong><asp:Literal ID="litCourseQuizTitle" runat="server" /></strong>
+                                <span><asp:Literal ID="litCourseQuizMeta" runat="server" /></span>
+                            </div>
+                            <a id="lnkCourseQuiz" runat="server" class="btn btn-outline">Take the quiz</a>
+                        </div>
+                    </asp:PlaceHolder>
                 </div>
             </asp:Panel>
 
