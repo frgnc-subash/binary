@@ -13,6 +13,15 @@
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
 
+    <%-- apply the saved dashboard theme and sidebar state before the page paints, so there's no flash --%>
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem('binary-theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+                if (localStorage.getItem('binary-sidebar') === 'collapsed') document.documentElement.classList.add('sidebar-collapsed');
+            } catch (e) { }
+        })();
+    </script>
     <link id="SiteStylesheet" rel="stylesheet" type="text/css" runat="server" />
     <link href="~/favicon.ico" rel="icon" />
     <link href="~/Content/images/logo.png" rel="apple-touch-icon" />
@@ -217,5 +226,6 @@
             });
         })();
     </script>
+    <script src="<%= ResolveUrl("~/Scripts/binary-ui.js") %>"></script>
 </body>
 </html>

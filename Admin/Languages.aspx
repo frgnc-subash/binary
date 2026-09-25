@@ -88,7 +88,7 @@
                                     <td><%# Eval("LearnerCount") %></td>
                                     <td style="text-align:right;">
                                         <a class="btn btn-ghost" style="height:30px;font-size:12px;padding:0 10px;" href='<%# ResolveUrl("~/Admin/Languages.aspx?id=" + Eval("CategoryId")) %>'>Edit</a>
-                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteLanguage" CommandArgument='<%# Eval("CategoryId") %>' OnClientClick="return confirm('Delete this language family? This only works if it has no courses.');">Delete</asp:LinkButton>
+                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteLanguage" CommandArgument='<%# Eval("CategoryId") %>' OnClientClick="return BinaryUI.confirm(this, { title: 'Delete this language family?', text: 'This only works when no courses use it.', ok: 'Delete' });">Delete</asp:LinkButton>
                                     </td>
                                 </tr>
                             </ItemTemplate>

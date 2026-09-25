@@ -13,7 +13,7 @@
                 <asp:Literal ID="litActionSuccess" runat="server" />
             </asp:Panel>
 
-            <div class="admin-main-grid">
+            <div class="admin-stack">
 
                 <div>
                     <asp:Panel ID="pnlCourseError" runat="server" CssClass="auth-alert auth-alert-error" Visible="false" style="margin-bottom:var(--space-4);">
@@ -93,7 +93,7 @@
                                                     <td><%# GetVideoBadge(Eval("VideoUrl")) %></td>
                                                     <td>
                                                         <asp:LinkButton runat="server" CssClass="btn btn-ghost" style="height:30px;font-size:12px;padding:0 10px;" CommandName="EditLesson" CommandArgument='<%# Eval("LessonID") %>'>Edit</asp:LinkButton>
-                                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteLesson" CommandArgument='<%# Eval("LessonID") %>' OnClientClick="return confirm('Delete this lesson?');">Delete</asp:LinkButton>
+                                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteLesson" CommandArgument='<%# Eval("LessonID") %>' OnClientClick="return BinaryUI.confirm(this, { title: 'Delete this lesson?', text: 'The lesson and its video link are removed from the course. This cannot be undone.', ok: 'Delete lesson' });">Delete</asp:LinkButton>
                                                     </td>
                                                 </tr>
                                             </ItemTemplate>
@@ -152,6 +152,53 @@
                         </div>
                     </asp:Panel>
 
+                    <%-- categories: sit above the course table they filter --%>
+                    <div class="card category-card">
+                        <div class="card-header category-card-head">
+                            <div class="category-card-title">
+                                <h3 style="font-size:1.05rem;">Categories</h3>
+                                <span class="category-count"><asp:Literal ID="litCategoryTotal" runat="server" /></span>
+                            </div>
+                            <asp:Panel ID="pnlAddCategory" runat="server" CssClass="category-add" DefaultButton="btnAddCategory">
+                                <asp:TextBox ID="txtCategoryName" runat="server" CssClass="form-control" MaxLength="100" placeholder="New category" aria-label="New category name" />
+                                <asp:Button ID="btnAddCategory" runat="server" CssClass="btn btn-primary" Text="Add" OnClick="btnAddCategory_Click" />
+                            </asp:Panel>
+                        </div>
+
+                        <asp:Panel ID="pnlCategoryError" runat="server" CssClass="auth-alert auth-alert-error" Visible="false" style="margin:var(--space-4) var(--space-6) 0;">
+                            <asp:Literal ID="litCategoryError" runat="server" />
+                        </asp:Panel>
+
+                        <ul class="category-list">
+                            <asp:Repeater ID="rptCategories" runat="server" OnItemCommand="rptCategories_ItemCommand">
+                                <ItemTemplate>
+                                    <li class='<%# IsActiveCategory((int)Eval("CategoryID")) ? "category-row is-active" : "category-row" %>'>
+                                        <div class="category-view">
+                                            <asp:LinkButton runat="server" CssClass="category-name" CommandName="FilterCategory" CommandArgument='<%# Eval("CategoryID") %>' ToolTip="Show only this category's courses">
+                                                <span><%# HttpUtility.HtmlEncode((string)Eval("Name")) %></span>
+                                                <span class="category-courses"><%# Eval("CourseCount") %></span>
+                                            </asp:LinkButton>
+                                            <button type="button" class="icon-btn" title="Rename" aria-label="Rename" onclick="toggleCategoryEdit(this, true)"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+                                            <asp:LinkButton runat="server" CssClass="icon-btn icon-btn-danger" CommandName="DeleteCategory" CommandArgument='<%# Eval("CategoryID") %>' Visible='<%# (int)Eval("CourseCount") == 0 %>' OnClientClick="return BinaryUI.confirm(this, { title: 'Delete this category?', text: 'It has no courses, so nothing else is affected.', ok: 'Delete category' });" ToolTip="Delete" aria-label="Delete"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></asp:LinkButton>
+                                            <asp:PlaceHolder runat="server" Visible='<%# (int)Eval("CourseCount") > 0 %>'>
+                                                <span class="icon-btn is-disabled" title="Move or delete its courses before deleting this category"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></span>
+                                            </asp:PlaceHolder>
+                                        </div>
+                                        <div class="category-edit" hidden>
+                                            <asp:TextBox ID="txtCategoryRename" runat="server" CssClass="form-control" MaxLength="100" Text='<%# Eval("Name") %>' aria-label="Category name" />
+                                            <asp:LinkButton runat="server" CssClass="btn btn-primary" CommandName="RenameCategory" CommandArgument='<%# Eval("CategoryID") %>'>Save</asp:LinkButton>
+                                            <button type="button" class="btn btn-ghost" onclick="toggleCategoryEdit(this, false)">Cancel</button>
+                                        </div>
+                                    </li>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </ul>
+                        <asp:Panel ID="pnlNoCategories" runat="server" Visible="false" CssClass="category-empty">
+                            No categories yet. Add one above to start grouping courses.
+                        </asp:Panel>
+                        <p class="category-hint">Click a category to show only its courses. A category can only be deleted once it has no courses.</p>
+                    </div>
+
                     <%-- course list --%>
                     <asp:HiddenField ID="hfCoursesPage" runat="server" Value="1" />
                     <div class="card">
@@ -199,7 +246,7 @@
                                                     <td>
                                                         <a class="btn btn-ghost" style="height:30px;font-size:12px;padding:0 10px;" href='<%# ResolveUrl("~/Admin/Courses.aspx?id=" + Eval("CourseID")) %>'>Edit</a>
                                                         <asp:LinkButton runat="server" CssClass="btn btn-ghost" style="height:30px;font-size:12px;padding:0 10px;" CommandName="TogglePublish" CommandArgument='<%# Eval("CourseID") %>'><%# GetToggleLabel(Eval("IsPublished")) %></asp:LinkButton>
-                                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteCourse" CommandArgument='<%# Eval("CourseID") %>' OnClientClick="return confirm('Delete this course? This cannot be undone.');">Delete</asp:LinkButton>
+                                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteCourse" CommandArgument='<%# Eval("CourseID") %>' OnClientClick="return BinaryUI.confirm(this, { title: 'Delete this course?', text: 'The course is removed from the catalogue for everyone. This cannot be undone.', ok: 'Delete course' });">Delete</asp:LinkButton>
                                                     </td>
                                                 </tr>
                                             </ItemTemplate>
@@ -224,52 +271,6 @@
                     </div>
                 </div>
 
-                <%-- categories sidebar --%>
-                <div class="admin-side">
-                    <div class="card category-card">
-                        <div class="card-header category-card-head">
-                            <h3 style="font-size:1.05rem;">Categories</h3>
-                            <span class="category-count"><asp:Literal ID="litCategoryTotal" runat="server" /></span>
-                        </div>
-
-                        <asp:Panel ID="pnlCategoryError" runat="server" CssClass="auth-alert auth-alert-error" Visible="false" style="margin:var(--space-3) var(--space-4) 0;">
-                            <asp:Literal ID="litCategoryError" runat="server" />
-                        </asp:Panel>
-
-                        <ul class="category-list">
-                            <asp:Repeater ID="rptCategories" runat="server" OnItemCommand="rptCategories_ItemCommand">
-                                <ItemTemplate>
-                                    <li class='<%# IsActiveCategory((int)Eval("CategoryID")) ? "category-row is-active" : "category-row" %>'>
-                                        <div class="category-view">
-                                            <asp:LinkButton runat="server" CssClass="category-name" CommandName="FilterCategory" CommandArgument='<%# Eval("CategoryID") %>' ToolTip="Show only this category's courses">
-                                                <span><%# HttpUtility.HtmlEncode((string)Eval("Name")) %></span>
-                                                <span class="category-courses"><%# Eval("CourseCount") %></span>
-                                            </asp:LinkButton>
-                                            <button type="button" class="icon-btn" title="Rename" aria-label="Rename" onclick="toggleCategoryEdit(this, true)"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
-                                            <asp:LinkButton runat="server" CssClass="icon-btn icon-btn-danger" CommandName="DeleteCategory" CommandArgument='<%# Eval("CategoryID") %>' Visible='<%# (int)Eval("CourseCount") == 0 %>' OnClientClick="return confirm('Delete this category?');" ToolTip="Delete" aria-label="Delete"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></asp:LinkButton>
-                                            <asp:PlaceHolder runat="server" Visible='<%# (int)Eval("CourseCount") > 0 %>'>
-                                                <span class="icon-btn is-disabled" title="Move or delete its courses before deleting this category"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></span>
-                                            </asp:PlaceHolder>
-                                        </div>
-                                        <div class="category-edit" hidden>
-                                            <asp:TextBox ID="txtCategoryRename" runat="server" CssClass="form-control" MaxLength="100" Text='<%# Eval("Name") %>' aria-label="Category name" />
-                                            <asp:LinkButton runat="server" CssClass="btn btn-primary" CommandName="RenameCategory" CommandArgument='<%# Eval("CategoryID") %>'>Save</asp:LinkButton>
-                                            <button type="button" class="btn btn-ghost" onclick="toggleCategoryEdit(this, false)">Cancel</button>
-                                        </div>
-                                    </li>
-                                </ItemTemplate>
-                            </asp:Repeater>
-                        </ul>
-                        <asp:Panel ID="pnlNoCategories" runat="server" Visible="false" CssClass="category-empty">
-                            No categories yet. Add one below to start grouping courses.
-                        </asp:Panel>
-
-                        <asp:Panel ID="pnlAddCategory" runat="server" CssClass="category-add" DefaultButton="btnAddCategory">
-                            <asp:TextBox ID="txtCategoryName" runat="server" CssClass="form-control" MaxLength="100" placeholder="New category" aria-label="New category name" />
-                            <asp:Button ID="btnAddCategory" runat="server" CssClass="btn btn-outline" Text="Add" OnClick="btnAddCategory_Click" />
-                        </asp:Panel>
-                    </div>
-                </div>
             </div>
 
     <script>
@@ -333,7 +334,7 @@
 
             var maxBytes = <%= binary.Core.Helpers.VideoHelper.MaxUploadBytes %>;
             if (input.files[0].size > maxBytes) {
-                alert('That video is larger than <%= binary.Core.Helpers.VideoHelper.MaxUploadMegabytes %> MB. Upload it to YouTube and paste the link instead.');
+                BinaryUI.toast('That video is larger than <%= binary.Core.Helpers.VideoHelper.MaxUploadMegabytes %> MB. Upload it to YouTube and paste the link instead.', 'error');
                 return false;
             }
 
@@ -377,13 +378,13 @@
                     return;
                 }
                 reset();
-                alert(xhr.status === 404 || xhr.status === 413
+                BinaryUI.toast(xhr.status === 404 || xhr.status === 413
                     ? 'The server rejected the upload because the file is too large.'
-                    : 'Upload failed (error ' + xhr.status + '). Please try again.');
+                    : 'Upload failed (error ' + xhr.status + '). Please try again.', 'error');
             };
             xhr.onerror = function () {
                 reset();
-                alert('Upload failed. Check your connection and try again.');
+                BinaryUI.toast('Upload failed. Check your connection and try again.', 'error');
             };
             xhr.send(data);
             return false;

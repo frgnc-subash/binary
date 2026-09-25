@@ -112,7 +112,7 @@
                                     <td><%# (bool)Eval("IsActive") ? "<span class=\"badge badge-success\">Active</span>" : "<span class=\"badge badge-muted\">Inactive</span>" %></td>
                                     <td style="text-align:right;">
                                         <a class="btn btn-ghost" style="height:30px;font-size:12px;padding:0 10px;" href='<%# ResolveUrl("~/Admin/Users.aspx?id=" + Eval("UserID")) %>'>Edit</a>
-                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" Visible='<%# (int)Eval("UserID") != binary.Core.BLL.AuthBLL.CurrentUserId %>' CommandName="DeleteUser" CommandArgument='<%# Eval("UserID") %>' OnClientClick="return confirm('Delete this user account? This cannot be undone.');">Delete</asp:LinkButton>
+                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" Visible='<%# (int)Eval("UserID") != binary.Core.BLL.AuthBLL.CurrentUserId %>' CommandName="DeleteUser" CommandArgument='<%# Eval("UserID") %>' OnClientClick="return BinaryUI.confirm(this, { title: 'Delete this user?', text: 'Their account and sign-in are removed permanently. This cannot be undone.', ok: 'Delete user' });">Delete</asp:LinkButton>
                                     </td>
                                 </tr>
                             </ItemTemplate>
