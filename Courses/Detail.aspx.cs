@@ -43,11 +43,20 @@ namespace binary.Courses
             }
 
             litTitle.Text = Server.HtmlEncode(course.Title);
+            litCourseFlag.Text = FlagHelper.Render(course.FlagImageUrl, course.Title, "flag-lg");
             litDescription.Text = Server.HtmlEncode(course.Description);
             badgeLevel.InnerText = course.Level;
             badgeCategory.InnerText = course.CategoryName;
 
             BindPage();
+
+            // first stop after the Get Started onboarding + registration
+            if (!IsPostBack && Request.QueryString["welcome"] == "1" && _mode == AccessMode.Enrolled)
+            {
+                litEnrollSuccess.Text = Server.HtmlEncode("Welcome to Binary! You're enrolled in " + course.Title +
+                    ". Your first lesson is open below - complete it to earn your first XP.");
+                pnlEnrollSuccess.Visible = true;
+            }
         }
 
         private enum AccessMode { Guest, NotEnrolled, Enrolled, AdminPreview }
@@ -59,8 +68,8 @@ namespace binary.Courses
             get
             {
                 return _mode == AccessMode.Guest
-                    ? "🔒 Sign in and enroll to unlock this lesson and its video."
-                    : "🔒 Enroll in this course to unlock this lesson and its video.";
+                    ? "Sign in and enroll to unlock this lesson and its video."
+                    : "Enroll in this course to unlock this lesson and its video.";
             }
         }
 
@@ -123,7 +132,9 @@ namespace binary.Courses
 
         protected string GetLessonKindLabel(object videoUrl)
         {
-            return VideoHelper.GetEmbed(videoUrl as string) != null ? "🎬 Video lesson" : "Interactive Lesson";
+            return VideoHelper.GetEmbed(videoUrl as string) != null
+                ? Icons.Svg("video", "ui-icon ui-icon-before") + "Video lesson"
+                : "Interactive lesson";
         }
 
         // Only a placeholder with data attributes; the page script builds the actual player when

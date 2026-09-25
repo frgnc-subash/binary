@@ -12,7 +12,7 @@ namespace binary.Core.DAL
         {
             const string sql = @"
                 SELECT c.CourseID, c.Title, c.Description, c.CategoryID, cat.Name AS CategoryName, 
-                       c.Level, c.ThumbnailUrl, c.IsPublished, c.CreatedBy, c.CreatedDate
+                       c.Level, c.ThumbnailUrl, c.FlagImageUrl, c.IsPublished, c.CreatedBy, c.CreatedDate
                 FROM Courses c
                 INNER JOIN Categories cat ON c.CategoryID = cat.CategoryID
                 ORDER BY c.CourseID ASC;";
@@ -34,7 +34,7 @@ namespace binary.Core.DAL
         {
             const string sql = @"
                 SELECT c.CourseID, c.Title, c.Description, c.CategoryID, cat.Name AS CategoryName, 
-                       c.Level, c.ThumbnailUrl, c.IsPublished, c.CreatedBy, c.CreatedDate
+                       c.Level, c.ThumbnailUrl, c.FlagImageUrl, c.IsPublished, c.CreatedBy, c.CreatedDate
                 FROM Courses c
                 INNER JOIN Categories cat ON c.CategoryID = cat.CategoryID
                 WHERE c.IsPublished = 1
@@ -57,7 +57,7 @@ namespace binary.Core.DAL
         {
             const string sql = @"
                 SELECT c.CourseID, c.Title, c.Description, c.CategoryID, cat.Name AS CategoryName, 
-                       c.Level, c.ThumbnailUrl, c.IsPublished, c.CreatedBy, c.CreatedDate
+                       c.Level, c.ThumbnailUrl, c.FlagImageUrl, c.IsPublished, c.CreatedBy, c.CreatedDate
                 FROM Courses c
                 INNER JOIN Categories cat ON c.CategoryID = cat.CategoryID
                 WHERE c.CourseID = @CourseID;";
@@ -80,8 +80,8 @@ namespace binary.Core.DAL
         public int Insert(Course c)
         {
             const string sql = @"
-                INSERT INTO Courses (Title, Description, CategoryID, Level, ThumbnailUrl, IsPublished, CreatedBy, CreatedDate)
-                VALUES (@Title, @Description, @CategoryID, @Level, @ThumbnailUrl, @IsPublished, @CreatedBy, GETUTCDATE());
+                INSERT INTO Courses (Title, Description, CategoryID, Level, ThumbnailUrl, FlagImageUrl, IsPublished, CreatedBy, CreatedDate)
+                VALUES (@Title, @Description, @CategoryID, @Level, @ThumbnailUrl, @FlagImageUrl, @IsPublished, @CreatedBy, GETUTCDATE());
                 SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             using (SqlConnection con = DbHelper.CreateConnection())
@@ -92,6 +92,7 @@ namespace binary.Core.DAL
                 DbHelper.AddParam(cmd, "@CategoryID", c.CategoryID);
                 DbHelper.AddParam(cmd, "@Level", c.Level ?? "Beginner");
                 DbHelper.AddParam(cmd, "@ThumbnailUrl", c.ThumbnailUrl);
+                DbHelper.AddParam(cmd, "@FlagImageUrl", c.FlagImageUrl);
                 DbHelper.AddParam(cmd, "@IsPublished", c.IsPublished);
                 DbHelper.AddParam(cmd, "@CreatedBy", c.CreatedBy);
 
@@ -104,7 +105,7 @@ namespace binary.Core.DAL
             const string sql = @"
                 UPDATE Courses 
                 SET Title = @Title, Description = @Description, CategoryID = @CategoryID, 
-                    Level = @Level, ThumbnailUrl = @ThumbnailUrl, IsPublished = @IsPublished
+                    Level = @Level, ThumbnailUrl = @ThumbnailUrl, FlagImageUrl = @FlagImageUrl, IsPublished = @IsPublished
                 WHERE CourseID = @CourseID;";
 
             using (SqlConnection con = DbHelper.CreateConnection())
@@ -115,6 +116,7 @@ namespace binary.Core.DAL
                 DbHelper.AddParam(cmd, "@CategoryID", c.CategoryID);
                 DbHelper.AddParam(cmd, "@Level", c.Level ?? "Beginner");
                 DbHelper.AddParam(cmd, "@ThumbnailUrl", c.ThumbnailUrl);
+                DbHelper.AddParam(cmd, "@FlagImageUrl", c.FlagImageUrl);
                 DbHelper.AddParam(cmd, "@IsPublished", c.IsPublished);
                 DbHelper.AddParam(cmd, "@CourseID", c.CourseID);
 
@@ -145,6 +147,7 @@ namespace binary.Core.DAL
                 CategoryName = reader["CategoryName"].ToString(),
                 Level = reader["Level"].ToString(),
                 ThumbnailUrl = reader["ThumbnailUrl"] == DBNull.Value ? null : reader["ThumbnailUrl"].ToString(),
+                FlagImageUrl = reader["FlagImageUrl"] == DBNull.Value ? null : reader["FlagImageUrl"].ToString(),
                 IsPublished = Convert.ToBoolean(reader["IsPublished"]),
                 CreatedBy = reader["CreatedBy"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["CreatedBy"]),
                 CreatedDate = Convert.ToDateTime(reader["CreatedDate"])

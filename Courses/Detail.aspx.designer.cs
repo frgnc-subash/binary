@@ -15,6 +15,7 @@ namespace binary.Courses
         protected System.Web.UI.HtmlControls.HtmlGenericControl badgeLevel;
         protected System.Web.UI.HtmlControls.HtmlGenericControl badgeCategory;
         protected System.Web.UI.WebControls.Literal litTitle;
+        protected System.Web.UI.WebControls.Literal litCourseFlag;
         protected System.Web.UI.WebControls.Literal litDescription;
         protected System.Web.UI.WebControls.Literal litLessonCount;
         protected System.Web.UI.WebControls.Panel pnlEnrollError;

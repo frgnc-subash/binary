@@ -14,6 +14,7 @@ namespace binary.Models
         public string CategoryName { get; set; }
         public string Level { get; set; }
         public string ThumbnailUrl { get; set; }
+        public string FlagImageUrl { get; set; }
         public bool IsPublished { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

@@ -6,7 +6,7 @@
         <div class="site-container" style="max-width:760px;">
             <span class="badge badge-primary" id="badgeLevel" runat="server"></span>
             <span class="badge badge-muted" id="badgeCategory" runat="server" style="margin-left:6px;"></span>
-            <h1 style="font-size:2rem;margin:var(--space-3) 0 var(--space-2);"><asp:Literal ID="litTitle" runat="server" /></h1>
+            <h1 class="course-detail-title"><asp:Literal ID="litCourseFlag" runat="server" /><span><asp:Literal ID="litTitle" runat="server" /></span></h1>
             <p style="color:var(--text-secondary);font-size:15px;"><asp:Literal ID="litDescription" runat="server" /></p>
             <p style="color:var(--text-muted);font-size:13.5px;margin-top:var(--space-2);"><asp:Literal ID="litLessonCount" runat="server" /> lessons</p>
         </div>
@@ -39,7 +39,7 @@
 
             <%-- enrolled: progress + interactive lessons --%>
             <asp:Panel ID="pnlEnrolled" runat="server" Visible="false">
-                <div class="card card-body" style="margin-bottom:var(--space-6);box-shadow:var(--shadow-card);background:linear-gradient(135deg, #ffffff, #f8fafc);">
+                <div class="card card-body" style="margin-bottom:var(--space-6);box-shadow:var(--shadow-card);background:#ffffff;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
                         <div>
                             <span style="font-size:14px;font-weight:800;color:var(--text-primary);">Track Mastery</span>
@@ -47,7 +47,7 @@
                         </div>
                         <span class="badge badge-success" style="font-size:13px;padding:4px 12px;"><asp:Literal ID="litProgressPercent" runat="server" />% Completed</span>
                     </div>
-                    <div class="progress" style="height:10px;"><div id="progressBarFill" runat="server" class="progress-bar" style="background:linear-gradient(90deg, #10b981, #059669);"></div></div>
+                    <div class="progress" style="height:10px;"><div id="progressBarFill" runat="server" class="progress-bar" style="background:#10b981;"></div></div>
                 </div>
             </asp:Panel>
 
@@ -76,10 +76,10 @@
                                 </div>
                                 <div style="display:flex;align-items:center;gap:12px;">
                                     <asp:Literal ID="litCompleted" runat="server" Visible="false">
-                                        <span class="badge badge-success" style="font-size:12px;padding:3px 10px;">&#10003; Completed</span>
+                                        <span class="badge badge-success" style="font-size:12px;padding:3px 10px;"><svg class="ui-icon ui-icon-before" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Completed</span>
                                     </asp:Literal>
                                     <asp:Literal ID="litLocked" runat="server" Visible="false">
-                                        <span class="badge badge-muted" style="font-size:12px;padding:3px 10px;">🔒 Locked</span>
+                                        <span class="badge badge-muted" style="font-size:12px;padding:3px 10px;"><svg class="ui-icon ui-icon-before" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Locked</span>
                                     </asp:Literal>
                                     <span class="accordion-arrow" style="font-size:14px;color:var(--text-muted);transition:transform 0.2s ease;"><svg class="ui-icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
                                 </div>
@@ -96,12 +96,12 @@
 
                                     <div class="lesson-card-actions">
                                         <asp:LinkButton ID="btnMarkComplete" runat="server" CssClass="btn btn-primary" style="height:38px;padding:0 18px;font-size:13.5px;box-shadow:0 2px 8px var(--brand-primary-glow);" CommandName="MarkComplete" CommandArgument='<%# Eval("LessonID") %>'>
-                                            <span>Complete Lesson & Earn +<%# binary.Core.BLL.EnrollmentBLL.LessonXpReward %> XP ⚡</span>
+                                            <span>Complete Lesson & Earn +<%# binary.Core.BLL.EnrollmentBLL.LessonXpReward %> XP<svg class="ui-icon ui-icon-after" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
                                         </asp:LinkButton>
                                     </div>
                                 </asp:PlaceHolder>
                                 <asp:PlaceHolder ID="phLessonLocked" runat="server" Visible="false">
-                                    <div class="lesson-locked"><%# LockedMessage %></div>
+                                    <div class="lesson-locked"><svg class="ui-icon ui-icon-before" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><%# LockedMessage %></div>
                                 </asp:PlaceHolder>
                             </div>
                         </div>
