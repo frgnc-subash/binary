@@ -25,7 +25,7 @@ namespace binary.Auth
                 litOnboardingFlag.Text = FlagHelper.Render(plan.CourseFlagUrl, plan.CourseTitle, "flag-md");
                 litOnboardingCourse.Text = Server.HtmlEncode(plan.CourseTitle);
                 litOnboardingMeta.Text = Server.HtmlEncode("You speak " + plan.NativeLanguage +
-                    (string.IsNullOrEmpty(plan.Reason) ? "" : " · Goal: " + plan.Reason));
+                    (string.IsNullOrEmpty(plan.Reason) ? "" : (plan.Reason.Contains(",") ? " · Goals: " : " · Goal: ") + plan.Reason));
             }
         }
 

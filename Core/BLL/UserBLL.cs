@@ -182,7 +182,7 @@ namespace binary.Core.BLL
         {
             if (userId <= 0)
                 throw new ValidationException("Invalid user ID.");
-            _dal.UpdateOnboarding(userId, Limit(nativeLanguage, 50), Limit(learningReason, 50));
+            _dal.UpdateOnboarding(userId, Limit(nativeLanguage, 200), Limit(learningReason, 200));
         }
 
         private static string Limit(string value, int max)
