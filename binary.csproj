@@ -134,6 +134,7 @@
     <Content Include="Pages\About.aspx" />
     <Content Include="Pages\Contact.aspx" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Scripts\binary-ui.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
