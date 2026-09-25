@@ -269,15 +269,21 @@
                         </div>
                         <a class="btn btn-outline" runat="server" href="~/Courses" style="height:32px;font-size:12px;padding:0 12px;">Browse catalogue<svg class="ui-icon ui-icon-after" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
                     </div>
+                    <asp:Panel ID="pnlEnrollmentFilter" runat="server" CssClass="seg-filter" role="tablist" aria-label="Filter courses">
+                        <button type="button" class="seg-filter-btn is-active" data-status="all" onclick="filterEnrollments(this)">All <span><asp:Literal ID="litCountAll" runat="server" /></span></button>
+                        <button type="button" class="seg-filter-btn" data-status="progress" onclick="filterEnrollments(this)">In progress <span><asp:Literal ID="litCountProgress" runat="server" /></span></button>
+                        <button type="button" class="seg-filter-btn" data-status="new" onclick="filterEnrollments(this)">Not started <span><asp:Literal ID="litCountNew" runat="server" /></span></button>
+                        <button type="button" class="seg-filter-btn" data-status="done" onclick="filterEnrollments(this)">Completed <span><asp:Literal ID="litCountDone" runat="server" /></span></button>
+                    </asp:Panel>
                     <div style="overflow-x:auto;">
-                        <table class="admin-table">
+                        <table class="admin-table" id="enrollmentTable">
                             <thead>
                                 <tr><th>Course</th><th>Progress</th><th>Status</th><th style="text-align:right;">Action</th></tr>
                             </thead>
                             <tbody>
                                 <asp:Repeater ID="rptEnrollments" runat="server">
                                     <ItemTemplate>
-                                        <tr>
+                                        <tr data-status="<%# GetEnrollmentStatusKey(Eval("ProgressPercent")) %>">
                                             <td>
                                                 <div style="display:flex;align-items:center;gap:12px;">
                                                     <%# binary.Core.Helpers.FlagHelper.Render((string)Eval("CourseFlagUrl"), (string)Eval("CourseTitle"), "flag-md") %>
@@ -302,6 +308,7 @@
                                 </asp:Repeater>
                             </tbody>
                         </table>
+                        <p class="seg-filter-empty" id="enrollmentFilterEmpty" hidden>No courses in this group.</p>
                         <asp:Panel ID="pnlNoEnrollments" runat="server" Visible="false" CssClass="dash-empty">
                             <div class="dash-empty-icon"><svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5h6a4 4 0 0 1 4 4v11a3 3 0 0 0-3-3H2z"></path><path d="M22 4.5h-6a4 4 0 0 0-4 4v11a3 3 0 0 1 3-3h7z"></path></svg></div>
                             <h4>No courses yet</h4>
@@ -586,6 +593,24 @@
         if (/[?&]tab=security\b/.test(window.location.search)) {
             var pw = document.getElementById('password-section');
             if (pw) pw.scrollIntoView({ block: 'start' });
+        }
+
+        // My courses: show only the rows in the chosen status group
+        function filterEnrollments(btn) {
+            var status = btn.getAttribute('data-status');
+            var buttons = btn.parentNode.querySelectorAll('.seg-filter-btn');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.toggle('is-active', buttons[i] === btn);
+                buttons[i].setAttribute('aria-selected', buttons[i] === btn ? 'true' : 'false');
+            }
+            var rows = document.querySelectorAll('#enrollmentTable tbody tr');
+            var shown = 0;
+            for (var j = 0; j < rows.length; j++) {
+                var match = status === 'all' || rows[j].getAttribute('data-status') === status;
+                rows[j].hidden = !match;
+                if (match) shown++;
+            }
+            document.getElementById('enrollmentFilterEmpty').hidden = shown > 0;
         }
 
         // quiz: highlight the picked option and keep the "answered" count current

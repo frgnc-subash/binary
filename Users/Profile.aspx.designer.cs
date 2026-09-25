@@ -208,6 +208,51 @@ namespace binary.Users
         protected global::System.Web.UI.WebControls.LinkButton lnkBackToList;
 
         /// <summary>
+        /// pnlEnrollmentFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlEnrollmentFilter;
+
+        /// <summary>
+        /// litCountAll control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litCountAll;
+
+        /// <summary>
+        /// litCountProgress control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litCountProgress;
+
+        /// <summary>
+        /// litCountNew control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litCountNew;
+
+        /// <summary>
+        /// litCountDone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litCountDone;
+
+        /// <summary>
         /// rptEnrollments control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Repeater rptEnrollments;
