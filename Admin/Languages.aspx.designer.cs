@@ -11,7 +11,6 @@ namespace binary.Admin
 {
     public partial class AdminLanguages
     {
-        protected System.Web.UI.WebControls.HiddenField hfLanguagesPage;
         protected System.Web.UI.WebControls.Panel pnlActionSuccess;
         protected System.Web.UI.WebControls.Literal litActionSuccess;
         protected System.Web.UI.WebControls.Panel pnlLanguageError;
@@ -24,17 +23,8 @@ namespace binary.Admin
         protected System.Web.UI.WebControls.Literal litTotalLanguages;
         protected System.Web.UI.WebControls.Literal litTotalCourses;
         protected System.Web.UI.WebControls.Literal litTotalLearners;
-        protected System.Web.UI.WebControls.Panel pnlLanguageFilters;
-        protected System.Web.UI.WebControls.TextBox txtLanguageSearch;
-        protected System.Web.UI.WebControls.Button btnLanguageSearch;
-        protected System.Web.UI.WebControls.Panel pnlLanguageFilterSummary;
-        protected System.Web.UI.WebControls.Literal litLanguageFilterSummary;
-        protected System.Web.UI.WebControls.LinkButton lnkClearLanguageFilters;
         protected System.Web.UI.WebControls.Panel pnlLanguageList;
         protected System.Web.UI.WebControls.Repeater rptLanguages;
-        protected System.Web.UI.WebControls.Literal litLanguagePageInfo;
-        protected System.Web.UI.WebControls.LinkButton lnkLanguagePrevPage;
-        protected System.Web.UI.WebControls.LinkButton lnkLanguageNextPage;
         protected System.Web.UI.WebControls.Panel pnlNoLanguages;
     }
 }

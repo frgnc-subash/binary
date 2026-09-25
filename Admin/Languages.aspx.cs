@@ -10,8 +10,6 @@ namespace binary.Admin
 {
     public partial class AdminLanguages : Page
     {
-        private const int PageSize = 8;
-
         private static readonly Dictionary<string, string> ActionMessages = new Dictionary<string, string>
         {
             { "language-saved", "Language family saved successfully." },
@@ -109,41 +107,9 @@ namespace binary.Admin
             litTotalCourses.Text = groups.Sum(g => g.CourseCount).ToString();
             litTotalLearners.Text = groups.Sum(g => g.LearnerCount).ToString();
 
-            int totalCount = groups.Count;
-            string search = (txtLanguageSearch.Text ?? "").Trim();
-            if (search.Length > 0)
-            {
-                groups = groups.Where(g => g.CategoryName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
-            }
-
-            groups = groups.OrderByDescending(g => g.LearnerCount).ThenBy(g => g.CategoryName).ToList();
-
-            int totalPages = Math.Max(1, (int)Math.Ceiling(groups.Count / (double)PageSize));
-            int page;
-            int.TryParse(hfLanguagesPage.Value, out page);
-            page = Math.Max(1, Math.Min(page <= 0 ? 1 : page, totalPages));
-            hfLanguagesPage.Value = page.ToString();
-
-            var paged = groups.Skip((page - 1) * PageSize).Take(PageSize).ToList();
-            rptLanguages.DataSource = paged;
+            // every family is rendered; search and paging happen in the browser (Scripts/binary-ui.js)
+            rptLanguages.DataSource = groups.OrderByDescending(g => g.LearnerCount).ThenBy(g => g.CategoryName).ToList();
             rptLanguages.DataBind();
-
-            litLanguagePageInfo.Text = "Page " + page + " of " + totalPages + " (" + groups.Count + " famil" + (groups.Count == 1 ? "y" : "ies") + ")";
-            lnkLanguagePrevPage.CssClass = page > 1 ? "btn btn-outline" : "btn btn-outline btn-disabled";
-            lnkLanguageNextPage.CssClass = page < totalPages ? "btn btn-outline" : "btn btn-outline btn-disabled";
-
-            pnlLanguageList.Visible = groups.Count > 0;
-            pnlNoLanguages.Visible = groups.Count == 0;
-
-            pnlLanguageFilterSummary.Visible = search.Length > 0;
-            litLanguageFilterSummary.Text = groups.Count + " of " + totalCount + " famil" + (totalCount == 1 ? "y" : "ies") + " match";
-        }
-
-        protected void lnkClearLanguageFilters_Click(object sender, EventArgs e)
-        {
-            txtLanguageSearch.Text = "";
-            hfLanguagesPage.Value = "1";
-            BindLanguages();
         }
 
         protected void btnSaveLanguage_Click(object sender, EventArgs e)
@@ -206,28 +172,6 @@ namespace binary.Admin
                 litLanguageError.Text = "Something went wrong. Please try again.";
                 pnlLanguageError.Visible = true;
             }
-        }
-
-        protected void btnLanguageSearch_Click(object sender, EventArgs e)
-        {
-            hfLanguagesPage.Value = "1";
-            BindLanguages();
-        }
-
-        protected void lnkLanguagePrevPage_Click(object sender, EventArgs e)
-        {
-            int page;
-            int.TryParse(hfLanguagesPage.Value, out page);
-            hfLanguagesPage.Value = Math.Max(1, page - 1).ToString();
-            BindLanguages();
-        }
-
-        protected void lnkLanguageNextPage_Click(object sender, EventArgs e)
-        {
-            int page;
-            int.TryParse(hfLanguagesPage.Value, out page);
-            hfLanguagesPage.Value = (page + 1).ToString();
-            BindLanguages();
         }
     }
 }

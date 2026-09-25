@@ -9,8 +9,6 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="AdminMainContent" runat="server">
 
-    <asp:HiddenField ID="hfUsersPage" runat="server" Value="1" />
-
     <asp:Panel ID="pnlActionSuccess" runat="server" CssClass="auth-alert auth-alert-success" Visible="false" style="margin-bottom:var(--space-4);">
         <asp:Literal ID="litActionSuccess" runat="server" />
     </asp:Panel>
@@ -65,45 +63,44 @@
         </div>
     </asp:Panel>
 
-    <div class="card">
+    <div class="card" data-list="users" data-page-size="8" data-noun="user" data-noun-plural="users">
         <div class="card-header"><h3 style="font-size:1.05rem;">All Users</h3></div>
 
-        <%-- filters: dropdowns apply straight away, the search box on Enter --%>
-        <asp:Panel ID="pnlUserFilters" runat="server" CssClass="filter-bar" DefaultButton="btnUserSearch">
+        <%-- search, filters, sort and paging run in the browser (Scripts/binary-ui.js) --%>
+        <div class="filter-bar">
             <div class="filter-bar-search">
                 <svg class="filter-bar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <asp:TextBox ID="txtUserSearch" runat="server" CssClass="form-control" TextMode="Search" placeholder="Search name or email" aria-label="Search users" />
+                <input type="search" class="form-control" data-filter-key="q" placeholder="Search name or email" aria-label="Search users" />
             </div>
-            <asp:DropDownList ID="ddlRoleFilter" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="UserFilter_Changed" aria-label="Role">
-                <asp:ListItem Text="All roles" Value="" />
-                <asp:ListItem Text="Admin" Value="1" />
-                <asp:ListItem Text="Member" Value="2" />
-            </asp:DropDownList>
-            <asp:DropDownList ID="ddlStatusFilter" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="UserFilter_Changed" aria-label="Status">
-                <asp:ListItem Text="Any status" Value="" />
-                <asp:ListItem Text="Active" Value="active" />
-                <asp:ListItem Text="Inactive" Value="inactive" />
-            </asp:DropDownList>
-            <asp:DropDownList ID="ddlUserSort" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="UserFilter_Changed" aria-label="Sort by">
-                <asp:ListItem Text="Newest first" Value="newest" />
-                <asp:ListItem Text="Name A to Z" Value="name" />
-                <asp:ListItem Text="Most XP" Value="xp" />
-            </asp:DropDownList>
-            <asp:Button ID="btnUserSearch" runat="server" CssClass="btn btn-outline" Text="Search" OnClick="btnUserSearch_Click" />
-        </asp:Panel>
-        <asp:Panel ID="pnlUserFilterSummary" runat="server" CssClass="filter-summary" Visible="false">
-            <span><asp:Literal ID="litUserFilterSummary" runat="server" /></span>
-            <asp:LinkButton ID="lnkClearUserFilters" runat="server" CssClass="filter-clear" OnClick="lnkClearUserFilters_Click">Clear filters</asp:LinkButton>
-        </asp:Panel>
+            <select class="form-control" data-filter-key="role" aria-label="Role">
+                <option value="">All roles</option>
+                <option value="1">Admin</option>
+                <option value="2">Member</option>
+            </select>
+            <select class="form-control" data-filter-key="status" aria-label="Status">
+                <option value="">Any status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+            <select class="form-control" data-sort-key="sort" aria-label="Sort by">
+                <option value="joined:desc">Newest first</option>
+                <option value="name:asc">Name A to Z</option>
+                <option value="xp:desc">Most XP</option>
+            </select>
+        </div>
+        <div class="filter-summary" data-list-summary hidden>
+            <span data-list-summary-text></span>
+            <button type="button" class="filter-clear" data-list-clear>Clear filters</button>
+        </div>
 
-        <asp:Panel ID="pnlUserList" runat="server">
+        <asp:Panel ID="pnlUserList" runat="server" data-list-body="true">
             <div style="overflow-x:auto;">
                 <table class="admin-table">
                     <thead><tr><th>User</th><th>Email</th><th>Joined</th><th>XP</th><th>Role</th><th>Status</th><th style="text-align:right;">Action</th></tr></thead>
                     <tbody>
                         <asp:Repeater ID="rptUsers" runat="server" OnItemCommand="rptUsers_ItemCommand">
                             <ItemTemplate>
-                                <tr>
+                                <tr data-row data-search="<%# GetUserSearchText(Container.DataItem) %>" data-f-role="<%# Eval("RoleID") %>" data-f-status="<%# (bool)Eval("IsActive") ? "active" : "inactive" %>" data-s-name="<%# HttpUtility.HtmlAttributeEncode(Eval("FirstName") + " " + Eval("LastName")) %>" data-s-xp="<%# Eval("TotalXP") %>" data-s-joined="<%# ((DateTime)Eval("CreatedDate")).Ticks %>">
                                     <td><div class="tbl-user"><div class="tbl-avatar" style="background:var(--brand-primary);"><%# binary.Core.Helpers.DisplayHelper.GetInitials((string)Eval("FirstName"), (string)Eval("LastName")) %></div><%# HttpUtility.HtmlEncode((string)Eval("FirstName") + " " + (string)Eval("LastName")) %></div></td>
                                     <td><%# HttpUtility.HtmlEncode((string)Eval("Email")) %></td>
                                     <td><%# Eval("CreatedDate", "{0:MMM d, yyyy}") %></td>
@@ -121,14 +118,14 @@
                 </table>
             </div>
             <div class="pagination-bar">
-                <asp:Literal ID="litPageInfo" runat="server" />
+                <span data-list-page-info></span>
                 <div class="pager-controls">
-                    <asp:LinkButton ID="lnkPrevPage" runat="server" CssClass="btn btn-outline" style="height:32px;font-size:12px;padding:0 14px;" OnClick="lnkPrevPage_Click"><svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Prev</asp:LinkButton>
-                    <asp:LinkButton ID="lnkNextPage" runat="server" CssClass="btn btn-outline" style="height:32px;font-size:12px;padding:0 14px;" OnClick="lnkNextPage_Click">Next <svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></asp:LinkButton>
+                    <button type="button" class="btn btn-outline btn-pager" data-list-prev><svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Prev</button>
+                    <button type="button" class="btn btn-outline btn-pager" data-list-next>Next <svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
                 </div>
             </div>
         </asp:Panel>
-        <asp:Panel ID="pnlNoUsers" runat="server" Visible="false" style="text-align:center;color:var(--text-muted);padding:var(--space-8) var(--space-4);">
+        <asp:Panel ID="pnlNoUsers" runat="server" data-list-empty="true" hidden="hidden" style="text-align:center;color:var(--text-muted);padding:var(--space-8) var(--space-4);">
             <div style="width:44px;height:44px;margin:0 auto var(--space-3);border-radius:50%;background:rgba(67,56,202,0.1);color:var(--brand-primary);display:grid;place-items:center;"><svg class="admin-icon" style="width:22px;height:22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
             <h4 style="font-weight:700;color:var(--text-primary);">No users found</h4>
             <p style="font-size:13.5px;">Try adjusting your search or filters.</p>
