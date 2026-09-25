@@ -58,16 +58,23 @@
                         <span class="brand-subtitle">Language Platform</span>
                     </span>
                 </a>
-                <button type="button" class="nav-toggle" id="navToggleBtn" onclick="toggleMobileNav()" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
-                    <svg class="nav-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                </button>
+                <%-- phones: theme and menu icons sit in the bar; the full-size buttons live in the dropdown --%>
+                <div class="nav-mobile-tools">
+                    <button type="button" class="nav-icon-btn theme-toggle" onclick="BinaryUI.toggleTheme()" aria-label="Switch to dark theme" title="Switch to dark theme">
+                        <svg class="admin-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        <svg class="admin-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                    </button>
+                    <button type="button" class="nav-icon-btn nav-toggle" id="navToggleBtn" onclick="toggleMobileNav()" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+                        <svg class="nav-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                </div>
                 <div class="nav-menu" id="navMenu">
                     <ul class="nav-links">
-                        <li><a runat="server" href="~/">Home</a></li>
-                        <li><a runat="server" href="~/Courses">Courses</a></li>
-                        <li><a runat="server" href="~/Leaderboard">Leaderboard</a></li>
-                        <li><a runat="server" href="~/Pages/About.aspx">About</a></li>
-                        <li><a runat="server" href="~/Pages/Contact.aspx">Contact</a></li>
+                        <li><a href="<%= ResolveUrl("~/") %>" <%= NavState("~/Default.aspx") %>>Home</a></li>
+                        <li><a href="<%= ResolveUrl("~/Courses") %>" <%= NavState("~/Courses/") %>>Courses</a></li>
+                        <li><a href="<%= ResolveUrl("~/Leaderboard") %>" <%= NavState("~/Leaderboard/") %>>Leaderboard</a></li>
+                        <li><a href="<%= ResolveUrl("~/Pages/About.aspx") %>" <%= NavState("~/Pages/About.aspx") %>>About</a></li>
+                        <li><a href="<%= ResolveUrl("~/Pages/Contact.aspx") %>" <%= NavState("~/Pages/Contact.aspx") %>>Contact</a></li>
                     </ul>
                     <div class="nav-actions">
                         <button type="button" class="admin-icon-btn theme-toggle" onclick="BinaryUI.toggleTheme()" aria-label="Switch to dark theme" title="Switch to dark theme">
