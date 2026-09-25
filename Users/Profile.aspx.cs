@@ -78,6 +78,24 @@ namespace binary.Users
                 LoadUserProfile();
                 LoadEnrollments();
                 LoadPracticeList();
+                StartRequestedQuiz();
+            }
+        }
+
+        // ~/Users/Profile.aspx?quiz=5 opens that quiz straight away (used by the course page)
+        private void StartRequestedQuiz()
+        {
+            int quizId;
+            if (!int.TryParse(Request.QueryString["quiz"], out quizId) || quizId <= 0) return;
+
+            hfActiveTab.Value = "tab-practice";
+            try
+            {
+                StartQuiz(quizId);
+            }
+            catch (ValidationException vex)
+            {
+                ShowError(vex.Message);
             }
         }
 
@@ -388,19 +406,26 @@ namespace binary.Users
             }
         }
 
+        // best score per quiz, filled before the quiz cards are bound
+        private Dictionary<int, int> _bestPercentByQuiz = new Dictionary<int, int>();
+
         private void LoadPracticeList()
         {
             int userId = AuthBLL.CurrentUserId;
             try
             {
                 var quizBll = new QuizBLL();
+                var attempts = quizBll.GetUserAttempts(userId);
+
+                _bestPercentByQuiz = attempts
+                    .GroupBy(a => a.QuizID)
+                    .ToDictionary(g => g.Key, g => g.Max(a => a.MaxScore > 0 ? (int)Math.Round(a.Score * 100.0 / a.MaxScore) : 0));
 
                 var quizzes = quizBll.GetQuizzesForEnrolledCourses(userId);
                 rptQuizzes.DataSource = quizzes;
                 rptQuizzes.DataBind();
                 pnlNoQuizzes.Visible = quizzes.Count == 0;
 
-                var attempts = quizBll.GetUserAttempts(userId);
                 rptAttempts.DataSource = attempts;
                 rptAttempts.DataBind();
                 pnlNoAttempts.Visible = attempts.Count == 0;
@@ -416,12 +441,25 @@ namespace binary.Users
             pnlQuizResult.Visible = false;
         }
 
+        protected bool HasAttempted(int quizId)
+        {
+            return _bestPercentByQuiz.ContainsKey(quizId);
+        }
+
+        protected string GetBestScoreText(int quizId)
+        {
+            int best;
+            return _bestPercentByQuiz.TryGetValue(quizId, out best) ? "Best score " + best + "%" : "Not taken yet";
+        }
+
         private void StartQuiz(int quizId)
         {
             Quiz quiz = new QuizBLL().GetQuizWithQuestions(AuthBLL.CurrentUserId, quizId);
 
             hfPlayQuizId.Value = quiz.QuizID.ToString();
             litPlayQuizTitle.Text = Server.HtmlEncode(quiz.Title);
+            litPlayQuizCourse.Text = Server.HtmlEncode(quiz.CourseTitle) + " &middot; " + quiz.Questions.Count + " questions";
+            litPlayQuizFlag.Text = FlagHelper.Render(quiz.CourseFlagUrl, quiz.CourseTitle, "flag-md");
             rptQuestions.DataSource = quiz.Questions;
             rptQuestions.DataBind();
 
@@ -486,24 +524,28 @@ namespace binary.Users
 
         private void ShowQuizResult(QuizResult result)
         {
-            litResultScore.Text = result.Score + " / " + result.MaxScore;
+            litResultScore.Text = "You got " + result.Score + " of " + result.MaxScore + " right";
             litResultXp.Text = result.XpAwarded.ToString();
+            pnlResultXp.Visible = result.XpAwarded > 0;
 
             if (result.Percent >= 80)
             {
                 litResultIcon.Text = Icons.Svg("trophy", "quiz-result-icon");
-                litResultMessage.Text = "Excellent work!";
+                litResultMessage.Text = "Great result. You know this material well.";
             }
             else if (result.Percent >= 50)
             {
                 litResultIcon.Text = Icons.Svg("thumbs-up", "quiz-result-icon");
-                litResultMessage.Text = "Good effort — keep practicing!";
+                litResultMessage.Text = "Not bad. Check the answers below and try again.";
             }
             else
             {
                 litResultIcon.Text = Icons.Svg("target", "quiz-result-icon");
-                litResultMessage.Text = "Keep at it, you'll get there!";
+                litResultMessage.Text = "Go over the course lessons, then have another go.";
             }
+
+            rptReview.DataSource = result.Review;
+            rptReview.DataBind();
 
             pnlQuizList.Visible = false;
             pnlQuizPlay.Visible = false;

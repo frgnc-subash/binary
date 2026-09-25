@@ -317,31 +317,35 @@
             <div id="tab-practice" class="<%= GetTabPaneClass("tab-practice") %>">
 
                 <asp:Panel ID="pnlQuizList" runat="server">
-                    <div class="admin-section-label">Available Practice</div>
-                    <div class="grid-2" style="margin-bottom:var(--space-6);">
+                    <div class="admin-section-label">Your quizzes</div>
+                    <div class="quiz-list">
                         <asp:Repeater ID="rptQuizzes" runat="server" OnItemCommand="rptQuizzes_ItemCommand">
                             <ItemTemplate>
-                                <div class="card card-body" style="display:flex;flex-direction:column;gap:var(--space-3);background:#ffffff;">
-                                    <div style="display:flex;align-items:center;gap:var(--space-3);">
-                                        <div class="kpi-icon" style="background:rgba(99,102,241,0.12);color:#4f46e5;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 2 2 4-4"/><path d="m3 15 2 2 4-4"/><line x1="11" y1="8" x2="21" y2="8"/><line x1="11" y1="16" x2="21" y2="16"/></svg></div>
-                                        <div>
-                                            <h3 style="font-size:1.02rem;font-weight:700;"><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></h3>
-                                            <p style="font-size:12px;color:var(--text-muted);"><%# HttpUtility.HtmlEncode((string)Eval("CourseTitle")) %></p>
+                                <div class="quiz-card">
+                                    <div class="quiz-card-head">
+                                        <%# binary.Core.Helpers.FlagHelper.Render((string)Eval("CourseFlagUrl"), (string)Eval("CourseTitle"), "flag-md") %>
+                                        <div class="quiz-card-text">
+                                            <h3><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></h3>
+                                            <p><%# HttpUtility.HtmlEncode((string)Eval("CourseTitle")) %></p>
                                         </div>
                                     </div>
-                                    <asp:LinkButton runat="server" CssClass="btn btn-primary" style="width:100%;" CommandName="StartQuiz" CommandArgument='<%# Eval("QuizID") %>'>Start Practice</asp:LinkButton>
+                                    <div class="quiz-card-meta">
+                                        <span><%# Eval("QuestionCount") %> questions</span>
+                                        <span><%# GetBestScoreText((int)Eval("QuizID")) %></span>
+                                    </div>
+                                    <asp:LinkButton runat="server" CssClass="btn btn-primary quiz-card-btn" CommandName="StartQuiz" CommandArgument='<%# Eval("QuizID") %>'><%# HasAttempted((int)Eval("QuizID")) ? "Retake quiz" : "Start quiz" %></asp:LinkButton>
                                 </div>
                             </ItemTemplate>
                         </asp:Repeater>
                     </div>
-                    <asp:Panel ID="pnlNoQuizzes" runat="server" Visible="false" style="text-align:center;color:var(--text-muted);padding:var(--space-8) var(--space-4);">
-                        <div class="dash-empty-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 2 2 4-4"/><path d="m3 15 2 2 4-4"/><line x1="11" y1="8" x2="21" y2="8"/><line x1="11" y1="16" x2="21" y2="16"/></svg></div>
-                        <h4 style="font-weight:700;color:var(--text-primary);">No practice available yet</h4>
-                        <p style="font-size:13.5px;">Enroll in a course to unlock its vocabulary practice quiz.</p>
+                    <asp:Panel ID="pnlNoQuizzes" runat="server" Visible="false" CssClass="quiz-empty">
+                        <h4>No quizzes yet</h4>
+                        <p>Enrol in a course and its quiz will show up here.</p>
+                        <a runat="server" href="~/Courses" class="btn btn-outline">Browse courses</a>
                     </asp:Panel>
 
                     <div class="card" style="background:#ffffff;">
-                        <div class="card-header"><h3 style="font-size:1.05rem;">Your Recent Attempts</h3></div>
+                        <div class="card-header"><h3 style="font-size:1.05rem;">Recent attempts</h3></div>
                         <div style="overflow-x:auto;">
                             <table class="admin-table">
                                 <thead><tr><th>Quiz</th><th>Score</th><th>Result</th><th>Date</th></tr></thead>
@@ -360,45 +364,74 @@
                             </table>
                         </div>
                         <asp:Panel ID="pnlNoAttempts" runat="server" Visible="false" style="text-align:center;color:var(--text-muted);padding:var(--space-6) var(--space-4);font-size:13px;">
-                            No attempts yet — take a quiz above to get started.
+                            No attempts yet. Your scores will be listed here.
                         </asp:Panel>
                     </div>
                 </asp:Panel>
 
                 <asp:Panel ID="pnlQuizPlay" runat="server" Visible="false">
-                    <div class="card" style="max-width:720px;background:#ffffff;">
-                        <div class="card-header">
-                            <h3 style="font-size:1.1rem;font-weight:800;"><asp:Literal ID="litPlayQuizTitle" runat="server" /></h3>
-                            <p style="font-size:13px;color:var(--text-muted);">Choose the best answer for each question, then submit.</p>
-                        </div>
-                        <div class="card-body">
-                            <asp:HiddenField ID="hfPlayQuizId" runat="server" />
-                            <asp:Repeater ID="rptQuestions" runat="server">
-                                <ItemTemplate>
-                                    <div class="quiz-question-card">
-                                        <div style="font-weight:700;margin-bottom:var(--space-2);"><%# Container.ItemIndex + 1 %>. <%# HttpUtility.HtmlEncode((string)Eval("QuestionText")) %></div>
-                                        <asp:HiddenField runat="server" ID="hfQuestionId" Value='<%# Eval("QuestionID") %>' />
-                                        <asp:RadioButtonList runat="server" ID="rblOptions" DataSource='<%# Eval("Options") %>' DataTextField="OptionText" DataValueField="OptionID" RepeatLayout="Flow" CssClass="quiz-option-row" />
-                                    </div>
-                                </ItemTemplate>
-                            </asp:Repeater>
-                            <div style="display:flex;gap:var(--space-3);margin-top:var(--space-4);">
-                                <asp:Button ID="btnSubmitQuiz" runat="server" CssClass="btn btn-primary" Text="Submit Answers" OnClick="btnSubmitQuiz_Click" OnClientClick="return confirmQuizSubmit();" />
-                                <asp:LinkButton ID="lnkCancelQuiz" runat="server" CssClass="btn btn-outline" Text="Cancel" OnClick="lnkCancelQuiz_Click" CausesValidation="false" />
+                    <div class="quiz-play">
+                        <div class="quiz-play-head">
+                            <asp:Literal ID="litPlayQuizFlag" runat="server" />
+                            <div class="quiz-card-text">
+                                <h3><asp:Literal ID="litPlayQuizTitle" runat="server" /></h3>
+                                <p><asp:Literal ID="litPlayQuizCourse" runat="server" /></p>
                             </div>
+                            <span class="quiz-progress-text" id="quizProgressText"></span>
+                        </div>
+                        <div class="quiz-progress"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
+
+                        <asp:HiddenField ID="hfPlayQuizId" runat="server" />
+                        <asp:Repeater ID="rptQuestions" runat="server">
+                            <ItemTemplate>
+                                <fieldset class="quiz-question-card">
+                                    <legend class="quiz-question-num">Question <%# Container.ItemIndex + 1 %></legend>
+                                    <p class="quiz-question-text"><%# HttpUtility.HtmlEncode((string)Eval("QuestionText")) %></p>
+                                    <asp:HiddenField runat="server" ID="hfQuestionId" Value='<%# Eval("QuestionID") %>' />
+                                    <asp:RadioButtonList runat="server" ID="rblOptions" DataSource='<%# Eval("Options") %>' DataTextField="OptionText" DataValueField="OptionID" RepeatLayout="UnorderedList" CssClass="quiz-options" />
+                                </fieldset>
+                            </ItemTemplate>
+                        </asp:Repeater>
+
+                        <div class="quiz-play-actions">
+                            <asp:LinkButton ID="lnkCancelQuiz" runat="server" CssClass="btn btn-outline" Text="Cancel" OnClick="lnkCancelQuiz_Click" CausesValidation="false" />
+                            <asp:Button ID="btnSubmitQuiz" runat="server" CssClass="btn btn-primary" Text="Submit answers" OnClick="btnSubmitQuiz_Click" OnClientClick="return confirmQuizSubmit();" />
                         </div>
                     </div>
                 </asp:Panel>
 
                 <asp:Panel ID="pnlQuizResult" runat="server" Visible="false">
-                    <div class="card card-body" style="max-width:480px;text-align:center;background:#ffffff;">
-                        <div class="quiz-result-badge"><asp:Literal ID="litResultIcon" runat="server" /></div>
-                        <h3 style="font-size:1.3rem;font-weight:800;">Score: <asp:Literal ID="litResultScore" runat="server" /></h3>
-                        <p style="font-size:13.5px;color:var(--text-muted);margin:6px 0 var(--space-2);"><asp:Literal ID="litResultMessage" runat="server" /></p>
-                        <p style="font-size:12.5px;color:#d97706;font-weight:700;margin-bottom:var(--space-4);">+<asp:Literal ID="litResultXp" runat="server" /> XP earned</p>
-                        <div style="display:flex;gap:var(--space-3);justify-content:center;">
-                            <asp:LinkButton ID="lnkRetryQuiz" runat="server" CssClass="btn btn-primary" Text="Try Again" OnClick="lnkRetryQuiz_Click" />
-                            <asp:LinkButton ID="lnkBackToList" runat="server" CssClass="btn btn-outline" Text="Back to Practice List" OnClick="lnkBackToList_Click" />
+                    <div class="quiz-play">
+                        <div class="quiz-result-summary">
+                            <div class="quiz-result-badge"><asp:Literal ID="litResultIcon" runat="server" /></div>
+                            <div>
+                                <h3><asp:Literal ID="litResultScore" runat="server" /></h3>
+                                <p><asp:Literal ID="litResultMessage" runat="server" /></p>
+                                <asp:Panel ID="pnlResultXp" runat="server" CssClass="quiz-result-xp">+<asp:Literal ID="litResultXp" runat="server" /> XP</asp:Panel>
+                            </div>
+                        </div>
+
+                        <div class="admin-section-label" style="margin-top:var(--space-6);">Your answers</div>
+                        <ol class="quiz-review">
+                            <asp:Repeater ID="rptReview" runat="server">
+                                <ItemTemplate>
+                                    <li class='<%# (bool)Eval("IsCorrect") ? "quiz-review-item is-correct" : "quiz-review-item is-wrong" %>'>
+                                        <span class="quiz-review-mark"><%# binary.Core.Helpers.Icons.Svg((bool)Eval("IsCorrect") ? "check" : "x") %></span>
+                                        <div>
+                                            <p class="quiz-review-question"><%# Eval("Number") %>. <%# HttpUtility.HtmlEncode((string)Eval("QuestionText")) %></p>
+                                            <p class="quiz-review-answer">Your answer: <strong><%# HttpUtility.HtmlEncode((string)Eval("YourAnswer") ?? "Not answered") %></strong></p>
+                                            <asp:PlaceHolder runat="server" Visible='<%# !(bool)Eval("IsCorrect") %>'>
+                                                <p class="quiz-review-answer">Correct answer: <strong><%# HttpUtility.HtmlEncode((string)Eval("CorrectAnswer")) %></strong></p>
+                                            </asp:PlaceHolder>
+                                        </div>
+                                    </li>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </ol>
+
+                        <div class="quiz-play-actions">
+                            <asp:LinkButton ID="lnkBackToList" runat="server" CssClass="btn btn-outline" Text="Back to quizzes" OnClick="lnkBackToList_Click" />
+                            <asp:LinkButton ID="lnkRetryQuiz" runat="server" CssClass="btn btn-primary" Text="Try again" OnClick="lnkRetryQuiz_Click" />
                         </div>
                     </div>
                 </asp:Panel>
@@ -554,6 +587,35 @@
             var pw = document.getElementById('password-section');
             if (pw) pw.scrollIntoView({ block: 'start' });
         }
+
+        // quiz: highlight the picked option and keep the "answered" count current
+        (function () {
+            var cards = document.querySelectorAll('.quiz-question-card');
+            if (!cards.length) return;
+            var text = document.getElementById('quizProgressText');
+            var fill = document.getElementById('quizProgressFill');
+
+            function refresh() {
+                var answered = 0;
+                for (var i = 0; i < cards.length; i++) {
+                    var items = cards[i].querySelectorAll('.quiz-options li');
+                    var picked = false;
+                    for (var j = 0; j < items.length; j++) {
+                        var on = items[j].querySelector('input').checked;
+                        items[j].classList.toggle('is-selected', on);
+                        if (on) picked = true;
+                    }
+                    if (picked) answered++;
+                }
+                if (text) text.textContent = answered + ' of ' + cards.length + ' answered';
+                if (fill) fill.style.width = Math.round(answered * 100 / cards.length) + '%';
+            }
+
+            document.addEventListener('change', function (e) {
+                if (e.target.closest && e.target.closest('.quiz-options')) refresh();
+            });
+            refresh();
+        })();
 
         // unanswered questions are scored as wrong, so check before submitting
         function confirmQuizSubmit() {

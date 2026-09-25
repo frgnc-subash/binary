@@ -6,12 +6,23 @@ using binary.Models;
 
 namespace binary.Core.BLL
 {
+    // one line of the answer review shown after a quiz
+    public class QuizAnswerReview
+    {
+        public int Number { get; set; }
+        public string QuestionText { get; set; }
+        public string YourAnswer { get; set; }
+        public string CorrectAnswer { get; set; }
+        public bool IsCorrect { get; set; }
+    }
+
     // result of a scored quiz attempt
     public class QuizResult
     {
         public int Score { get; set; }
         public int MaxScore { get; set; }
         public int XpAwarded { get; set; }
+        public List<QuizAnswerReview> Review { get; set; }
 
         public int Percent
         {
@@ -31,7 +42,8 @@ namespace binary.Core.BLL
             if (userId <= 0) return new List<Quiz>();
 
             var courseIds = _enrollmentBll.GetUserEnrollments(userId).Select(e => e.CourseID).ToList();
-            return _dal.SelectByCourseIds(courseIds);
+            // a quiz with no questions yet can't be taken, so don't offer it
+            return _dal.SelectByCourseIds(courseIds).Where(q => q.QuestionCount > 0).ToList();
         }
 
         public Quiz GetQuizWithQuestions(int userId, int quizId)
@@ -53,17 +65,28 @@ namespace binary.Core.BLL
 
             Quiz quiz = GetQuizWithQuestions(userId, quizId);
             int score = 0;
+            var review = new List<QuizAnswerReview>();
 
             foreach (Question question in quiz.Questions)
             {
+                var options = question.Options ?? new List<QuestionOption>();
                 int selectedOptionId;
-                if (!selectedOptionIdByQuestionId.TryGetValue(question.QuestionID, out selectedOptionId))
-                    continue;
+                QuestionOption selected = selectedOptionIdByQuestionId.TryGetValue(question.QuestionID, out selectedOptionId)
+                    ? options.FirstOrDefault(o => o.OptionID == selectedOptionId)
+                    : null;
+                QuestionOption correct = options.FirstOrDefault(o => o.IsCorrect);
 
-                bool isCorrect = question.Options != null &&
-                    question.Options.Any(o => o.OptionID == selectedOptionId && o.IsCorrect);
-
+                bool isCorrect = selected != null && selected.IsCorrect;
                 if (isCorrect) score++;
+
+                review.Add(new QuizAnswerReview
+                {
+                    Number = review.Count + 1,
+                    QuestionText = question.QuestionText,
+                    YourAnswer = selected != null ? selected.OptionText : null,
+                    CorrectAnswer = correct != null ? correct.OptionText : null,
+                    IsCorrect = isCorrect
+                });
             }
 
             int maxScore = quiz.Questions.Count;
@@ -78,7 +101,7 @@ namespace binary.Core.BLL
                 xpAwarded > 0 ? NotificationTypes.Xp : NotificationTypes.Info,
                 "~/Users/Profile.aspx?tab=practice");
 
-            return new QuizResult { Score = score, MaxScore = maxScore, XpAwarded = xpAwarded };
+            return new QuizResult { Score = score, MaxScore = maxScore, XpAwarded = xpAwarded, Review = review };
         }
 
         public List<QuizAttempt> GetUserAttempts(int userId)

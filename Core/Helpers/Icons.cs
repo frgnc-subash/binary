@@ -20,6 +20,7 @@ namespace binary.Core.Helpers
             { "lock", "<rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/>" },
             { "bolt", "<polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"/>" },
             { "check", "<polyline points=\"20 6 9 17 4 12\"/>" },
+            { "x", "<line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/><line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>" },
             { "users", "<path d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M23 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/>" },
             { "practice", "<path d=\"m3 7 2 2 4-4\"/><path d=\"m3 15 2 2 4-4\"/><line x1=\"11\" y1=\"8\" x2=\"21\" y2=\"8\"/><line x1=\"11\" y1=\"16\" x2=\"21\" y2=\"16\"/>" },
             { "trophy", "<path d=\"M8 21h8\"/><path d=\"M12 17v4\"/><path d=\"M7 4h10v5a5 5 0 0 1-10 0V4Z\"/><path d=\"M7 5H4.5a2.5 2.5 0 0 0 0 5H7\"/><path d=\"M17 5h2.5a2.5 2.5 0 0 1 0 5H17\"/>" },
