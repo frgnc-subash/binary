@@ -2363,6 +2363,12 @@ body.notif-open {
     background: var(--bg-overlay);
 }
 
+/* cards that hold a table clip it to their rounded corners, so the header and row
+   hover colours never poke out past the curve */
+.card:has(.admin-table) {
+    overflow: hidden;
+}
+
 .admin-table tbody tr:last-child td {
     border-bottom: none;
 }
@@ -4241,7 +4247,7 @@ html[data-theme="dark"] {
 
     --brand-primary: #6366f1;
     --brand-primary-hover: #818cf8;
-    --brand-primary-soft: rgba(99, 102, 241, 0.18);
+    --brand-primary-soft: rgba(99, 102, 241, 0.14);
     --brand-primary-glow: rgba(99, 102, 241, 0.25);
 
     --brand-accent: #34d399;
@@ -4251,19 +4257,20 @@ html[data-theme="dark"] {
     --brand-rose: #fb7185;
     --brand-rose-soft: rgba(251, 113, 133, 0.14);
 
-    --bg-page: #0b1120;
-    --bg-surface: #111827;
-    --bg-subtle: #0b1120;
-    --bg-overlay: #0f172a;
+    /* neutral greys (no blue cast): near-black page, slightly lifted cards */
+    --bg-page: #0e0e10;
+    --bg-surface: #17171a;
+    --bg-subtle: #0e0e10;
+    --bg-overlay: #131316;
 
-    --border-light: #1f2937;
-    --border-mid: #334155;
-    --border-focus: #818cf8;
+    --border-light: #26262b;
+    --border-mid: #3a3a41;
+    --border-focus: #a1a1aa;
 
-    --text-primary: #e5e7eb;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
-    --text-subtle: #64748b;
+    --text-primary: #ececee;
+    --text-secondary: #c2c2c7;
+    --text-muted: #8f8f96;
+    --text-subtle: #66666d;
 
     --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.5);
@@ -4301,14 +4308,15 @@ html[data-theme="dark"] .auth-alert-success {
 }
 
 html[data-theme="dark"] select:not([multiple]) {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f8f96' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 }
 
 html[data-theme="dark"] .progress { background: var(--border-light); }
 html[data-theme="dark"] .brand-logo { background: #ffffff; }
 html[data-theme="dark"] .notif-backdrop { background: rgba(0, 0, 0, 0.55); }
-html[data-theme="dark"] .site-navbar { background: rgba(17, 24, 39, 0.92); }
+html[data-theme="dark"] .site-navbar { background: rgba(14, 14, 16, 0.9); }
 html[data-theme="dark"] .confirm-overlay { background: rgba(0, 0, 0, 0.6); }
+html[data-theme="dark"] .about-cta { background: #1c1c20; }
 
 /* =====================================================
    Confirmation dialog + toasts (Scripts/binary-ui.js)
