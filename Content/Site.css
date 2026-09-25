@@ -269,6 +269,19 @@ p {
     flex-shrink: 0;
 }
 
+/* desktop: logo | centred links | actions. The menu wrapper steps out of the layout so its two
+   halves become grid columns; on mobile it's the dropdown panel again (see max-width: 860px) */
+@media (min-width: 861px) {
+    .nav-content {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+    }
+
+    .nav-menu { display: contents; }
+    .brand-link { justify-self: start; }
+    .nav-actions { justify-self: end; }
+}
+
 /* =====================================================
    Buttons (Clean & Minimal)
    ===================================================== */
@@ -498,95 +511,105 @@ html.is-submitting * {
 /* =====================================================
    Course Cards (Clean, Minimal & Modern)
    ===================================================== */
-.clean-course-card {
+/* course catalogue card: the whole card is the link */
+.course-card {
     display: flex;
     flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
     background: var(--bg-surface);
-    border-radius: var(--radius-lg);
     border: 1px solid var(--border-light);
-    box-shadow: var(--shadow-subtle);
-    overflow: hidden;
-    transition: all 0.2s ease;
+    border-radius: var(--radius-lg);
+    color: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.clean-course-card:hover {
-    box-shadow: var(--shadow-card-hover);
+.course-card[hidden] { display: none; }
+
+.course-card:hover {
     border-color: var(--border-mid);
+    box-shadow: var(--shadow-card);
 }
 
-.course-card-top {
-    padding: var(--space-5) var(--space-6) var(--space-3);
+.course-card:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+}
+
+.course-card-head {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-1);
 }
 
-.course-lang-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--text-primary);
-}
-
-.course-lang-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: inline-grid;
-    place-items: center;
-    background: var(--bg-subtle);
-    color: var(--brand-primary);
-}
-
-.course-card-content {
-    padding: 0 var(--space-6) var(--space-5);
-    flex: 1;
+.course-card-category {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .course-card-title {
-    font-family: var(--font-heading);
     font-size: 1.15rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 6px;
 }
 
 .course-card-desc {
-    color: var(--text-secondary);
+    flex: 1;
     font-size: 13.5px;
-    line-height: 1.5;
-    margin-bottom: var(--space-4);
+    line-height: 1.55;
+    color: var(--text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-.course-meta-tags {
+.course-card-progress {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    flex-wrap: wrap;
-}
-
-.meta-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 10px;
-    border-radius: var(--radius-pill);
-    background: var(--bg-subtle);
-    color: var(--text-secondary);
+    gap: var(--space-3);
     font-size: 12px;
     font-weight: 600;
+    color: var(--text-muted);
 }
 
-.course-card-bottom {
-    padding: var(--space-4) var(--space-6);
-    border-top: 1px solid var(--border-light);
+.course-card-progress .progress { flex: 1; }
+
+.course-card-foot {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: var(--bg-overlay);
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+    margin-top: var(--space-1);
+    border-top: 1px solid var(--border-light);
 }
+
+.course-card-meta {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.course-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--brand-primary);
+}
+
+.course-card-cta .ui-icon {
+    width: 15px;
+    height: 15px;
+    transition: transform 0.15s ease;
+}
+
+.course-card:hover .course-card-cta .ui-icon { transform: translateX(2px); }
 
 /* =====================================================
    Forms & Controls
@@ -620,6 +643,13 @@ textarea {
     color: var(--text-primary);
     outline: none;
     transition: all 0.15s ease;
+}
+
+/* fixed-size text areas: no drag handle, long text scrolls inside the box */
+textarea {
+    resize: none;
+    overflow-y: auto;
+    line-height: 1.55;
 }
 
 .form-control:focus,
@@ -940,6 +970,10 @@ input[type="radio"] {
 
     .nav-actions .btn {
         width: 100%;
+    }
+
+    .nav-actions .theme-toggle {
+        align-self: flex-start;
     }
 
 }
@@ -2223,7 +2257,7 @@ body.notif-open {
 .quick-action-btn:hover {
     border-color: #6366f1;
     background: rgba(99, 102, 241, 0.06);
-    color: #4f46e5;
+    color: var(--brand-primary);
 }
 
 .quick-action-icon {
@@ -2595,7 +2629,7 @@ body.notif-open {
     height: 32px;
     border-radius: 8px;
     background: var(--bg-subtle);
-    color: #4f46e5;
+    color: var(--brand-primary);
     display: grid;
     place-items: center;
     font-size: 15px;
@@ -3411,7 +3445,7 @@ body.notif-open {
     height: 36px;
     border-radius: var(--radius-sm);
     background: var(--brand-primary-soft);
-    color: #4338ca;
+    color: var(--brand-primary);
     font-weight: 800;
     font-size: 13px;
     display: grid;
@@ -3649,7 +3683,7 @@ body.notif-open {
     display: inline-grid;
     place-items: center;
     background: var(--brand-primary-soft);
-    color: #4338ca;
+    color: var(--brand-primary);
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 0.02em;
@@ -3886,6 +3920,30 @@ body.notif-open {
     box-shadow: 0 0 0 3px var(--brand-primary-glow);
 }
 
+/* checkbox mark in the corner: every step accepts more than one answer */
+.onb-option { padding-right: 40px; }
+
+.onb-option::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    width: 18px;
+    height: 18px;
+    margin-top: -9px;
+    border: 1.5px solid var(--border-mid);
+    border-radius: 5px;
+    background: var(--bg-surface) no-repeat center / 12px 12px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.onb-option.is-selected::after,
+.onb-option:has(input:checked)::after {
+    border-color: var(--brand-primary);
+    background-color: var(--brand-primary);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+}
+
 .onb-option:has(input:focus-visible) {
     outline: 2px solid var(--brand-primary);
     outline-offset: 2px;
@@ -3928,6 +3986,16 @@ body.notif-open {
 .onb-actions .btn-ghost {
     margin-left: auto;
 }
+
+.onb-count {
+    margin-left: auto;
+    align-self: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.onb-count + .btn-ghost { margin-left: 0; }
 
 .onb-actions-center {
     justify-content: center;
@@ -4132,9 +4200,9 @@ html[data-theme="dark"] .theme-toggle .theme-icon-sun { display: block; }
 html[data-theme="dark"] .theme-toggle .theme-icon-moon { display: none; }
 
 /* =====================================================
-   Dark theme (dashboards only: scoped to .admin-shell)
+   Dark theme (whole site; toggled from the navbar or the dashboard header)
    ===================================================== */
-html[data-theme="dark"] .admin-shell {
+html[data-theme="dark"] {
     color-scheme: dark;
 
     --brand-primary: #6366f1;
@@ -4172,39 +4240,41 @@ html[data-theme="dark"] .admin-shell {
 }
 
 /* inline white backgrounds in the dashboard markup */
-html[data-theme="dark"] .admin-shell [style*="background:#ffffff"],
-html[data-theme="dark"] .admin-shell [style*="background: #ffffff"],
-html[data-theme="dark"] .admin-shell [style*="background:#fff;"] {
+html[data-theme="dark"] [style*="background:#ffffff"],
+html[data-theme="dark"] [style*="background: #ffffff"],
+html[data-theme="dark"] [style*="background:#fff;"] {
     background: var(--bg-surface) !important;
 }
 
-html[data-theme="dark"] .admin-shell [style*="background:#f8fafc"] { background: var(--bg-overlay) !important; }
-html[data-theme="dark"] .admin-shell [style*="background:#e2e8f0"] { background: var(--border-mid) !important; }
+html[data-theme="dark"] [style*="background:#f8fafc"] { background: var(--bg-overlay) !important; }
+html[data-theme="dark"] [style*="background:#e2e8f0"] { background: var(--border-mid) !important; }
 
-html[data-theme="dark"] .admin-shell h1,
-html[data-theme="dark"] .admin-shell h2,
-html[data-theme="dark"] .admin-shell h3,
-html[data-theme="dark"] .admin-shell h4 {
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4 {
     color: var(--text-primary);
 }
 
-html[data-theme="dark"] .admin-shell .auth-alert-error {
+html[data-theme="dark"] .auth-alert-error {
     color: #fda4af;
     border-color: rgba(251, 113, 133, 0.35);
 }
 
-html[data-theme="dark"] .admin-shell .auth-alert-success {
+html[data-theme="dark"] .auth-alert-success {
     color: #6ee7b7;
     border-color: rgba(52, 211, 153, 0.35);
 }
 
-html[data-theme="dark"] .admin-shell select:not([multiple]) {
+html[data-theme="dark"] select:not([multiple]) {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 }
 
-html[data-theme="dark"] .admin-shell .progress { background: var(--border-light); }
-html[data-theme="dark"] .admin-shell .brand-logo { background: #ffffff; }
-html[data-theme="dark"] .admin-shell .notif-backdrop { background: rgba(0, 0, 0, 0.55); }
+html[data-theme="dark"] .progress { background: var(--border-light); }
+html[data-theme="dark"] .brand-logo { background: #ffffff; }
+html[data-theme="dark"] .notif-backdrop { background: rgba(0, 0, 0, 0.55); }
+html[data-theme="dark"] .site-navbar { background: rgba(17, 24, 39, 0.92); }
+html[data-theme="dark"] .confirm-overlay { background: rgba(0, 0, 0, 0.6); }
 
 /* =====================================================
    Confirmation dialog + toasts (Scripts/binary-ui.js)
@@ -4357,4 +4427,58 @@ html[data-theme="dark"] .admin-shell .notif-backdrop { background: rgba(0, 0, 0,
     .confirm-overlay,
     .confirm-box,
     .toast { transition: none; }
+}
+
+/* =====================================================
+   Client-side lists (data-list in Scripts/binary-ui.js)
+   ===================================================== */
+tr[hidden],
+.filter-summary[hidden],
+[data-list-body][hidden],
+[data-list-empty][hidden] {
+    display: none;
+}
+
+.btn-pager {
+    height: 32px;
+    padding: 0 14px;
+    font-size: 12px;
+}
+
+.btn-pager:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.filter-clear {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+}
+
+/* category names on the admin Courses page are buttons that filter the list */
+button.category-name {
+    border: 0;
+    background: none;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+/* =====================================================
+   Theme switching
+   ===================================================== */
+/* colours fade for a moment while the theme changes, instead of snapping */
+html.theme-switching,
+html.theme-switching * {
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, fill 0.25s ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.theme-switching,
+    html.theme-switching * {
+        transition: none !important;
+    }
 }

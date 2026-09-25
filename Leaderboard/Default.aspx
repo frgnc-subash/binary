@@ -2,7 +2,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <section class="section-sm" style="background:#ffffff;border-bottom:1px solid var(--border-light);">
+    <section class="section-sm" style="background:var(--bg-surface);border-bottom:1px solid var(--border-light);">
         <div class="site-container" style="text-align:center;max-width:640px;margin:0 auto;">
             <span class="badge badge-primary" style="margin-bottom:var(--space-2);">Leaderboard</span>
             <h1 style="font-size:2.2rem;margin-bottom:var(--space-2);">Top Learners</h1>

@@ -2,7 +2,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <section class="section-sm" style="background:#ffffff;border-bottom:1px solid var(--border-light);">
+    <section class="section-sm" style="background:var(--bg-surface);border-bottom:1px solid var(--border-light);">
         <div class="site-container" style="max-width:760px;">
             <span class="badge badge-primary" id="badgeLevel" runat="server"></span>
             <span class="badge badge-muted" id="badgeCategory" runat="server" style="margin-left:6px;"></span>
@@ -39,7 +39,7 @@
 
             <%-- enrolled: progress + interactive lessons --%>
             <asp:Panel ID="pnlEnrolled" runat="server" Visible="false">
-                <div class="card card-body" style="margin-bottom:var(--space-6);box-shadow:var(--shadow-card);background:#ffffff;">
+                <div class="card card-body" style="margin-bottom:var(--space-6);box-shadow:var(--shadow-card);background:var(--bg-surface);">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
                         <div>
                             <span style="font-size:14px;font-weight:800;color:var(--text-primary);">Track Mastery</span>
@@ -98,7 +98,7 @@
                                 <%-- server-side Visible=false means locked content is never sent to the browser --%>
                                 <asp:PlaceHolder ID="phLessonUnlocked" runat="server">
                                     <%# RenderVideoPlaceholder(Eval("VideoUrl"), Eval("Title")) %>
-                                    <div style="background:#ffffff;padding:var(--space-4);border-radius:var(--radius-md);border:1px solid var(--border-light);margin:var(--space-4) 0;">
+                                    <div style="background:var(--bg-surface);padding:var(--space-4);border-radius:var(--radius-md);border:1px solid var(--border-light);margin:var(--space-4) 0;">
                                         <h4 style="font-size:13px;font-weight:700;text-transform:uppercase;color:var(--brand-primary);letter-spacing:0.04em;margin-bottom:6px;">Lesson Content & Key Phrases</h4>
                                         <p style="font-size:14.5px;color:var(--text-primary);white-space:pre-line;line-height:1.7;"><%# HttpUtility.HtmlEncode((string)Eval("Content")) %></p>
                                     </div>
@@ -234,14 +234,14 @@
     </script>
 
     <style>
-        .lesson-card-item { background:#ffffff;border:1px solid var(--border-light);border-radius:var(--radius-md);margin-bottom:var(--space-3);overflow:hidden; }
-        .lesson-card-header { padding:var(--space-4);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#ffffff;transition:background 0.2s; }
-        .lesson-card-header:hover { background:#f8fafc; }
+        .lesson-card-item { background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-md);margin-bottom:var(--space-3);overflow:hidden; }
+        .lesson-card-header { padding:var(--space-4);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:var(--bg-surface);transition:background 0.2s; }
+        .lesson-card-header:hover { background:var(--bg-overlay); }
         .lesson-title-wrap { display:flex;align-items:center;gap:16px; }
         .lesson-num-badge { width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--bg-subtle);border-radius:50%;font-weight:800;font-size:13px;color:var(--text-muted); }
-        .lesson-card-body { padding:0 var(--space-4) var(--space-4);border-top:1px solid var(--border-light);background:#fcfcfc; }
+        .lesson-card-body { padding:0 var(--space-4) var(--space-4);border-top:1px solid var(--border-light);background:var(--bg-overlay); }
         .lesson-card-actions { text-align:right; }
-        .lesson-locked { margin-top:var(--space-4);padding:var(--space-4);border-radius:var(--radius-md);border:1px dashed var(--border-mid);background:#ffffff;text-align:center;font-size:13.5px;font-weight:600;color:var(--text-muted); }
+        .lesson-locked { margin-top:var(--space-4);padding:var(--space-4);border-radius:var(--radius-md);border:1px dashed var(--border-mid);background:var(--bg-surface);text-align:center;font-size:13.5px;font-weight:600;color:var(--text-muted); }
         .admin-preview-banner { margin-bottom:var(--space-4);padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);background:var(--brand-primary-soft);border:1px solid rgba(67,56,202,0.2);color:var(--brand-primary);font-size:13.5px; }
     </style>
 
