@@ -99,6 +99,18 @@ namespace binary.MasterPages
             "~/Auth/GetStarted.aspx",
         };
 
+        // Navbar highlight for the page being viewed: a path ending in "/" covers the whole folder
+        // (so a course's Detail page still highlights Courses). Matched against the .aspx file,
+        // like IsPublicPage, because FriendlyUrls serves pages without the extension.
+        protected string NavState(string path)
+        {
+            string pagePath = Page.AppRelativeVirtualPath ?? "";
+            bool current = path.EndsWith("/")
+                ? pagePath.StartsWith(path, StringComparison.OrdinalIgnoreCase)
+                : pagePath.Equals(path, StringComparison.OrdinalIgnoreCase);
+            return current ? "class=\"active\" aria-current=\"page\"" : "";
+        }
+
         private bool IsPublicPage()
         {
             string pagePath = Page.AppRelativeVirtualPath ?? "";
