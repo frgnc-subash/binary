@@ -133,7 +133,7 @@ namespace binary.Users
                 litStreak.Text = enrollmentBll.GetCurrentStreak(userId).ToString();
 
                 litGreetingName.Text = Server.HtmlEncode(user.FirstName);
-                litGreetingTitle.Text = Server.HtmlEncode(LearnerTitles.For(user.TotalXP).Display);
+                litGreetingTitle.Text = LearnerTitles.For(user.TotalXP).Html;
 
                 // course progress breakdown (replaces the old fixed 45/35/20 bar)
                 int coursesDone = enrollments.Count(en => en.ProgressPercent >= 100);
@@ -189,6 +189,7 @@ namespace binary.Users
             Lesson next = new LessonBLL().GetLessonsByCourse(current.CourseID).FirstOrDefault(l => !done.Contains(l.LessonID));
 
             litContinueCourse.Text = Server.HtmlEncode(current.CourseTitle);
+            litContinueFlag.Text = FlagHelper.Render(current.CourseFlagUrl, current.CourseTitle, "flag-md");
             litContinueLesson.Text = next != null
                 ? "Next: Lesson " + next.SortOrder + " · " + Server.HtmlEncode(next.Title)
                 : current.ProgressPercent + "% complete";
@@ -207,7 +208,7 @@ namespace binary.Users
 
         private class TitleCardVM
         {
-            public string Emoji { get; set; }
+            public string IconHtml { get; set; }
             public string Name { get; set; }
             public string RangeText { get; set; }
             public string Description { get; set; }
@@ -222,13 +223,13 @@ namespace binary.Users
             LearnerTitle current = LearnerTitles.For(xp);
             LearnerTitle next = LearnerTitles.Next(xp);
 
-            litLearnerLevel.Text = Server.HtmlEncode(current.Display);
-            litProfileTitle.Text = Server.HtmlEncode(current.Display);
+            litLearnerLevel.Text = current.Html;
+            litProfileTitle.Text = current.Html;
             litProfileTitleHint.Text = Server.HtmlEncode(next != null
-                ? xp.ToString("N0") + " XP · " + (next.MinXp - xp).ToString("N0") + " XP to " + next.Display
+                ? xp.ToString("N0") + " XP · " + (next.MinXp - xp).ToString("N0") + " XP to " + next.Name
                 : xp.ToString("N0") + " XP · highest title reached");
 
-            litExpTitleEmoji.Text = Server.HtmlEncode(current.Emoji);
+            litExpTitleIcon.Text = current.IconHtml("exp-icon");
             litExpTitleName.Text = Server.HtmlEncode(current.Name);
             litExpTotal.Text = xp.ToString("N0");
 
@@ -236,7 +237,7 @@ namespace binary.Users
             if (next != null)
             {
                 progress = (xp - current.MinXp) * 100.0 / (next.MinXp - current.MinXp);
-                litExpToNext.Text = Server.HtmlEncode((next.MinXp - xp).ToString("N0") + " XP to " + next.Display);
+                litExpToNext.Text = Server.HtmlEncode((next.MinXp - xp).ToString("N0") + " XP to " + next.Name);
             }
             else
             {
@@ -254,7 +255,7 @@ namespace binary.Users
 
                 cards.Add(new TitleCardVM
                 {
-                    Emoji = t.Emoji,
+                    IconHtml = t.IconHtml("exp-icon"),
                     Name = Server.HtmlEncode(t.Name),
                     Description = Server.HtmlEncode(t.Description),
                     RangeText = following != null
@@ -285,6 +286,9 @@ namespace binary.Users
                     litProfileName.Text = Server.HtmlEncode(user.FullName);
                     litProfileEmail.Text = Server.HtmlEncode(user.Email);
                     litMemberSince.Text = user.CreatedDate.ToString("MMMM yyyy");
+                    litOnboardingInfo.Text =
+                        (string.IsNullOrEmpty(user.NativeLanguage) ? "" : "<span>Speaks " + Server.HtmlEncode(user.NativeLanguage) + "</span>") +
+                        (string.IsNullOrEmpty(user.LearningReason) ? "" : "<span>Goal: " + Server.HtmlEncode(user.LearningReason) + "</span>");
 
                     // calculate initials for avatar
                     string initials = "U";
@@ -487,17 +491,17 @@ namespace binary.Users
 
             if (result.Percent >= 80)
             {
-                litResultEmoji.Text = "🌟";
+                litResultIcon.Text = Icons.Svg("trophy", "quiz-result-icon");
                 litResultMessage.Text = "Excellent work!";
             }
             else if (result.Percent >= 50)
             {
-                litResultEmoji.Text = "👍";
+                litResultIcon.Text = Icons.Svg("thumbs-up", "quiz-result-icon");
                 litResultMessage.Text = "Good effort — keep practicing!";
             }
             else
             {
-                litResultEmoji.Text = "💪";
+                litResultIcon.Text = Icons.Svg("target", "quiz-result-icon");
                 litResultMessage.Text = "Keep at it, you'll get there!";
             }
 

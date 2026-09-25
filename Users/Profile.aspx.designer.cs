@@ -142,9 +142,9 @@ namespace binary.Users
         protected global::System.Web.UI.WebControls.Panel pnlQuizResult;
 
         /// <summary>
-        /// litResultEmoji control.
+        /// litResultIcon control.
         /// </summary>
-        protected global::System.Web.UI.WebControls.Literal litResultEmoji;
+        protected global::System.Web.UI.WebControls.Literal litResultIcon;
 
         /// <summary>
         /// litResultScore control.
@@ -242,9 +242,9 @@ namespace binary.Users
         protected global::System.Web.UI.WebControls.Literal litProfileTitleHint;
 
         /// <summary>
-        /// litExpTitleEmoji control.
+        /// litExpTitleIcon control.
         /// </summary>
-        protected global::System.Web.UI.WebControls.Literal litExpTitleEmoji;
+        protected global::System.Web.UI.WebControls.Literal litExpTitleIcon;
 
         /// <summary>
         /// litExpTitleName control.
@@ -415,5 +415,15 @@ namespace binary.Users
         /// segNotStarted control.
         /// </summary>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl segNotStarted;
+
+        /// <summary>
+        /// litContinueFlag control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litContinueFlag;
+
+        /// <summary>
+        /// litOnboardingInfo control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litOnboardingInfo;
     }
 }
