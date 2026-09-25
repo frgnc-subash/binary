@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using binary.Core.DAL;
+using binary.Core.Helpers;
 
 namespace binary.Core.BLL
 {
@@ -9,12 +11,18 @@ namespace binary.Core.BLL
     {
         public int MinXp { get; set; }
         public string Name { get; set; }
-        public string Emoji { get; set; }
+        public string IconName { get; set; }   // a key in Core/Helpers/Icons
         public string Description { get; set; }
 
-        public string Display
+        public string IconHtml(string cssClass = "ui-icon")
         {
-            get { return Emoji + " " + Name; }
+            return Icons.Svg(IconName, cssClass);
+        }
+
+        // icon + encoded name, for pills and labels rendered as HTML
+        public string Html
+        {
+            get { return IconHtml("ui-icon ui-icon-before") + HttpUtility.HtmlEncode(Name); }
         }
     }
 
@@ -24,11 +32,11 @@ namespace binary.Core.BLL
     {
         public static readonly IList<LearnerTitle> All = new List<LearnerTitle>
         {
-            new LearnerTitle { MinXp = 0,    Emoji = "🌱", Name = "Beginner",         Description = "Every polyglot starts here." },
-            new LearnerTitle { MinXp = 50,   Emoji = "🚀", Name = "Active Learner",   Description = "You're building a real study habit." },
-            new LearnerTitle { MinXp = 200,  Emoji = "🔥", Name = "Avid Explorer",    Description = "Lessons and quizzes are part of your routine." },
-            new LearnerTitle { MinXp = 500,  Emoji = "📚", Name = "Language Scholar", Description = "Serious progress across your tracks." },
-            new LearnerTitle { MinXp = 1000, Emoji = "🌟", Name = "Master Polyglot",  Description = "The highest title on Binary." },
+            new LearnerTitle { MinXp = 0,    IconName = "sprout", Name = "Beginner",         Description = "Every polyglot starts here." },
+            new LearnerTitle { MinXp = 50,   IconName = "rocket", Name = "Active Learner",   Description = "You're building a real study habit." },
+            new LearnerTitle { MinXp = 200,  IconName = "flame", Name = "Avid Explorer",    Description = "Lessons and quizzes are part of your routine." },
+            new LearnerTitle { MinXp = 500,  IconName = "graduation", Name = "Language Scholar", Description = "Serious progress across your tracks." },
+            new LearnerTitle { MinXp = 1000, IconName = "crown", Name = "Master Polyglot",  Description = "The highest title on Binary." },
         }.AsReadOnly();
 
         public static LearnerTitle For(int xp)
@@ -60,7 +68,7 @@ namespace binary.Core.BLL
             if (after.MinXp <= before.MinXp) return;
 
             new NotificationBLL().Notify(userId,
-                "New title unlocked: " + after.Display,
+                "New title unlocked: " + after.Name,
                 "You reached " + after.MinXp + " XP. Your new title now shows on your profile and the leaderboard.",
                 NotificationTypes.Award,
                 "~/Users/Profile.aspx?tab=exp");
