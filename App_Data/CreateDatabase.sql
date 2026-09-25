@@ -1,10 +1,10 @@
 ﻿
 -- Create the database if it doesn't exist
-IF DB_ID('BinaryKoData') IS NULL
-    CREATE DATABASE BinaryKoData;
+IF DB_ID('BinaryDB') IS NULL
+    CREATE DATABASE BinaryDB;
 GO
 
-USE BinaryKoData;
+USE BinaryDB;
 GO
 
 -- ── Roles ──

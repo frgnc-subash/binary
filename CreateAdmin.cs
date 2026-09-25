@@ -22,8 +22,8 @@ namespace binary
             string salt = PasswordHelper.GenerateSalt();
             string hash = PasswordHelper.Hash(password, salt);
 
-            string connectionString = ConfigurationManager.ConnectionStrings["LoginConnectionString"]?.ConnectionString
-                ?? @"Data Source=.\SQLEXPRESS01;Initial Catalog=BinaryKoData;Integrated Security=True;TrustServerCertificate=True;";
+            string connectionString = ConfigurationManager.ConnectionStrings["BinaryConnectionString"]?.ConnectionString
+                ?? @"Data Source=.\SQLEXPRESS01;Initial Catalog=BinaryDB;Integrated Security=True;TrustServerCertificate=True;";
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
