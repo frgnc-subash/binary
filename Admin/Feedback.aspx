@@ -30,7 +30,7 @@
                                     <td style="max-width:360px;color:var(--text-secondary);"><%# HttpUtility.HtmlEncode(Truncate((string)Eval("Message"), 140)) %></td>
                                     <td style="color:var(--text-muted);white-space:nowrap;"><%# Eval("SubmittedDate", "{0:MMM d, yyyy}") %></td>
                                     <td style="text-align:right;">
-                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteFeedback" CommandArgument='<%# Eval("FeedbackID") %>' OnClientClick="return confirm('Delete this message? This cannot be undone.');">Delete</asp:LinkButton>
+                                        <asp:LinkButton runat="server" CssClass="btn btn-ghost text-danger" style="height:30px;font-size:12px;padding:0 10px;" CommandName="DeleteFeedback" CommandArgument='<%# Eval("FeedbackID") %>' OnClientClick="return BinaryUI.confirm(this, { title: 'Delete this message?', text: 'The message will be removed permanently. This cannot be undone.', ok: 'Delete message' });">Delete</asp:LinkButton>
                                     </td>
                                 </tr>
                             </ItemTemplate>
