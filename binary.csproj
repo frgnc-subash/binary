@@ -111,9 +111,20 @@
     <Content Include="Auth\Login.aspx" />
     <Content Include="Auth\Logout.aspx" />
     <Content Include="Auth\Register.aspx" />
+    <Content Include="Auth\GetStarted.aspx" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\logo-mark.png" />
+    <Content Include="Content\images\flags\arab-league.png" />
+    <Content Include="Content\images\flags\china.png" />
+    <Content Include="Content\images\flags\france.png" />
+    <Content Include="Content\images\flags\germany.png" />
+    <Content Include="Content\images\flags\italy.png" />
+    <Content Include="Content\images\flags\japan.png" />
+    <Content Include="Content\images\flags\nepal.png" />
+    <Content Include="Content\images\flags\portugal.png" />
+    <Content Include="Content\images\flags\south-korea.png" />
+    <Content Include="Content\images\flags\spain.png" />
     <Content Include="Courses\Default.aspx" />
     <Content Include="Courses\Detail.aspx" />
     <Content Include="App_Data\CreateDatabase.sql" />
@@ -245,6 +256,13 @@
     <Compile Include="Auth\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Auth\GetStarted.aspx.cs">
+      <DependentUpon>GetStarted.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Auth\GetStarted.aspx.designer.cs">
+      <DependentUpon>GetStarted.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Core\BLL\AuthBLL.cs" />
     <Compile Include="Core\BLL\CategoryBLL.cs" />
     <Compile Include="Core\BLL\CourseBLL.cs" />
@@ -252,6 +270,7 @@
     <Compile Include="Core\BLL\FeedbackBLL.cs" />
     <Compile Include="Core\BLL\LessonBLL.cs" />
     <Compile Include="Core\BLL\NotificationBLL.cs" />
+    <Compile Include="Core\BLL\OnboardingBLL.cs" />
     <Compile Include="Core\BLL\QuizBLL.cs" />
     <Compile Include="Core\BLL\UserBLL.cs" />
     <Compile Include="Core\BLL\XpBLL.cs" />
@@ -292,6 +311,8 @@
     <Compile Include="Core\Helpers\AvatarHelper.cs" />
     <Compile Include="Core\Helpers\DbHelper.cs" />
     <Compile Include="Core\Helpers\DisplayHelper.cs" />
+    <Compile Include="Core\Helpers\FlagHelper.cs" />
+    <Compile Include="Core\Helpers\Icons.cs" />
     <Compile Include="Core\Helpers\PasswordHelper.cs" />
     <Compile Include="Core\Helpers\VideoHelper.cs" />
     <Compile Include="Models\Category.cs" />
