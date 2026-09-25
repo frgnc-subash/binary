@@ -3169,3 +3169,16 @@ body.notif-open {
     background: var(--brand-rose-soft);
     color: var(--brand-rose);
 }
+
+/* admin profile: role badge in place of the learner's XP title */
+.profile-role-pill {
+    gap: 6px;
+    background: var(--brand-primary-soft);
+    border-color: rgba(67, 56, 202, 0.25);
+    color: var(--brand-primary);
+}
+
+.profile-role-pill .ui-icon {
+    width: 14px;
+    height: 14px;
+}

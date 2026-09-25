@@ -28,6 +28,9 @@ namespace binary.MasterPages
             {
                 lnkFooterCta.HRef = "~/Admin/Default.aspx";
                 lnkFooterCta.InnerText = "Open admin panel";
+                // admins' dashboard and profile live in the admin panel, not the learner hub
+                lnkFooterDashboard.HRef = "~/Admin/Default.aspx";
+                lnkFooterProfile.HRef = "~/Admin/Profile.aspx";
             }
             else if (loggedIn)
             {

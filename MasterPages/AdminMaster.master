@@ -62,7 +62,7 @@
 
                     <div class="admin-nav-group">
                         <div class="admin-nav-group-title">Account</div>
-                        <a class="admin-nav-item" runat="server" href="~/Users/Profile.aspx?tab=profile">
+                        <a class="admin-nav-item <%= GetActiveClass("~/Admin/Profile.aspx") %>" href="<%= Page.ResolveUrl("~/Admin/Profile.aspx") %>">
                             <span class="admin-nav-icon">
                                 <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="10" r="3"></circle><path d="M6.5 19a6 6 0 0 1 11 0"></path></svg>
                             </span>
@@ -84,7 +84,7 @@
 
             <%-- Admin User Profile Footer --%>
             <div class="admin-sidebar-footer">
-                <a class="admin-user-info" runat="server" href="~/Users/Profile.aspx?tab=profile" title="Edit your profile">
+                <a class="admin-user-info" runat="server" href="~/Admin/Profile.aspx" title="Edit your profile">
                     <div class="admin-user-avatar"><%= GetAvatarHtml() %></div>
                     <div class="admin-user-meta">
                         <div class="admin-user-name"><%: AdminName %></div>
@@ -107,7 +107,7 @@
                 </div>
                 <div class="admin-global-actions">
                     <bn:NotificationBell ID="NotificationBell" runat="server" />
-                    <a class="admin-global-avatar" runat="server" href="~/Users/Profile.aspx?tab=profile" title="Edit your profile" style="text-decoration:none;color:inherit;"><%= GetAvatarHtml() %></a>
+                    <a class="admin-global-avatar" runat="server" href="~/Admin/Profile.aspx" title="Edit your profile" style="text-decoration:none;color:inherit;"><%= GetAvatarHtml() %></a>
                 </div>
             </header>
 

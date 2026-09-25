@@ -178,6 +178,36 @@ namespace binary.Core.BLL
             _dal.UpdateProfile(user);
         }
 
+        // Validates, stores, and assigns an uploaded profile picture, then removes the old file.
+        // Shared by the learner and admin profile pages.
+        public void SaveProfilePicture(int userId, System.Web.HttpPostedFile file)
+        {
+            string error;
+            if (!AvatarHelper.IsValidImage(file, out error))
+                throw new ValidationException(error);
+
+            var server = System.Web.HttpContext.Current.Server;
+            string oldImageUrl = GetProfile(userId).ProfileImageUrl;
+
+            string folder = server.MapPath(AvatarHelper.AvatarFolderVirtualPath);
+            System.IO.Directory.CreateDirectory(folder);
+            string fileName = AvatarHelper.BuildFileName(userId, file.FileName);
+            file.SaveAs(System.IO.Path.Combine(folder, fileName));
+
+            UpdateProfilePicture(userId, AvatarHelper.AvatarFolderVirtualPath + fileName);
+
+            if (string.IsNullOrWhiteSpace(oldImageUrl)) return;
+            try
+            {
+                string oldPath = server.MapPath(oldImageUrl);
+                if (System.IO.File.Exists(oldPath)) System.IO.File.Delete(oldPath);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("Failed to delete old avatar for user {0}: {1}", userId, ex);
+            }
+        }
+
         public void UpdateProfilePicture(int userId, string imageUrl)
         {
             if (userId <= 0)

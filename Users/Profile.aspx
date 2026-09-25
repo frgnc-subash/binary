@@ -56,12 +56,6 @@
                             <span class="admin-nav-icon"><svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="10" r="3"></circle><path d="M6.5 19a6 6 0 0 1 11 0"></path></svg></span>
                             <span>Profile</span>
                         </button>
-                        <% if (binary.Core.BLL.AuthBLL.IsAdmin) { %>
-                        <a class="admin-nav-item" runat="server" href="~/Admin">
-                            <span class="admin-nav-icon"><svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"></path><path d="m9 12 2 2 4-4"></path></svg></span>
-                            <span>Admin Panel</span>
-                        </a>
-                        <% } %>
                     </div>
 
                     <div class="admin-nav-group">

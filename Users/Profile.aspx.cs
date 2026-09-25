@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -61,6 +60,15 @@ namespace binary.Users
             if (!AuthBLL.IsLoggedIn)
             {
                 Response.Redirect("~/Auth/Login.aspx?ReturnUrl=" + Server.UrlEncode(Request.RawUrl), true);
+                return;
+            }
+
+            // this is the learner dashboard; admins manage their account inside the admin panel,
+            // so they never end up with a second, different sidebar
+            if (AuthBLL.IsAdmin)
+            {
+                bool wantsPassword = string.Equals(Request.QueryString["tab"], "security", StringComparison.OrdinalIgnoreCase);
+                Response.Redirect("~/Admin/Profile.aspx" + (wantsPassword ? "#password-section" : ""), true);
                 return;
             }
 
@@ -326,38 +334,7 @@ namespace binary.Users
                     int userId = AuthBLL.CurrentUserId;
 
                     if (fuAvatar.HasFile)
-                    {
-                        string error;
-                        if (!AvatarHelper.IsValidImage(fuAvatar.PostedFile, out error))
-                        {
-                            ShowError(error);
-                            return;
-                        }
-
-                        string oldImageUrl = _userBll.GetProfile(userId).ProfileImageUrl;
-
-                        string folderPath = Server.MapPath(AvatarHelper.AvatarFolderVirtualPath);
-                        if (!Directory.Exists(folderPath))
-                            Directory.CreateDirectory(folderPath);
-
-                        string fileName = AvatarHelper.BuildFileName(userId, fuAvatar.FileName);
-                        fuAvatar.SaveAs(Path.Combine(folderPath, fileName));
-
-                        _userBll.UpdateProfilePicture(userId, AvatarHelper.AvatarFolderVirtualPath + fileName);
-
-                        if (!string.IsNullOrWhiteSpace(oldImageUrl))
-                        {
-                            try
-                            {
-                                string oldPhysicalPath = Server.MapPath(oldImageUrl);
-                                if (File.Exists(oldPhysicalPath)) File.Delete(oldPhysicalPath);
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Diagnostics.Trace.TraceError("Failed to delete old avatar for user {0}: {1}", userId, ex);
-                            }
-                        }
-                    }
+                        _userBll.SaveProfilePicture(userId, fuAvatar.PostedFile);
 
                     _userBll.UpdateProfile(userId, txtFirstName.Text, txtLastName.Text);
 
