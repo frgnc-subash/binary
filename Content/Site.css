@@ -942,16 +942,6 @@ input[type="radio"] {
         width: 100%;
     }
 
-    /* avatar circle on the left, Sign Out fills the rest of the row */
-    .user-nav-dropdown {
-        width: 100%;
-        gap: var(--space-3);
-    }
-
-    .user-nav-dropdown .btn {
-        flex: 1;
-        width: auto;
-    }
 }
 
 @media (max-width: 600px) {
@@ -2653,9 +2643,213 @@ body.notif-open {
 }
 
 .filter-bar-search {
+    position: relative;
     flex: 1;
     min-width: 200px;
 }
+
+.filter-bar-search .form-control {
+    width: 100%;
+    padding-left: 36px;
+}
+
+.filter-bar-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    transform: translateY(-50%);
+    color: var(--text-subtle);
+    pointer-events: none;
+}
+
+/* "3 of 9 courses match · Clear filters", shown only while a filter is on */
+.filter-summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 10px var(--space-6);
+    border-bottom: 1px solid var(--border-light);
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.filter-clear {
+    font-weight: 600;
+    color: var(--brand-primary);
+}
+
+.filter-clear:hover { text-decoration: underline; }
+
+@media (max-width: 700px) {
+    .filter-bar { padding: var(--space-3) var(--space-4); }
+    .filter-bar .form-control,
+    .filter-bar select.form-control { flex: 1 1 140px; min-width: 0; }
+    .filter-bar-search { flex-basis: 100%; }
+    .filter-summary { padding: 10px var(--space-4); }
+}
+
+/* segmented status filter (learner dashboard: My courses) */
+.seg-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0 var(--space-6) var(--space-3);
+}
+
+.seg-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 12px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.seg-filter-btn span {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-subtle);
+}
+
+.seg-filter-btn:hover { color: var(--text-primary); background: var(--bg-subtle); }
+
+.seg-filter-btn.is-active {
+    color: var(--text-primary);
+    background: #ffffff;
+    border-color: var(--border-light);
+}
+
+.seg-filter-btn.is-active span { color: var(--brand-primary); }
+
+.seg-filter-empty {
+    padding: var(--space-6) var(--space-4);
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* admin courses: category sidebar */
+.category-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.category-count {
+    min-width: 24px;
+    padding: 1px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+    border-radius: var(--radius-pill);
+}
+
+.category-list {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-2);
+}
+
+.category-row { border-radius: var(--radius-sm); }
+.category-row:hover { background: var(--bg-overlay); }
+.category-row.is-active { background: var(--brand-primary-soft); }
+
+.category-view {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding-right: 4px;
+}
+
+.category-name {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: 8px 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.category-name span:first-child {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.category-row.is-active .category-name { color: var(--brand-primary); }
+
+.category-courses {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.category-edit {
+    display: flex;
+    gap: 6px;
+    padding: 6px;
+}
+
+/* both set display, which would otherwise override the [hidden] the rename toggle uses */
+.category-view[hidden],
+.category-edit[hidden] { display: none; }
+
+.category-edit .form-control { height: 34px; flex: 1; min-width: 0; font-size: 13px; }
+.category-edit .btn { height: 34px; padding: 0 12px; font-size: 12.5px; }
+
+.category-empty {
+    padding: var(--space-4);
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.category-add {
+    display: flex;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4) var(--space-4);
+    border-top: 1px solid var(--border-light);
+}
+
+.category-add .form-control { height: 38px; flex: 1; min-width: 0; }
+.category-add .btn { height: 38px; }
+
+/* small square icon button used in list rows */
+.icon-btn {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    display: inline-grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.icon-btn .ui-icon { width: 15px; height: 15px; }
+.icon-btn:hover { background: var(--bg-subtle); color: var(--text-primary); }
+.icon-btn-danger:hover { background: var(--brand-rose-soft); color: var(--brand-rose); }
+.icon-btn.is-disabled { opacity: 0.35; cursor: not-allowed; }
+.icon-btn.is-disabled:hover { background: transparent; color: var(--text-muted); }
 
 .pagination-bar {
     display: flex;

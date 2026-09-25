@@ -109,6 +109,7 @@ namespace binary.Admin
             litTotalCourses.Text = groups.Sum(g => g.CourseCount).ToString();
             litTotalLearners.Text = groups.Sum(g => g.LearnerCount).ToString();
 
+            int totalCount = groups.Count;
             string search = (txtLanguageSearch.Text ?? "").Trim();
             if (search.Length > 0)
             {
@@ -133,6 +134,16 @@ namespace binary.Admin
 
             pnlLanguageList.Visible = groups.Count > 0;
             pnlNoLanguages.Visible = groups.Count == 0;
+
+            pnlLanguageFilterSummary.Visible = search.Length > 0;
+            litLanguageFilterSummary.Text = groups.Count + " of " + totalCount + " famil" + (totalCount == 1 ? "y" : "ies") + " match";
+        }
+
+        protected void lnkClearLanguageFilters_Click(object sender, EventArgs e)
+        {
+            txtLanguageSearch.Text = "";
+            hfLanguagesPage.Value = "1";
+            BindLanguages();
         }
 
         protected void btnSaveLanguage_Click(object sender, EventArgs e)
@@ -157,6 +168,10 @@ namespace binary.Admin
                 pnlLanguageError.Visible = true;
                 pnlLanguageForm.Visible = true;
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError("Save language family failed: {0}", ex);
@@ -168,10 +183,6 @@ namespace binary.Admin
 
         protected void rptLanguages_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            catch (System.Threading.ThreadAbortException)
-            {
-                throw;   // Response.Redirect ends the request this way; not an error
-            }
             if (e.CommandName != "DeleteLanguage") return;
 
             int categoryId = Convert.ToInt32(e.CommandArgument);
@@ -185,6 +196,10 @@ namespace binary.Admin
                 litLanguageError.Text = Server.HtmlEncode(vex.Message);
                 pnlLanguageError.Visible = true;
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError("Delete language family {0} failed: {1}", categoryId, ex);
@@ -196,10 +211,6 @@ namespace binary.Admin
         protected void btnLanguageSearch_Click(object sender, EventArgs e)
         {
             hfLanguagesPage.Value = "1";
-            catch (System.Threading.ThreadAbortException)
-            {
-                throw;   // Response.Redirect ends the request this way; not an error
-            }
             BindLanguages();
         }
 

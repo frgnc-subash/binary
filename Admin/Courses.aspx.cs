@@ -115,21 +115,51 @@ namespace binary.Admin
             ddlCategoryFilter.DataBind();
         }
 
+        // a category with how many courses use it, for the sidebar list
+        protected class CategoryRow
+        {
+            public int CategoryID { get; set; }
+            public string Name { get; set; }
+            public int CourseCount { get; set; }
+        }
+
         private void BindCategoryList()
         {
-            rptCategories.DataSource = new CategoryBLL().GetAllCategories();
+            var courses = new CourseBLL().GetAllCourses();
+            var rows = new CategoryBLL().GetAllCategories().Select(c => new CategoryRow
+            {
+                CategoryID = c.CategoryID,
+                Name = c.Name,
+                CourseCount = courses.Count(x => x.CategoryID == c.CategoryID)
+            }).ToList();
+
+            rptCategories.DataSource = rows;
             rptCategories.DataBind();
+            pnlNoCategories.Visible = rows.Count == 0;
+            litCategoryTotal.Text = rows.Count.ToString();
+        }
+
+        protected bool IsActiveCategory(int categoryId)
+        {
+            return ddlCategoryFilter.SelectedValue == categoryId.ToString();
         }
 
         private void BindCourseList()
         {
             var courses = new CourseBLL().GetAllCourses();
+            int totalCount = courses.Count;
 
             string search = (txtCourseSearch.Text ?? "").Trim();
             if (search.Length > 0)
             {
-                courses = courses.Where(c => c.Title.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                courses = courses.Where(c =>
+                    c.Title.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    (c.CategoryName ?? "").IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0
+                ).ToList();
             }
+
+            if (!string.IsNullOrEmpty(ddlLevelFilter.SelectedValue))
+                courses = courses.Where(c => c.Level == ddlLevelFilter.SelectedValue).ToList();
 
             if (!string.IsNullOrEmpty(ddlCategoryFilter.SelectedValue))
             {
@@ -158,12 +188,33 @@ namespace binary.Admin
 
             pnlCourseList.Visible = courses.Count > 0;
             pnlNoCourses.Visible = courses.Count == 0;
+
+            bool filtered = search.Length > 0 || ddlCategoryFilter.SelectedIndex > 0 ||
+                            ddlLevelFilter.SelectedIndex > 0 || ddlStatusFilter.SelectedIndex > 0;
+            pnlCourseFilterSummary.Visible = filtered;
+            litCourseFilterSummary.Text = courses.Count + " of " + totalCount + " course" + (totalCount == 1 ? "" : "s") + " match";
         }
 
         protected void btnCourseSearch_Click(object sender, EventArgs e)
         {
             hfCoursesPage.Value = "1";
             BindCourseList();
+        }
+
+        protected void CourseFilter_Changed(object sender, EventArgs e)
+        {
+            hfCoursesPage.Value = "1";
+            BindCourseList();
+            BindCategoryList();   // keeps the active category highlighted
+        }
+
+        protected void lnkClearCourseFilters_Click(object sender, EventArgs e)
+        {
+            txtCourseSearch.Text = "";
+            ddlCategoryFilter.SelectedIndex = 0;
+            ddlLevelFilter.SelectedIndex = 0;
+            ddlStatusFilter.SelectedIndex = 0;
+            CourseFilter_Changed(sender, e);
         }
 
         protected void lnkCoursePrevPage_Click(object sender, EventArgs e)
@@ -262,6 +313,10 @@ namespace binary.Admin
                 pnlCourseError.Visible = true;
                 pnlCourseForm.Visible = true;
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError("Save course failed: {0}", ex);
@@ -299,6 +354,10 @@ namespace binary.Admin
                 litCourseError.Text = Server.HtmlEncode(vex.Message);
                 pnlCourseError.Visible = true;
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError("Course action '{0}' failed for course {1}: {2}", e.CommandName, courseId, ex);
@@ -313,10 +372,6 @@ namespace binary.Admin
             string newUpload = null;   // video saved during this request; removed again if the save fails
 
             try
-            catch (System.Threading.ThreadAbortException)
-            {
-                throw;   // Response.Redirect ends the request this way; not an error
-            }
             {
                 courseId = int.Parse(hfCourseId.Value);
                 int sortOrder;
@@ -354,10 +409,6 @@ namespace binary.Admin
                 newUpload = null;
             }
             catch (ValidationException vex)
-            catch (System.Threading.ThreadAbortException)
-            {
-                throw;   // Response.Redirect ends the request this way; not an error
-            }
             {
                 VideoHelper.TryDeleteUploadedFile(newUpload);
                 litLessonError.Text = Server.HtmlEncode(vex.Message);
@@ -462,6 +513,10 @@ namespace binary.Admin
                 litLessonError.Text = Server.HtmlEncode(vex.Message);
                 pnlLessonError.Visible = true;
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError("Lesson action '{0}' failed for lesson {1}: {2}", e.CommandName, lessonId, ex);
@@ -482,6 +537,10 @@ namespace binary.Admin
                 litCategoryError.Text = Server.HtmlEncode(vex.Message);
                 pnlCategoryError.Visible = true;
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+                throw;   // Response.Redirect ends the request this way; not an error
+            }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError("Add category failed: {0}", ex);
@@ -493,6 +552,18 @@ namespace binary.Admin
         protected void rptCategories_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             int categoryId = Convert.ToInt32(e.CommandArgument);
+
+            // clicking a category name filters the course list (click again to show all)
+            if (e.CommandName == "FilterCategory")
+            {
+                bool alreadyActive = IsActiveCategory(categoryId);
+                ddlCategoryFilter.ClearSelection();
+                ListItem item = alreadyActive ? null : ddlCategoryFilter.Items.FindByValue(categoryId.ToString());
+                if (item != null) item.Selected = true;
+                CourseFilter_Changed(source, e);
+                return;
+            }
+
             try
             {
                 if (e.CommandName == "DeleteCategory")
@@ -512,11 +583,11 @@ namespace binary.Admin
                 litCategoryError.Text = Server.HtmlEncode(vex.Message);
                 pnlCategoryError.Visible = true;
             }
-            catch (Exception ex)
             catch (System.Threading.ThreadAbortException)
             {
                 throw;   // Response.Redirect ends the request this way; not an error
             }
+            catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError("Category action '{0}' failed for category {1}: {2}", e.CommandName, categoryId, ex);
                 litCategoryError.Text = "Something went wrong. Please try again.";
@@ -525,11 +596,3 @@ namespace binary.Admin
         }
     }
 }
-            catch (System.Threading.ThreadAbortException)
-            {
-                throw;   // Response.Redirect ends the request this way; not an error
-            }
-            catch (System.Threading.ThreadAbortException)
-            {
-                throw;   // Response.Redirect ends the request this way; not an error
-            }
