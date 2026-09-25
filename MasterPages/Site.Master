@@ -73,7 +73,6 @@
                                         <asp:Literal ID="litAvatarInitials" runat="server">U</asp:Literal>
                                     </span>
                                 </a>
-                                <a class="btn btn-outline text-danger" runat="server" href="~/Auth/Logout.aspx" style="height:36px;padding:0 12px;font-size:13px;" title="Sign Out">Sign Out</a>
                             </div>
                         </asp:PlaceHolder>
                     </div>
@@ -135,7 +134,6 @@
                                     <asp:PlaceHolder ID="phFooterMemberLinks" runat="server" Visible="false">
                                         <li><a id="lnkFooterDashboard" runat="server" href="~/Users/Profile.aspx">My dashboard</a></li>
                                         <li><a id="lnkFooterProfile" runat="server" href="~/Users/Profile.aspx?tab=profile">Profile settings</a></li>
-                                        <li><a runat="server" href="~/Auth/Logout.aspx">Sign out</a></li>
                                     </asp:PlaceHolder>
                                 </ul>
                             </div>
