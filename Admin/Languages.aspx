@@ -9,8 +9,6 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="AdminMainContent" runat="server">
 
-    <asp:HiddenField ID="hfLanguagesPage" runat="server" Value="1" />
-
     <asp:Panel ID="pnlActionSuccess" runat="server" CssClass="auth-alert auth-alert-success" Visible="false" style="margin-bottom:var(--space-4);">
         <asp:Literal ID="litActionSuccess" runat="server" />
     </asp:Panel>
@@ -60,29 +58,28 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-list="languages" data-page-size="8" data-noun="family" data-noun-plural="families">
         <div class="card-header"><h3 style="font-size:1.05rem;">All Language Families</h3></div>
 
-        <asp:Panel ID="pnlLanguageFilters" runat="server" CssClass="filter-bar" DefaultButton="btnLanguageSearch">
+        <div class="filter-bar">
             <div class="filter-bar-search">
                 <svg class="filter-bar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <asp:TextBox ID="txtLanguageSearch" runat="server" CssClass="form-control" TextMode="Search" placeholder="Search by name" aria-label="Search language families" />
+                <input type="search" class="form-control" data-filter-key="q" placeholder="Search by name" aria-label="Search language families" />
             </div>
-            <asp:Button ID="btnLanguageSearch" runat="server" CssClass="btn btn-outline" Text="Search" OnClick="btnLanguageSearch_Click" />
-        </asp:Panel>
-        <asp:Panel ID="pnlLanguageFilterSummary" runat="server" CssClass="filter-summary" Visible="false">
-            <span><asp:Literal ID="litLanguageFilterSummary" runat="server" /></span>
-            <asp:LinkButton ID="lnkClearLanguageFilters" runat="server" CssClass="filter-clear" OnClick="lnkClearLanguageFilters_Click">Clear search</asp:LinkButton>
-        </asp:Panel>
+        </div>
+        <div class="filter-summary" data-list-summary hidden>
+            <span data-list-summary-text></span>
+            <button type="button" class="filter-clear" data-list-clear>Clear search</button>
+        </div>
 
-        <asp:Panel ID="pnlLanguageList" runat="server">
+        <asp:Panel ID="pnlLanguageList" runat="server" data-list-body="true">
             <div style="overflow-x:auto;">
                 <table class="admin-table">
                     <thead><tr><th>Name</th><th>Courses</th><th>Learners</th><th style="text-align:right;">Action</th></tr></thead>
                     <tbody>
                         <asp:Repeater ID="rptLanguages" runat="server" OnItemCommand="rptLanguages_ItemCommand">
                             <ItemTemplate>
-                                <tr>
+                                <tr data-row data-search="<%# HttpUtility.HtmlAttributeEncode(((string)Eval("CategoryName")).ToLowerInvariant()) %>">
                                     <td style="font-weight:700;color:var(--text-primary);"><%# HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
                                     <td><%# Eval("CourseCount") %></td>
                                     <td><%# Eval("LearnerCount") %></td>
@@ -97,14 +94,14 @@
                 </table>
             </div>
             <div class="pagination-bar">
-                <asp:Literal ID="litLanguagePageInfo" runat="server" />
+                <span data-list-page-info></span>
                 <div class="pager-controls">
-                    <asp:LinkButton ID="lnkLanguagePrevPage" runat="server" CssClass="btn btn-outline" style="height:32px;font-size:12px;padding:0 14px;" OnClick="lnkLanguagePrevPage_Click"><svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Prev</asp:LinkButton>
-                    <asp:LinkButton ID="lnkLanguageNextPage" runat="server" CssClass="btn btn-outline" style="height:32px;font-size:12px;padding:0 14px;" OnClick="lnkLanguageNextPage_Click">Next <svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></asp:LinkButton>
+                    <button type="button" class="btn btn-outline btn-pager" data-list-prev><svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Prev</button>
+                    <button type="button" class="btn btn-outline btn-pager" data-list-next>Next <svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
                 </div>
             </div>
         </asp:Panel>
-        <asp:Panel ID="pnlNoLanguages" runat="server" Visible="false" style="text-align:center;color:var(--text-muted);padding:var(--space-8) var(--space-4);">
+        <asp:Panel ID="pnlNoLanguages" runat="server" data-list-empty="true" hidden="hidden" style="text-align:center;color:var(--text-muted);padding:var(--space-8) var(--space-4);">
             <div style="width:44px;height:44px;margin:0 auto var(--space-3);border-radius:50%;background:rgba(67,56,202,0.1);color:var(--brand-primary);display:grid;place-items:center;"><svg class="admin-icon" style="width:22px;height:22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.5 2.7 2.5 15.3 0 18"></path><path d="M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg></div>
             <h4 style="font-weight:700;color:var(--text-primary);">No language families found</h4>
             <p style="font-size:13.5px;">Try adjusting your search, or add a new one above.</p>

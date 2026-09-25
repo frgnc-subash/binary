@@ -28,13 +28,44 @@ var BinaryUI = (function () {
         }
     }
 
-    function toggleTheme() {
-        var dark = root.getAttribute('data-theme') !== 'dark';
+    var switchTimer = null;
+
+    function applyTheme(dark, animate) {
+        if ((root.getAttribute('data-theme') === 'dark') === dark) { syncThemeButtons(); return; }
+        if (animate) {
+            // fade colours for a moment; removed again so normal hovers keep their own timing
+            root.classList.add('theme-switching');
+            clearTimeout(switchTimer);
+            switchTimer = setTimeout(function () { root.classList.remove('theme-switching'); }, 300);
+        }
         if (dark) root.setAttribute('data-theme', 'dark');
         else root.removeAttribute('data-theme');
-        store(THEME_KEY, dark ? 'dark' : 'light');
         syncThemeButtons();
     }
+
+    function savedThemeIsDark() {
+        try { return localStorage.getItem(THEME_KEY) === 'dark'; } catch (e) { return root.getAttribute('data-theme') === 'dark'; }
+    }
+
+    function toggleTheme() {
+        var dark = root.getAttribute('data-theme') !== 'dark';
+        store(THEME_KEY, dark ? 'dark' : 'light');
+        applyTheme(dark, true);
+    }
+
+    // another tab switched the theme: follow it
+    window.addEventListener('storage', function (e) {
+        if (e.key === THEME_KEY) applyTheme(e.newValue === 'dark', true);
+        if (e.key === SIDEBAR_KEY) {
+            root.classList.toggle('sidebar-collapsed', e.newValue === 'collapsed');
+            syncSidebar();
+        }
+    });
+
+    // pages restored by the Back button come from memory with the theme they were left in
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) applyTheme(savedThemeIsDark(), false);
+    });
 
     /* ---------- sidebar ---------- */
 
@@ -221,10 +252,195 @@ var BinaryUI = (function () {
         }
     }
 
+    /* ---------- filterable lists ---------- */
+
+    // Instant search / filter / sort / paging for a server-rendered table, with no postback.
+    // The state lives in the address bar (?q=...&cat=...&page=2), so a reload, the back button or
+    // a redirect after Save/Delete shows exactly the filters on screen, never an older search.
+    //
+    // Markup contract (all inside the element with data-list="name"):
+    //   [data-filter-key="q"]        search box, matched against each row's data-search
+    //   [data-filter-key="cat"]      a select, matched against each row's data-f-cat
+    //   [data-sort-key="sort"]       a select with values like "xp:desc"; rows carry data-s-xp
+    //   tr[data-row]                 the rows
+    //   [data-list-body]             hidden when nothing matches ([data-list-empty] is shown instead)
+    //   [data-list-summary] + [data-list-summary-text] + [data-list-clear]
+    //   [data-list-page-info], [data-list-prev], [data-list-next]
+    // Elsewhere on the page, data-list-set="name:cat=3" makes any button set a filter (click again to clear).
+    function setUrlParams(values, defaults) {
+        var params = new URLSearchParams(location.search);
+        for (var key in values) {
+            if (values[key] && values[key] !== defaults[key]) params.set(key, values[key]);
+            else params.delete(key);
+        }
+        params.delete('msg');
+        var query = params.toString();
+        var url = location.pathname + (query ? '?' + query : '') + location.hash;
+        if (url === location.pathname + location.search + location.hash) return;
+        history.replaceState(null, '', url);
+        // WebForms posts back to the URL the page was loaded with; keep that in step too, so the
+        // redirect after Publish / Delete / Rename comes back to these filters, not the first ones
+        if (document.forms[0]) document.forms[0].action = url;
+    }
+
+    function initList(box) {
+        var name = box.getAttribute('data-list');
+        var pageSize = parseInt(box.getAttribute('data-page-size'), 10) || 10;
+        var noun = box.getAttribute('data-noun') || 'item';
+        var nouns = box.getAttribute('data-noun-plural') || noun + 's';
+        var controls = box.querySelectorAll('[data-filter-key], [data-sort-key]');
+        var rows = Array.prototype.slice.call(box.querySelectorAll('tr[data-row]'));
+        var tbody = rows.length ? rows[0].parentNode : null;
+        var page = 1;
+        var defaults = { page: '1' };
+
+        function keyOf(el) { return el.getAttribute('data-filter-key') || el.getAttribute('data-sort-key'); }
+
+        for (var i = 0; i < controls.length; i++) {
+            var c = controls[i];
+            // the first option of a sort select is the default order; everything else defaults to "any"
+            defaults[keyOf(c)] = c.hasAttribute('data-sort-key') && c.options && c.options.length ? c.options[0].value : '';
+            c.setAttribute('autocomplete', 'off');
+        }
+
+        function read() {
+            var state = {};
+            for (var i = 0; i < controls.length; i++) state[keyOf(controls[i])] = controls[i].value.trim();
+            return state;
+        }
+
+        function sortRows(sortValue) {
+            if (!sortValue || !tbody) return;
+            var parts = sortValue.split(':'), field = 'data-s-' + parts[0], desc = parts[1] === 'desc';
+            rows.sort(function (a, b) {
+                var x = a.getAttribute(field) || '', y = b.getAttribute(field) || '';
+                var nx = parseFloat(x), ny = parseFloat(y);
+                var cmp = (!isNaN(nx) && !isNaN(ny)) ? nx - ny : x.localeCompare(y, undefined, { sensitivity: 'base' });
+                return desc ? -cmp : cmp;
+            });
+            for (var i = 0; i < rows.length; i++) tbody.appendChild(rows[i]);
+        }
+
+        function apply(keepPage) {
+            var state = read();
+            if (!keepPage) page = 1;
+
+            var sortKey = null;
+            for (var i = 0; i < controls.length; i++) if (controls[i].hasAttribute('data-sort-key')) sortKey = keyOf(controls[i]);
+            if (sortKey) sortRows(state[sortKey]);
+
+            var q = (state.q || '').toLowerCase();
+            var matches = rows.filter(function (row) {
+                if (q && (row.getAttribute('data-search') || '').indexOf(q) === -1) return false;
+                for (var key in state) {
+                    if (key === 'q' || key === sortKey || !state[key]) continue;
+                    if (row.getAttribute('data-f-' + key) !== state[key]) return false;
+                }
+                return true;
+            });
+
+            var pages = Math.max(1, Math.ceil(matches.length / pageSize));
+            page = Math.min(Math.max(1, page), pages);
+            var first = (page - 1) * pageSize;
+            for (var r = 0; r < rows.length; r++) rows[r].hidden = true;
+            for (var m = first; m < Math.min(first + pageSize, matches.length); m++) matches[m].hidden = false;
+
+            var filtered = false;
+            for (var k in state) if (k !== sortKey && state[k]) filtered = true;
+
+            var body = box.querySelector('[data-list-body]');
+            var empty = box.querySelector('[data-list-empty]');
+            if (body) body.hidden = matches.length === 0;
+            if (empty) empty.hidden = matches.length > 0;
+
+            var info = box.querySelector('[data-list-page-info]');
+            if (info) info.textContent = 'Page ' + page + ' of ' + pages + ' (' + matches.length + ' ' + (matches.length === 1 ? noun : nouns) + ')';
+            var prev = box.querySelector('[data-list-prev]'), next = box.querySelector('[data-list-next]');
+            if (prev) prev.disabled = page <= 1;
+            if (next) next.disabled = page >= pages;
+
+            var summary = box.querySelector('[data-list-summary]');
+            if (summary) {
+                summary.hidden = !filtered;
+                var text = summary.querySelector('[data-list-summary-text]');
+                if (text) text.textContent = matches.length + ' of ' + rows.length + ' ' + (rows.length === 1 ? noun : nouns) + ' match';
+            }
+
+            var setters = document.querySelectorAll('[data-list-set^="' + name + ':"]');
+            for (var s = 0; s < setters.length; s++) {
+                var pair = setters[s].getAttribute('data-list-set').split(':')[1].split('=');
+                var on = state[pair[0]] === pair[1];
+                (setters[s].closest('[data-list-set-scope]') || setters[s]).classList.toggle('is-active', on);
+                setters[s].setAttribute('aria-pressed', on ? 'true' : 'false');
+            }
+
+            state.page = String(page);
+            setUrlParams(state, defaults);
+        }
+
+        // start from the address bar, not from whatever the browser restored into the fields
+        var params = new URLSearchParams(location.search);
+        for (var j = 0; j < controls.length; j++) {
+            var key = keyOf(controls[j]);
+            var value = params.get(key) || defaults[key];
+            controls[j].value = value;
+            if (controls[j].value !== value) controls[j].value = defaults[key];   // stale option
+        }
+        page = parseInt(params.get('page'), 10) || 1;
+
+        var timer = null;
+        box.addEventListener('input', function (e) {
+            if (!e.target.hasAttribute('data-filter-key') || e.target.tagName === 'SELECT') return;
+            clearTimeout(timer);
+            timer = setTimeout(function () { apply(false); }, 120);
+        });
+        box.addEventListener('change', function (e) {
+            if (e.target.tagName === 'SELECT' && (e.target.hasAttribute('data-filter-key') || e.target.hasAttribute('data-sort-key'))) apply(false);
+        });
+        box.addEventListener('keydown', function (e) {
+            // Enter in the search box would submit the whole WebForms page
+            if (e.key === 'Enter' && e.target.hasAttribute('data-filter-key')) e.preventDefault();
+        });
+        box.addEventListener('click', function (e) {
+            var btn = e.target.closest ? e.target.closest('[data-list-prev], [data-list-next], [data-list-clear]') : null;
+            if (!btn) return;
+            e.preventDefault();
+            if (btn.hasAttribute('data-list-clear')) {
+                for (var i = 0; i < controls.length; i++) {
+                    if (controls[i].hasAttribute('data-filter-key')) controls[i].value = '';
+                }
+                apply(false);
+                return;
+            }
+            page += btn.hasAttribute('data-list-next') ? 1 : -1;
+            apply(true);
+            box.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        });
+
+        document.addEventListener('click', function (e) {
+            var setter = e.target.closest ? e.target.closest('[data-list-set^="' + name + ':"]') : null;
+            if (!setter) return;
+            e.preventDefault();
+            var pair = setter.getAttribute('data-list-set').split(':')[1].split('=');
+            var control = box.querySelector('[data-filter-key="' + pair[0] + '"]');
+            if (!control) return;
+            control.value = control.value === pair[1] ? '' : pair[1];
+            apply(false);
+        });
+
+        apply(true);
+    }
+
+    function initLists() {
+        var lists = document.querySelectorAll('[data-list]');
+        for (var i = 0; i < lists.length; i++) initList(lists[i]);
+    }
+
     function init() {
         syncThemeButtons();
         syncSidebar();
         promoteAlerts();
+        initLists();
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
