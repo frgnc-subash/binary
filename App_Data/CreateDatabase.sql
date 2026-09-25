@@ -31,8 +31,8 @@ CREATE TABLE Users (
     CreatedDate         DATETIME       NOT NULL DEFAULT GETUTCDATE(),
     TotalXP             INT            NOT NULL DEFAULT 0,  -- Moved here to avoid ALTER TABLE issues
     ProfileImageUrl     NVARCHAR(500)  NULL,
-    NativeLanguage      NVARCHAR(50)   NULL,   -- onboarding: the language the learner already speaks
-    LearningReason      NVARCHAR(50)   NULL,   -- onboarding: why they're learning
+    NativeLanguage      NVARCHAR(200)  NULL,   -- onboarding: the languages the learner already speaks
+    LearningReason      NVARCHAR(200)  NULL,   -- onboarding: why they're learning
     CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
 );
 GO
@@ -43,11 +43,19 @@ IF COL_LENGTH('Users', 'ProfileImageUrl') IS NULL
 GO
 
 IF COL_LENGTH('Users', 'NativeLanguage') IS NULL
-    ALTER TABLE Users ADD NativeLanguage NVARCHAR(50) NULL;
+    ALTER TABLE Users ADD NativeLanguage NVARCHAR(200) NULL;
 GO
 
 IF COL_LENGTH('Users', 'LearningReason') IS NULL
-    ALTER TABLE Users ADD LearningReason NVARCHAR(50) NULL;
+    ALTER TABLE Users ADD LearningReason NVARCHAR(200) NULL;
+GO
+
+-- onboarding answers can hold several choices ("English, Nepali"); widen columns made at 50
+IF COL_LENGTH('Users', 'NativeLanguage') < 400
+    ALTER TABLE Users ALTER COLUMN NativeLanguage NVARCHAR(200) NULL;
+
+IF COL_LENGTH('Users', 'LearningReason') < 400
+    ALTER TABLE Users ALTER COLUMN LearningReason NVARCHAR(200) NULL;
 GO
 
 -- ── Categories ──
