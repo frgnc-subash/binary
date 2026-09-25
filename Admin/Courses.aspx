@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="txtDescription">Description</label>
-                                    <asp:TextBox ID="txtDescription" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" />
+                                    <asp:TextBox ID="txtDescription" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="4" />
                                 </div>
                                 <div class="grid-2">
                                     <div class="form-group">
@@ -115,7 +115,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="txtLessonContent">Content</label>
-                                    <asp:TextBox ID="txtLessonContent" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" />
+                                    <asp:TextBox ID="txtLessonContent" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="8" />
                                 </div>
 
                                 <%-- lesson video: paste a link OR upload a file --%>
@@ -172,12 +172,12 @@
                         <ul class="category-list">
                             <asp:Repeater ID="rptCategories" runat="server" OnItemCommand="rptCategories_ItemCommand">
                                 <ItemTemplate>
-                                    <li class='<%# IsActiveCategory((int)Eval("CategoryID")) ? "category-row is-active" : "category-row" %>'>
+                                    <li class="category-row" data-list-set-scope>
                                         <div class="category-view">
-                                            <asp:LinkButton runat="server" CssClass="category-name" CommandName="FilterCategory" CommandArgument='<%# Eval("CategoryID") %>' ToolTip="Show only this category's courses">
+                                            <button type="button" class="category-name" data-list-set="courses:cat=<%# Eval("CategoryID") %>" title="Show only this category's courses">
                                                 <span><%# HttpUtility.HtmlEncode((string)Eval("Name")) %></span>
                                                 <span class="category-courses"><%# Eval("CourseCount") %></span>
-                                            </asp:LinkButton>
+                                            </button>
                                             <button type="button" class="icon-btn" title="Rename" aria-label="Rename" onclick="toggleCategoryEdit(this, true)"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
                                             <asp:LinkButton runat="server" CssClass="icon-btn icon-btn-danger" CommandName="DeleteCategory" CommandArgument='<%# Eval("CategoryID") %>' Visible='<%# (int)Eval("CourseCount") == 0 %>' OnClientClick="return BinaryUI.confirm(this, { title: 'Delete this category?', text: 'It has no courses, so nothing else is affected.', ok: 'Delete category' });" ToolTip="Delete" aria-label="Delete"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></asp:LinkButton>
                                             <asp:PlaceHolder runat="server" Visible='<%# (int)Eval("CourseCount") > 0 %>'>
@@ -199,46 +199,43 @@
                         <p class="category-hint">Click a category to show only its courses. A category can only be deleted once it has no courses.</p>
                     </div>
 
-                    <%-- course list --%>
-                    <asp:HiddenField ID="hfCoursesPage" runat="server" Value="1" />
-                    <div class="card">
+                    <%-- course list: search, filters and paging run in the browser (Scripts/binary-ui.js) --%>
+                    <div class="card" data-list="courses" data-page-size="8" data-noun="course" data-noun-plural="courses">
                         <div class="card-header"><h3 style="font-size:1.05rem;">All Courses</h3></div>
 
-                        <%-- filters: dropdowns apply straight away, the search box on Enter --%>
-                        <asp:Panel ID="pnlCourseFilters" runat="server" CssClass="filter-bar" DefaultButton="btnCourseSearch">
+                        <div class="filter-bar">
                             <div class="filter-bar-search">
                                 <svg class="filter-bar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                                <asp:TextBox ID="txtCourseSearch" runat="server" CssClass="form-control" TextMode="Search" placeholder="Search title or category" aria-label="Search courses" />
+                                <input type="search" class="form-control" data-filter-key="q" placeholder="Search title or category" aria-label="Search courses" />
                             </div>
-                            <asp:DropDownList ID="ddlCategoryFilter" runat="server" CssClass="form-control" AppendDataBoundItems="true" DataTextField="Name" DataValueField="CategoryID" AutoPostBack="true" OnSelectedIndexChanged="CourseFilter_Changed" aria-label="Category">
+                            <asp:DropDownList ID="ddlCategoryFilter" runat="server" CssClass="form-control" AppendDataBoundItems="true" DataTextField="Name" DataValueField="CategoryID" data-filter-key="cat" aria-label="Category">
                                 <asp:ListItem Text="All categories" Value="" />
                             </asp:DropDownList>
-                            <asp:DropDownList ID="ddlLevelFilter" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="CourseFilter_Changed" aria-label="Level">
-                                <asp:ListItem Text="All levels" Value="" />
-                                <asp:ListItem Text="Beginner" Value="Beginner" />
-                                <asp:ListItem Text="Intermediate" Value="Intermediate" />
-                                <asp:ListItem Text="All Levels" Value="All Levels" />
-                            </asp:DropDownList>
-                            <asp:DropDownList ID="ddlStatusFilter" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="CourseFilter_Changed" aria-label="Status">
-                                <asp:ListItem Text="Any status" Value="" />
-                                <asp:ListItem Text="Published" Value="published" />
-                                <asp:ListItem Text="Draft" Value="draft" />
-                            </asp:DropDownList>
-                            <asp:Button ID="btnCourseSearch" runat="server" CssClass="btn btn-outline" Text="Search" OnClick="btnCourseSearch_Click" />
-                        </asp:Panel>
-                        <asp:Panel ID="pnlCourseFilterSummary" runat="server" CssClass="filter-summary" Visible="false">
-                            <span><asp:Literal ID="litCourseFilterSummary" runat="server" /></span>
-                            <asp:LinkButton ID="lnkClearCourseFilters" runat="server" CssClass="filter-clear" OnClick="lnkClearCourseFilters_Click">Clear filters</asp:LinkButton>
-                        </asp:Panel>
+                            <select class="form-control" data-filter-key="level" aria-label="Level">
+                                <option value="">All levels</option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="All Levels">All Levels</option>
+                            </select>
+                            <select class="form-control" data-filter-key="status" aria-label="Status">
+                                <option value="">Any status</option>
+                                <option value="published">Published</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+                        <div class="filter-summary" data-list-summary hidden>
+                            <span data-list-summary-text></span>
+                            <button type="button" class="filter-clear" data-list-clear>Clear filters</button>
+                        </div>
 
-                        <asp:Panel ID="pnlCourseList" runat="server">
+                        <asp:Panel ID="pnlCourseList" runat="server" data-list-body="true">
                             <div style="overflow-x:auto;">
                                 <table class="admin-table">
                                     <thead><tr><th>Title</th><th>Category</th><th>Level</th><th>Status</th><th>Action</th></tr></thead>
                                     <tbody>
                                         <asp:Repeater ID="rptCourses" runat="server" OnItemCommand="rptCourses_ItemCommand">
                                             <ItemTemplate>
-                                                <tr>
+                                                <tr data-row data-search="<%# GetCourseSearchText(Container.DataItem) %>" data-f-cat="<%# Eval("CategoryID") %>" data-f-level="<%# HttpUtility.HtmlAttributeEncode((string)Eval("Level")) %>" data-f-status="<%# (bool)Eval("IsPublished") ? "published" : "draft" %>">
                                                     <td><span class="course-title-cell"><%# binary.Core.Helpers.FlagHelper.Render((string)Eval("FlagImageUrl"), (string)Eval("Title"), "flag-sm") %><%# HttpUtility.HtmlEncode((string)Eval("Title")) %></span></td>
                                                     <td><%# HttpUtility.HtmlEncode((string)Eval("CategoryName")) %></td>
                                                     <td><%# HttpUtility.HtmlEncode((string)Eval("Level")) %></td>
@@ -255,14 +252,14 @@
                                 </table>
                             </div>
                             <div class="pagination-bar">
-                                <asp:Literal ID="litCoursePageInfo" runat="server" />
+                                <span data-list-page-info></span>
                                 <div class="pager-controls">
-                                    <asp:LinkButton ID="lnkCoursePrevPage" runat="server" CssClass="btn btn-outline" style="height:32px;font-size:12px;padding:0 14px;" OnClick="lnkCoursePrevPage_Click"><svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Prev</asp:LinkButton>
-                                    <asp:LinkButton ID="lnkCourseNextPage" runat="server" CssClass="btn btn-outline" style="height:32px;font-size:12px;padding:0 14px;" OnClick="lnkCourseNextPage_Click">Next <svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></asp:LinkButton>
+                                    <button type="button" class="btn btn-outline btn-pager" data-list-prev><svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Prev</button>
+                                    <button type="button" class="btn btn-outline btn-pager" data-list-next>Next <svg class="admin-icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
                                 </div>
                             </div>
                         </asp:Panel>
-                        <asp:Panel ID="pnlNoCourses" runat="server" Visible="false" style="text-align:center;color:var(--text-muted);padding:var(--space-8) var(--space-4);">
+                        <asp:Panel ID="pnlNoCourses" runat="server" data-list-empty="true" hidden="hidden" style="text-align:center;color:var(--text-muted);padding:var(--space-8) var(--space-4);">
                             <div style="width:44px;height:44px;margin:0 auto var(--space-3);border-radius:50%;background:rgba(67,56,202,0.1);color:var(--brand-primary);display:grid;place-items:center;"><svg class="admin-icon" style="width:22px;height:22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5h6a4 4 0 0 1 4 4v11a3 3 0 0 0-3-3H2z"></path><path d="M22 4.5h-6a4 4 0 0 0-4 4v11a3 3 0 0 1 3-3h7z"></path></svg></div>
                             <h4 style="font-weight:700;color:var(--text-primary);">No courses found</h4>
                             <p style="font-size:13.5px;margin-bottom:var(--space-3);">Try adjusting your search or filters, or create a new course.</p>

@@ -56,7 +56,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="<%= txtEmail.ClientID %>">Email address</label>
-                    <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" ReadOnly="true" style="background:#f8fafc;color:var(--text-muted);cursor:not-allowed;" />
+                    <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" ReadOnly="true" style="background:var(--bg-overlay);color:var(--text-muted);cursor:not-allowed;" />
                     <p class="form-hint">Your sign-in email. Another admin can change it from Users if needed.</p>
                 </div>
                 <asp:Button ID="btnSaveProfile" runat="server" CssClass="btn btn-primary" Text="Save changes" ValidationGroup="ProfileGroup" OnClick="btnSaveProfile_Click" />

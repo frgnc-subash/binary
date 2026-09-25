@@ -222,7 +222,7 @@
                 </div>
 
                 <div class="saas-mid-grid">
-                    <div class="card card-body" style="background:#ffffff;">
+                    <div class="card card-body" style="background:var(--bg-surface);">
                         <div class="dash-card-head">
                             <div>
                                 <h3>This week's activity</h3>
@@ -243,7 +243,7 @@
                         </div>
                     </div>
 
-                    <div class="card card-body" style="background:#ffffff;display:flex;flex-direction:column;justify-content:space-between;">
+                    <div class="card card-body" style="background:var(--bg-surface);display:flex;flex-direction:column;justify-content:space-between;">
                         <div>
                             <div class="dash-card-head">
                                 <div>
@@ -269,8 +269,8 @@
                 </div>
 
                 <%-- enrolled courses --%>
-                <div class="card" style="box-shadow:var(--shadow-card);background:#ffffff;">
-                    <div class="card-header dash-card-head" style="background:#ffffff;margin:0;">
+                <div class="card" style="box-shadow:var(--shadow-card);background:var(--bg-surface);">
+                    <div class="card-header dash-card-head" style="background:var(--bg-surface);margin:0;">
                         <div>
                             <h3>My courses</h3>
                             <p>Pick up any course where you left off</p>
@@ -359,7 +359,7 @@
                         <a runat="server" href="~/Courses" class="btn btn-outline">Browse courses</a>
                     </asp:Panel>
 
-                    <div class="card" style="background:#ffffff;">
+                    <div class="card" style="background:var(--bg-surface);">
                         <div class="card-header"><h3 style="font-size:1.05rem;">Recent attempts</h3></div>
                         <div style="overflow-x:auto;">
                             <table class="admin-table">
@@ -502,7 +502,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="<%= txtEmail.ClientID %>">Email address</label>
-                                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" ReadOnly="true" style="background:#f8fafc;color:var(--text-muted);cursor:not-allowed;" />
+                                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" ReadOnly="true" style="background:var(--bg-overlay);color:var(--text-muted);cursor:not-allowed;" />
                                 <p class="form-hint">Your sign-in email can't be changed here. Contact support if you need it updated.</p>
                             </div>
                             <asp:Button ID="btnSaveProfile" runat="server" CssClass="btn btn-primary" Text="Save changes" ValidationGroup="ProfileGroup" OnClick="btnSaveProfile_Click" />
