@@ -2,7 +2,7 @@
 
 A language-learning platform built with ASP.NET Web Forms. Learners enrol in language courses, work through lessons with text and video, take quizzes, and earn XP to climb the leaderboard. Admins manage courses, lessons, quizzes, and users from a separate dashboard.
 
-**Live site:** https://binarylms.runasp.net
+**Live site:** http://binarylms.runasp.net
 
 ## Features
 
