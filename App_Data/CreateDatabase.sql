@@ -242,8 +242,8 @@ IF NOT EXISTS (SELECT 1 FROM Roles WHERE RoleName = 'Member')
 GO
 
 -- No admin account is seeded here, so no credentials live in source control.
--- Create the first admin with the CreateAdmin console program (CreateAdmin.cs),
--- which asks for the email and password when run.
+-- Create the first admin by registering through the site, then promoting that account:
+--   UPDATE Users SET RoleID = (SELECT RoleID FROM Roles WHERE RoleName = 'Admin') WHERE Email = 'you@example.com';
 
 -- Categories
 IF NOT EXISTS (SELECT 1 FROM Categories)
