@@ -241,25 +241,9 @@ IF NOT EXISTS (SELECT 1 FROM Roles WHERE RoleName = 'Member')
     INSERT INTO Roles (RoleName) VALUES ('Member');
 GO
 
--- Default Admin User (Credentials: admin@binary.com / ***REMOVED***)
-IF NOT EXISTS (SELECT 1 FROM Users WHERE Email = 'admin@binary.com')
-BEGIN
-    INSERT INTO Users (FirstName, LastName, Email, PasswordHash, PasswordSalt, RoleID, IsActive, FailedLoginAttempts, LockoutEndUtc, CreatedDate, TotalXP)
-    VALUES (
-        'Admin',
-        'User',
-        'admin@binary.com',
-        '31762b459973ebed71b27fc48617c29ec02e30cff20927711b54f571eb4d32be',
-        'd3b07384d113edec49eaa6238ad5ff00',
-        1, -- Admin Role (RoleID = 1)
-        1, -- IsActive = true
-        0,
-        NULL,
-        GETUTCDATE(),
-        0
-    );
-END
-GO
+-- No admin account is seeded here, so no credentials live in source control.
+-- Create the first admin with the CreateAdmin console program (CreateAdmin.cs),
+-- which asks for the email and password when run.
 
 -- Categories
 IF NOT EXISTS (SELECT 1 FROM Categories)

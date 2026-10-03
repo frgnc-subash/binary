@@ -4,3 +4,6 @@ obj/
 packages/
 *.user
 *.suo
+
+# database credentials
+ConnectionStrings.config

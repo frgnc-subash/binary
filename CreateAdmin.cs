@@ -12,10 +12,24 @@ namespace binary
         {
             Console.WriteLine("=== Binary LMS — Admin Account Creator ===");
 
+            // credentials come from the command line or a prompt, never from source code
+            //   usage: CreateAdmin <email> [password]
             string firstName = "Admin";
             string lastName = "User";
-            string email = "admin@binary.com";
-            string password = "***REMOVED***";
+            string email = args.Length > 0 ? args[0] : Prompt("Admin email: ");
+            string password = args.Length > 1 ? args[1] : ReadPassword("Admin password (min 8 characters): ");
+
+            email = (email ?? "").Trim().ToLowerInvariant();
+            if (email.Length == 0 || !email.Contains("@"))
+            {
+                Console.WriteLine("A valid email is required.");
+                return;
+            }
+            if (string.IsNullOrEmpty(password) || password.Length < 8)
+            {
+                Console.WriteLine("Password must be at least 8 characters long.");
+                return;
+            }
 
             Console.WriteLine("Creating admin account for: " + email);
 
@@ -65,9 +79,36 @@ namespace binary
                     cmd.ExecuteNonQuery();
                     Console.WriteLine("Admin account created successfully!");
                     Console.WriteLine("Email: " + email);
-                    Console.WriteLine("Password: " + password);
                 }
             }
+        }
+
+        private static string Prompt(string label)
+        {
+            Console.Write(label);
+            return Console.ReadLine();
+        }
+
+        // reads a line without echoing it to the console
+        private static string ReadPassword(string label)
+        {
+            Console.Write(label);
+            var sb = new System.Text.StringBuilder();
+            while (true)
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter) break;
+                if (key.Key == ConsoleKey.Backspace)
+                {
+                    if (sb.Length > 0) sb.Length--;
+                }
+                else if (!char.IsControl(key.KeyChar))
+                {
+                    sb.Append(key.KeyChar);
+                }
+            }
+            Console.WriteLine();
+            return sb.ToString();
         }
     }
 }

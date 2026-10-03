@@ -164,6 +164,9 @@
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="MasterPages\Site.Master" />
     <Content Include="Web.config" />
+    <Content Include="ConnectionStrings.example.config" />
+    <!-- git-ignored; included only when present so it still gets published -->
+    <Content Include="ConnectionStrings.config" Condition="Exists('ConnectionStrings.config')" />
     <Content Include="Bundle.config" />
     <Content Include="Users\Default.aspx" />
     <Content Include="Users\Profile.aspx" />

@@ -23,7 +23,7 @@ A web-based language learning platform where users can browse courses, view lear
    git clone https://github.com/frgnc-subash/binary.git
    ```
 2. Import the database schema into MySQL
-3. Update the connection string in `appsettings.json` (or `Web.config`)
+3. Copy `ConnectionStrings.example.config` to `ConnectionStrings.config` and fill in your database details (this file is git-ignored, so credentials are never committed)
 4. Run the project from Visual Studio or via:
    ```bash
    dotnet run
